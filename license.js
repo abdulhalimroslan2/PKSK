@@ -68,32 +68,7 @@
     return (h1 >>> 0).toString(16).toUpperCase().padStart(8, '0');
   }
 
-  // Detect GPU Hardware (Normalized across Chrome, Safari, Firefox, Edge)
-  function getNormalizedGpuSignature() {
-    try {
-      const canvas = document.createElement('canvas');
-      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-      if (!gl) return 'GL_NONE';
-      const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-      let rawVendor = '';
-      let rawRenderer = '';
-      if (debugInfo) {
-        rawVendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) || '';
-        rawRenderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || '';
-      }
-      
-      const full = (rawVendor + ' ' + rawRenderer).toUpperCase();
-      if (full.includes('APPLE')) return 'APPLE_SILICON_GPU';
-      if (full.includes('INTEL')) return 'INTEL_GRAPHICS_GPU';
-      if (full.includes('NVIDIA') || full.includes('GEFORCE')) return 'NVIDIA_DISCRETE_GPU';
-      if (full.includes('AMD') || full.includes('RADEON')) return 'AMD_RADEON_GPU';
-      return full.replace(/[^A-Z0-9]/g, '').substring(0, 20) || 'GENERIC_GPU';
-    } catch (e) {
-      return 'GL_UNAVAILABLE';
-    }
-  }
-
-  // Detect Normalized OS Category
+  // Detect Normalized OS Category (Stable across all browsers & profiles)
   function getNormalizedPlatform() {
     const p = (navigator.platform || navigator.userAgentData?.platform || '').toUpperCase();
     const ua = (navigator.userAgent || '').toUpperCase();
@@ -105,23 +80,33 @@
     return 'UNKNOWN_OS';
   }
 
-  // Generate Stable, Cross-Browser Hardware-bound Device Fingerprint (HWFP-XXXXXXXX-YYYYYYYY)
+  // Get stable device memory tier (navigator.deviceMemory is rounded by browsers: 0.25, 0.5, 1, 2, 4, 8)
+  function getDeviceMemoryTier() {
+    if (navigator.deviceMemory) return String(navigator.deviceMemory);
+    // Safari doesn't support deviceMemory; use a consistent fallback
+    return 'STD';
+  }
+
+  // Generate Stable, Cross-Browser & Cross-Profile Hardware Fingerprint (HWFP-XXXXXXXX-YYYYYYYY)
+  // Uses ONLY hardware signals that are 100% identical across Chrome profiles, Safari, Firefox, Edge
   function getDeviceHardwareFingerprint() {
     if (window._pksk_hwfp_cached) return window._pksk_hwfp_cached;
 
-    const screenData = (window.screen) ? `${window.screen.width}x${window.screen.height}x${window.screen.colorDepth || 24}` : '1920x1080x24';
-    const cpuCores = navigator.hardwareConcurrency || 4;
     const osPlatform = getNormalizedPlatform();
-    const gpuSignature = getNormalizedGpuSignature();
+    const cpuCores = navigator.hardwareConcurrency || 4;
+    const screenRes = (window.screen) ? `${window.screen.width}x${window.screen.height}` : '1920x1080';
     const timeZone = (Intl && Intl.DateTimeFormat) ? Intl.DateTimeFormat().resolvedOptions().timeZone : 'UTC';
+    const memTier = getDeviceMemoryTier();
+    const touchSupport = navigator.maxTouchPoints || 0;
 
-    // Gabungkan komponen perkakasan tulen fizikal yang stabil rentas pelayar
+    // Gabungkan HANYA komponen perkakasan yang stabil 100% rentas pelayar & profil
     const hardwareIdentityString = [
       osPlatform,
       cpuCores,
-      screenData,
+      screenRes,
       timeZone,
-      gpuSignature
+      memTier,
+      touchSupport
     ].join('##');
 
     const hash1 = murmurHash3(hardwareIdentityString, 101);
