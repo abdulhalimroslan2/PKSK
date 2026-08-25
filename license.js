@@ -80,15 +80,12 @@
     return 'UNKNOWN_OS';
   }
 
-  // Get stable device memory tier (navigator.deviceMemory is rounded by browsers: 0.25, 0.5, 1, 2, 4, 8)
-  function getDeviceMemoryTier() {
-    if (navigator.deviceMemory) return String(navigator.deviceMemory);
-    // Safari doesn't support deviceMemory; use a consistent fallback
-    return 'STD';
-  }
-
   // Generate Stable, Cross-Browser & Cross-Profile Hardware Fingerprint (HWFP-XXXXXXXX-YYYYYYYY)
-  // Uses ONLY hardware signals that are 100% identical across Chrome profiles, Safari, Firefox, Edge
+  // Uses ONLY 4 hardware signals that are GUARANTEED identical across Chrome/Safari/Firefox/Edge/all profiles:
+  //   1. OS category (MACOS / WINDOWS / IOS / ANDROID)
+  //   2. CPU logical cores (navigator.hardwareConcurrency)
+  //   3. Screen native resolution (width x height — no colorDepth, no devicePixelRatio)
+  //   4. IANA timezone (Intl.DateTimeFormat)
   function getDeviceHardwareFingerprint() {
     if (window._pksk_hwfp_cached) return window._pksk_hwfp_cached;
 
@@ -96,17 +93,12 @@
     const cpuCores = navigator.hardwareConcurrency || 4;
     const screenRes = (window.screen) ? `${window.screen.width}x${window.screen.height}` : '1920x1080';
     const timeZone = (Intl && Intl.DateTimeFormat) ? Intl.DateTimeFormat().resolvedOptions().timeZone : 'UTC';
-    const memTier = getDeviceMemoryTier();
-    const touchSupport = navigator.maxTouchPoints || 0;
 
-    // Gabungkan HANYA komponen perkakasan yang stabil 100% rentas pelayar & profil
     const hardwareIdentityString = [
       osPlatform,
       cpuCores,
       screenRes,
-      timeZone,
-      memTier,
-      touchSupport
+      timeZone
     ].join('##');
 
     const hash1 = murmurHash3(hardwareIdentityString, 101);
