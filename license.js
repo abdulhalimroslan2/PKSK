@@ -11,7 +11,7 @@
 
   // Konfigurasi Asas Supabase (Boleh dikemaskini oleh Pengurus/Developer)
   const DEFAULT_SUPABASE_URL = 'https://rvslrscgbhgdcktdtfrl.supabase.co';
-  const DEFAULT_SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+  const DEFAULT_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2c2xyc2NnYmhnZGNrdGR0ZnJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc2MzM3MDQsImV4cCI6MjEwMzIwOTcwNH0.B5PRH8Mp7NgKDO9NnyS0akFcBuWz-e5xjKjEFjUD-1Y';
 
   const STORAGE_KEY_SESSION = 'pksk_license_session';
   const STORAGE_KEY_DEVICE = 'pksk_device_id';
