@@ -1639,16 +1639,35 @@ ${essay}
     }
   }
 
+  async function performAutoHardwareCheck() {
+    if (window.PkskLicense && !window.PkskLicense.isActivated()) {
+      try {
+        const res = await window.PkskLicense.autoRestoreHardwareLicense();
+        if (res && res.restored) {
+          updateLicenseBadgeUI();
+          if (dom.activationModal && !dom.activationModal.classList.contains('hidden')) {
+            closeActivationModal();
+          }
+          console.log('✓ Akses lesen berjaya dipulihkan secara automatik dari Hardware Fingerprint!');
+        }
+      } catch (err) {
+        console.warn('Auto hardware check error:', err);
+      }
+    }
+  }
+
   // Self Initialization on DOM Ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       initEventListeners();
       updateLicenseBadgeUI();
+      performAutoHardwareCheck();
       switchView('DASHBOARD');
     });
   } else {
     initEventListeners();
     updateLicenseBadgeUI();
+    performAutoHardwareCheck();
     switchView('DASHBOARD');
   }
 

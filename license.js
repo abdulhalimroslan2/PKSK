@@ -68,65 +68,61 @@
     return (h1 >>> 0).toString(16).toUpperCase().padStart(8, '0');
   }
 
-  // Detect GPU Hardware (Unmasked Renderer & Vendor) via WebGL
-  function getGpuHardwareSignature() {
+  // Detect GPU Hardware (Normalized across Chrome, Safari, Firefox, Edge)
+  function getNormalizedGpuSignature() {
     try {
       const canvas = document.createElement('canvas');
       const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
       if (!gl) return 'GL_NONE';
       const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-      if (!debugInfo) return 'GL_GENERIC';
-      const vendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) || '';
-      const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || '';
-      const maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE) || 0;
-      return `${vendor}::${renderer}::${maxTextureSize}`;
+      let rawVendor = '';
+      let rawRenderer = '';
+      if (debugInfo) {
+        rawVendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) || '';
+        rawRenderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || '';
+      }
+      
+      const full = (rawVendor + ' ' + rawRenderer).toUpperCase();
+      if (full.includes('APPLE')) return 'APPLE_SILICON_GPU';
+      if (full.includes('INTEL')) return 'INTEL_GRAPHICS_GPU';
+      if (full.includes('NVIDIA') || full.includes('GEFORCE')) return 'NVIDIA_DISCRETE_GPU';
+      if (full.includes('AMD') || full.includes('RADEON')) return 'AMD_RADEON_GPU';
+      return full.replace(/[^A-Z0-9]/g, '').substring(0, 20) || 'GENERIC_GPU';
     } catch (e) {
       return 'GL_UNAVAILABLE';
     }
   }
 
-  // Detect 2D Canvas Subpixel Render Signature (Deterministic Font & Antialiasing)
-  function getCanvas2dSignature() {
-    try {
-      const canvas = document.createElement('canvas');
-      canvas.width = 200;
-      canvas.height = 50;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return 'CANVAS_NONE';
-      ctx.textBaseline = 'top';
-      ctx.font = "14px 'Arial', sans-serif";
-      ctx.fillStyle = '#f60';
-      ctx.fillRect(125, 1, 62, 20);
-      ctx.fillStyle = '#069';
-      ctx.fillText('PKSK-HWFP-2026', 2, 15);
-      ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
-      ctx.fillText('PKSK-HWFP-2026', 4, 17);
-      return murmurHash3(canvas.toDataURL());
-    } catch (e) {
-      return 'CANVAS_ERR';
-    }
+  // Detect Normalized OS Category
+  function getNormalizedPlatform() {
+    const p = (navigator.platform || navigator.userAgentData?.platform || '').toUpperCase();
+    const ua = (navigator.userAgent || '').toUpperCase();
+    if (p.includes('MAC') || ua.includes('MACINTOSH') || ua.includes('MAC OS')) return 'MACOS';
+    if (p.includes('WIN') || ua.includes('WINDOWS')) return 'WINDOWS';
+    if (p.includes('LINUX') || ua.includes('X11')) return 'LINUX';
+    if (ua.includes('IPHONE') || ua.includes('IPAD') || ua.includes('IPOD')) return 'IOS';
+    if (ua.includes('ANDROID')) return 'ANDROID';
+    return 'UNKNOWN_OS';
   }
 
-  // Generate Stable, Hardware-bound Device Fingerprint (HWFP-XXXXXXXX-YYYYYYYY)
+  // Generate Stable, Cross-Browser Hardware-bound Device Fingerprint (HWFP-XXXXXXXX-YYYYYYYY)
   function getDeviceHardwareFingerprint() {
     if (window._pksk_hwfp_cached) return window._pksk_hwfp_cached;
 
     const screenData = (window.screen) ? `${window.screen.width}x${window.screen.height}x${window.screen.colorDepth || 24}` : '1920x1080x24';
     const cpuCores = navigator.hardwareConcurrency || 4;
-    const platform = (navigator.platform || navigator.userAgentData?.platform || 'UNKNOWN').toUpperCase();
-    const gpuInfo = getGpuHardwareSignature();
-    const canvasSig = getCanvas2dSignature();
+    const osPlatform = getNormalizedPlatform();
+    const gpuSignature = getNormalizedGpuSignature();
     const timeZone = (Intl && Intl.DateTimeFormat) ? Intl.DateTimeFormat().resolvedOptions().timeZone : 'UTC';
 
-    // Gabungkan komponen perkakasan tulen fizikal
+    // Gabungkan komponen perkakasan tulen fizikal yang stabil rentas pelayar
     const hardwareIdentityString = [
+      osPlatform,
       cpuCores,
-      platform,
       screenData,
-      gpuInfo,
-      canvasSig,
-      timeZone
-    ].join('||');
+      timeZone,
+      gpuSignature
+    ].join('##');
 
     const hash1 = murmurHash3(hardwareIdentityString, 101);
     const hash2 = murmurHash3(hardwareIdentityString, 997);
@@ -205,6 +201,60 @@
         return true;
       } catch (e) {
         return false;
+      }
+    },
+
+    // Auto-restore sesi lesen dari Supabase jika peranti ini (Hardware Fingerprint) telah didaftarkan sebelum ini
+    autoRestoreHardwareLicense: async function() {
+      if (this.isActivated()) return { restored: true, session: this.getLicenseSession() };
+      if (!this.isConfigured()) return { restored: false };
+
+      try {
+        const currentHwId = getDeviceHardwareFingerprint();
+        const config = getSupabaseConfig();
+        
+        // Cari rekod lesen yang berstatus USED dan mengandungi HWFP peranti ini
+        const endpoint = `${config.url}/rest/v1/pksk_licenses?status=eq.USED&device_id=ilike.*${encodeURIComponent(currentHwId)}*&select=*`;
+        const headers = {
+          'apikey': config.anonKey,
+          'Authorization': `Bearer ${config.anonKey}`,
+          'Content-Type': 'application/json'
+        };
+
+        const res = await fetch(endpoint, { headers });
+        if (!res.ok) return { restored: false };
+
+        const rows = await res.json();
+        if (!rows || rows.length === 0) return { restored: false };
+
+        // Cari rekod yang masih belum luput
+        const now = Date.now();
+        const validRecord = rows.find(r => !r.expires_at || new Date(r.expires_at).getTime() > now);
+        if (!validRecord) return { restored: false };
+
+        const registeredDevices = parseRegisteredDevices(validRecord.device_id);
+        const slot = registeredDevices.indexOf(currentHwId) + 1;
+
+        const restoredSession = {
+          license_key: validRecord.license_key,
+          status: 'ACTIVE_SESSION',
+          tier: validRecord.tier || 'PREMIUM_6_MONTHS',
+          device_id: currentHwId,
+          max_devices: validRecord.max_devices || 2,
+          device_slot: slot > 0 ? slot : 1,
+          activated_by_name: validRecord.activated_by_name || 'Calon PKSK',
+          activated_by_ic: validRecord.activated_by_ic || '-',
+          activated_at: validRecord.activated_at,
+          expires_at: validRecord.expires_at
+        };
+
+        localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(restoredSession));
+        console.log('✓ Sesi lesen berjaya dipulihkan secara automatik melalui Hardware Fingerprint!');
+        return { restored: true, session: restoredSession };
+
+      } catch (err) {
+        console.warn('Auto restore hardware license error:', err);
+        return { restored: false, error: err.message };
       }
     },
 
