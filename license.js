@@ -18,14 +18,123 @@
   const STORAGE_KEY_CONFIG_URL = 'pksk_supabase_url';
   const STORAGE_KEY_CONFIG_KEY = 'pksk_supabase_anon_key';
 
-  // Dapatkan atau cipta Device ID yang unik
-  function getOrCreateDeviceId() {
-    let deviceId = localStorage.getItem(STORAGE_KEY_DEVICE);
-    if (!deviceId) {
-      deviceId = 'DEV-' + Math.random().toString(36).substring(2, 9).toUpperCase() + '-' + Date.now().toString(36).toUpperCase();
-      localStorage.setItem(STORAGE_KEY_DEVICE, deviceId);
+  /* =========================================================================
+     HARDWARE DEVICE FINGERPRINT ENGINE (CROSS-BROWSER & RE-FORMAT RESISTANT)
+     ========================================================================= */
+
+  // Fast 32-bit MurmurHash3 algorithm
+  function murmurHash3(keyStr, seed = 42) {
+    let remainder = keyStr.length & 3;
+    let bytesLen = keyStr.length - remainder;
+    let h1 = seed;
+    const c1 = 0xcc9e2d51;
+    const c2 = 0x1b873593;
+    let i = 0;
+
+    while (i < bytesLen) {
+      let k1 = (keyStr.charCodeAt(i) & 0xff) |
+               ((keyStr.charCodeAt(i + 1) & 0xff) << 8) |
+               ((keyStr.charCodeAt(i + 2) & 0xff) << 16) |
+               ((keyStr.charCodeAt(i + 3) & 0xff) << 24);
+      i += 4;
+
+      k1 = Math.imul(k1, c1);
+      k1 = (k1 << 15) | (k1 >>> 17);
+      k1 = Math.imul(k1, c2);
+
+      h1 ^= k1;
+      h1 = (h1 << 13) | (h1 >>> 19);
+      h1 = Math.imul(h1, 5) + 0xe6546b64;
     }
-    return deviceId;
+
+    let k1 = 0;
+    if (remainder === 3) k1 ^= (keyStr.charCodeAt(bytesLen + 2) & 0xff) << 16;
+    if (remainder >= 2) k1 ^= (keyStr.charCodeAt(bytesLen + 1) & 0xff) << 8;
+    if (remainder >= 1) {
+      k1 ^= (keyStr.charCodeAt(bytesLen) & 0xff);
+      k1 = Math.imul(k1, c1);
+      k1 = (k1 << 15) | (k1 >>> 17);
+      k1 = Math.imul(k1, c2);
+      h1 ^= k1;
+    }
+
+    h1 ^= keyStr.length;
+    h1 ^= h1 >>> 16;
+    h1 = Math.imul(h1, 0x85ebca6b);
+    h1 ^= h1 >>> 13;
+    h1 = Math.imul(h1, 0xc2b2ae35);
+    h1 ^= h1 >>> 16;
+
+    return (h1 >>> 0).toString(16).toUpperCase().padStart(8, '0');
+  }
+
+  // Detect GPU Hardware (Unmasked Renderer & Vendor) via WebGL
+  function getGpuHardwareSignature() {
+    try {
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      if (!gl) return 'GL_NONE';
+      const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+      if (!debugInfo) return 'GL_GENERIC';
+      const vendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) || '';
+      const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || '';
+      const maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE) || 0;
+      return `${vendor}::${renderer}::${maxTextureSize}`;
+    } catch (e) {
+      return 'GL_UNAVAILABLE';
+    }
+  }
+
+  // Detect 2D Canvas Subpixel Render Signature (Deterministic Font & Antialiasing)
+  function getCanvas2dSignature() {
+    try {
+      const canvas = document.createElement('canvas');
+      canvas.width = 200;
+      canvas.height = 50;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return 'CANVAS_NONE';
+      ctx.textBaseline = 'top';
+      ctx.font = "14px 'Arial', sans-serif";
+      ctx.fillStyle = '#f60';
+      ctx.fillRect(125, 1, 62, 20);
+      ctx.fillStyle = '#069';
+      ctx.fillText('PKSK-HWFP-2026', 2, 15);
+      ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
+      ctx.fillText('PKSK-HWFP-2026', 4, 17);
+      return murmurHash3(canvas.toDataURL());
+    } catch (e) {
+      return 'CANVAS_ERR';
+    }
+  }
+
+  // Generate Stable, Hardware-bound Device Fingerprint (HWFP-XXXXXXXX-YYYYYYYY)
+  function getDeviceHardwareFingerprint() {
+    if (window._pksk_hwfp_cached) return window._pksk_hwfp_cached;
+
+    const screenData = (window.screen) ? `${window.screen.width}x${window.screen.height}x${window.screen.colorDepth || 24}` : '1920x1080x24';
+    const cpuCores = navigator.hardwareConcurrency || 4;
+    const platform = (navigator.platform || navigator.userAgentData?.platform || 'UNKNOWN').toUpperCase();
+    const gpuInfo = getGpuHardwareSignature();
+    const canvasSig = getCanvas2dSignature();
+    const timeZone = (Intl && Intl.DateTimeFormat) ? Intl.DateTimeFormat().resolvedOptions().timeZone : 'UTC';
+
+    // Gabungkan komponen perkakasan tulen fizikal
+    const hardwareIdentityString = [
+      cpuCores,
+      platform,
+      screenData,
+      gpuInfo,
+      canvasSig,
+      timeZone
+    ].join('||');
+
+    const hash1 = murmurHash3(hardwareIdentityString, 101);
+    const hash2 = murmurHash3(hardwareIdentityString, 997);
+    const hwFingerprintId = `HWFP-${hash1}-${hash2}`;
+
+    window._pksk_hwfp_cached = hwFingerprintId;
+    localStorage.setItem(STORAGE_KEY_DEVICE, hwFingerprintId);
+    return hwFingerprintId;
   }
 
   function getSupabaseConfig() {
@@ -60,7 +169,7 @@
   }
 
   window.PkskLicense = {
-    getDeviceId: getOrCreateDeviceId,
+    getDeviceId: getDeviceHardwareFingerprint,
     
     getConfig: getSupabaseConfig,
 
@@ -82,8 +191,9 @@
         const session = JSON.parse(raw);
         if (!session || !session.license_key || session.status !== 'ACTIVE_SESSION') return false;
         
-        // Semak padanan Device ID tempatan
-        if (session.device_id !== getOrCreateDeviceId()) return false;
+        const currentHwId = getDeviceHardwareFingerprint();
+        // Semak padanan Hardware Fingerprint
+        if (session.device_id !== currentHwId) return false;
 
         // Semak tempoh tamat sah (6 Bulan)
         if (session.expires_at && new Date(session.expires_at).getTime() < Date.now()) {
@@ -120,7 +230,7 @@
         return { success: false, message: 'Format Kunci Lesen tidak lengkap. Sila masukkan format PKSK-XXXX-XXXX-XXXX.' };
       }
 
-      const deviceId = getOrCreateDeviceId();
+      const deviceId = getDeviceHardwareFingerprint();
       const config = getSupabaseConfig();
 
       const now = new Date();
