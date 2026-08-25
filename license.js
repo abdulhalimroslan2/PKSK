@@ -10,7 +10,7 @@
   'use strict';
 
   // Konfigurasi Asas Supabase (Boleh dikemaskini oleh Pengurus/Developer)
-  const DEFAULT_SUPABASE_URL = 'https://zblynieuimcxkkaaqaxy.supabase.co';
+  const DEFAULT_SUPABASE_URL = 'https://rvslrscgbhgdcktdtfrl.supabase.co';
   const DEFAULT_SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
   const STORAGE_KEY_SESSION = 'pksk_license_session';
