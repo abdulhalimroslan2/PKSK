@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <title>Semakan Visual 34 Rajah Autentik PKSK</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f172a; color: #f8fafc; padding: 24px; }
+    h1 { text-align: center; color: #38bdf8; margin-bottom: 8px; }
+    p.subtitle { text-align: center; color: #94a3b8; margin-bottom: 24px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+    .card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; align-items: center; }
+    .card h3 { font-size: 14px; margin: 0 0 12px 0; color: #e2e8f0; text-align: center; }
+    .img-wrap { background: #ffffff; padding: 12px; border-radius: 8px; width: 100%; display: flex; justify-content: center; align-items: center; min-height: 140px; box-sizing: border-box; }
+    .img-wrap img { max-width: 100%; max-height: 220px; object-fit: contain; }
+    .badge { font-size: 11px; font-weight: bold; background: #0369a1; color: #e0f2fe; padding: 3px 8px; border-radius: 4px; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>🔍 Semakan Visual 34 Rajah PKSK (100% Upright & Precise)</h1>
+  <p class="subtitle">Semua 34 rajah daripada PKSK 1 dan PKSK 2 telah dipotong semula dengan orientasi tegak dan diselaraskan mengikut soalan asal.</p>
+  <div class="grid" id="diagramGrid"></div>
+
+  <script>
+    const diagrams = [
+      { file: "diagram_mat_009_jadual.webp", title: "Matematik: Jadual Wang 4 Murid (Emy, Halim...)", sec: "Matematik" },
+      { file: "diagram_mat_021_gabungan_bentuk.webp", title: "Matematik: Gabungan Segi Empat MNOP & Segi Tiga RST", sec: "Matematik" },
+      { file: "diagram_mat_020_koordinat.webp", title: "Matematik: Jadual Titik Koordinat D, E, F, G", sec: "Matematik" },
+      { file: "diagram_mat_005_buku.webp", title: "Matematik: Tag Harga Buku RM127 (Diskaun 75%)", sec: "Matematik" },
+      { file: "diagram_mat_003_tali.webp", title: "Matematik: Panjang Tali 6.4m Dipotong 8", sec: "Matematik" },
+      { file: "diagram_mat_011_bikar.webp", title: "Matematik: Isi Padu Dua Bikar Air A & B", sec: "Matematik" },
+      { file: "diagram_mat_016_bekas.webp", title: "Matematik: Isi Padu Bekas Air 4.5L", sec: "Matematik" },
+      { file: "diagram_mat_018_carta_palang.webp", title: "Matematik: Carta Palang Pengunjung Taman Tema", sec: "Matematik" },
+      { file: "table_p031_3d_shapes.webp", title: "Matematik: Jadual Ciri Bentuk 3 Matra", sec: "Matematik" },
+
+      { file: "diagram_sn_001_situasi.webp", title: "Sains: Situasi May Ling Menutup Hidung (Bau)", sec: "Sains" },
+      { file: "diagram_sn_002_haiwan_pq.webp", title: "Sains: Jadual Ciri Haiwan P & Q", sec: "Sains" },
+      { file: "diagram_sn_003_anak_pokok.webp", title: "Sains: Rangsangan Anak Pokok Anas", sec: "Sains" },
+      { file: "table_p071_keadaan_jirim.webp", title: "Sains: Jadual Sifat Bahan X, Y, Z (Jirim)", sec: "Sains" },
+      { file: "diagram_sn_007_cawan.webp", title: "Sains: 4 Bentuk Cawan Kestabilan A, B, C, D", sec: "Sains" },
+      { file: "diagram_sn_008_alat_z.webp", title: "Sains: Ciptaan Alat Optik Z (Teleskop)", sec: "Sains" },
+      { file: "diagram_sn_010_organ_mno.webp", title: "Sains: Organ Pernafasan M, N, O", sec: "Sains" },
+      { file: "diagram_sn_012_daya_geseran.webp", title: "Sains: Penyiasatan Daya Geseran Permukaan", sec: "Sains" },
+      { file: "diagram_sn_009_kitaran_air.webp", title: "Sains: Kitaran Air & Pembentukan Awan", sec: "Sains" },
+
+      { file: "diagram_pa_003_bnm.webp", title: "Pengetahuan Am: Logo Kijang Emas BNM", sec: "Pengetahuan Am" },
+      { file: "diagram_pa_021_avatar.webp", title: "Pengetahuan Am: Poster Filem AVATAR (Cameron)", sec: "Pengetahuan Am" },
+
+      { file: "diagram_eng_016_menu.webp", title: "Bahasa Inggeris: Menu of the Day (Caramel Pudding)", sec: "Bahasa Inggeris" },
+      { file: "diagram_eng_017_email.webp", title: "Bahasa Inggeris: Email Suzanne to Damia", sec: "Bahasa Inggeris" },
+      { file: "diagram_eng_018_dialogue.webp", title: "Bahasa Inggeris: Class Trip to Zoo Dialogue", sec: "Bahasa Inggeris" },
+      { file: "diagram_eng_019_poem.webp", title: "Bahasa Inggeris: Poem 'Beloved Frontline Workers'", sec: "Bahasa Inggeris" },
+      { file: "diagram_eng_021_diary.webp", title: "Bahasa Inggeris: Kevin's Diary Entry", sec: "Bahasa Inggeris" },
+      { file: "diagram_eng_023_nightingale.webp", title: "Bahasa Inggeris: Emperor & Nightingale Story", sec: "Bahasa Inggeris" },
+      { file: "diagram_eng_026_gymnast.webp", title: "Bahasa Inggeris: Sandra the Gymnast Interview", sec: "Bahasa Inggeris" },
+
+      { file: "diagram_bm_set1_jagung.webp", title: "Bahasa Melayu: Tongkol Jagung Kukus (Set 1)", sec: "Bahasa Melayu" },
+      { file: "diagram_bm_set2_tetikus.webp", title: "Bahasa Melayu: Peranti Tetikus Komputer (Set 2)", sec: "Bahasa Melayu" },
+      { file: "diagram_bm_set3_sesiku.webp", title: "Bahasa Melayu: Alat Pertukangan Sesiku L (Set 3)", sec: "Bahasa Melayu" },
+      { file: "diagram_bm_set4_bertatih.webp", title: "Bahasa Melayu: Kanak-kanak Bertatih-tatih (Set 4)", sec: "Bahasa Melayu" },
+      { file: "diagram_bm_set5_pentas.webp", title: "Bahasa Melayu: Pentas Persembahan Tarian (Set 5)", sec: "Bahasa Melayu" },
+      { file: "diagram_bm_set6_manggis.webp", title: "Bahasa Melayu: Ulas Buah Manggis (Set 6)", sec: "Bahasa Melayu" },
+      { file: "diagram_bm_set9_sawah.webp", title: "Bahasa Melayu: Membajak Sawah dengan Kerbau (Set 9)", sec: "Bahasa Melayu" }
+    ];
+
+    const grid = document.getElementById("diagramGrid");
+    diagrams.forEach(d => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <h3>${d.title}</h3>
+        <div class="img-wrap">
+          <img src="assets/diagrams/${d.file}" alt="${d.title}" loading="lazy">
+        </div>
+        <div class="badge">${d.sec} • ${d.file}</div>
+      `;
+      grid.appendChild(card);
+    });
+  </script>
+</body>
+</html>

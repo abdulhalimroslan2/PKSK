@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Rasmi PKSK | Kementerian Pendidikan Malaysia</title>
+  <meta name="description" content="Sistem Pentaksiran Kemasukan Sekolah Khusus (PKSK) Tingkatan 1 - Kementerian Pendidikan Malaysia">
+  <link rel="icon" type="image/png" href="assets/kpm_favicon.png">
+  <link rel="stylesheet" href="styles.css?v=20260825_1145">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- =========================================================================
+       1. MOE EXACT DOM CLONE HEADER
+       ========================================================================= -->
+  <header id="acc-page-wrap">
+    <div id="topnav" style="background-color:#0d355c; width:100%; border-bottom:1px solid #0a2b4b;">
+      <div style="max-width:1140px; margin:0 auto; padding:0 15px; display:flex; justify-content:space-between; align-items:center; height:45px;">
+        <h2 class="tranz" style="font-family:'Manrope', sans-serif; font-size:14px; color:#ffffff; font-weight:700; margin:0;">Selamat Datang ke PORTAL KPM</h2>
+        <div style="display:flex; align-items:center; gap:15px;">
+          <form class="searchform" style="display:flex; align-items:center; background:#ffffff; border-radius:3px; padding:2px 5px;">
+            <input type="text" placeholder="Carian..." style="border:none; outline:none; padding:4px 8px; font-size:13px; color:#333; width:150px; background:transparent;">
+            <button type="button" style="background:transparent; border:none; cursor:pointer; padding:4px; color:#555;"><i class="fa-solid fa-search"></i></button>
+          </form>
+          <ul class="social-menu" style="list-style:none; margin:0; padding:0; display:flex; align-items:center; gap:12px;">
+            <li>
+              <div style="background:#ffffff; border-radius:3px; padding:3px 8px; font-size:12px; font-weight:700; display:flex; gap:5px;">
+                <span style="color:#0d355c;">BM</span> <span style="color:#ccc;">|</span> <span style="color:#999;">EN</span>
+              </div>
+            </li>
+            <li><a href="#" style="color:#ffffff; font-size:15px;"><i class="fa-solid fa-sitemap"></i></a></li>
+            <li><a href="#" style="color:#ffffff; font-size:15px;"><i class="fa-solid fa-phone"></i></a></li>
+            <li><a href="#" style="color:#ffffff; font-size:15px;"><i class="fa-regular fa-circle-question"></i></a></li>
+            <li><a href="#" style="color:#ffffff; font-size:15px;"><i class="fa-regular fa-envelope"></i></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="mainhead" style="background-color:#ffffff; width:100%;">
+      <div style="max-width:1140px; margin:0 auto; padding:20px 15px; display:flex; justify-content:space-between; align-items:center;">
+        
+        <!-- Left: Logo & Title (Exactly like MOE portal) -->
+        <a href="#" style="display:flex; align-items:center; text-decoration:none; gap:15px;">
+          <img src="assets/jata_negara_kpm.svg" alt="Logo KPM" style="height:90px; width:auto;">
+          <div style="display:flex; flex-direction:column; justify-content:center;">
+            <div style="font-family:'Manrope', sans-serif; font-size:13px; font-weight:700; color:#333333; letter-spacing:0.5px; margin-bottom:2px;">PORTAL RASMI</div>
+            <div style="font-family:'Manrope', sans-serif; font-size:27px; font-weight:800; color:#444444; line-height:1; text-transform:uppercase;">Kementerian Pendidikan</div>
+            <div style="font-family:'Manrope', sans-serif; font-size:12px; font-weight:700; color:#666666; margin-top:5px; background:#f1f5f9; padding:3px 8px; border-radius:4px; display:inline-block; width:fit-content;">SISTEM PENTAKSIRAN KEMASUKAN SEKOLAH KHUSUS (PKSK)</div>
+          </div>
+        </a>
+
+        <!-- Right: Candidate Info & User Icon -->
+        <div style="display:flex; align-items:center; gap:16px; text-align:right;">
+          <div style="display:flex; flex-direction:column; align-items:flex-end; justify-content:center; gap:2px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span id="dispCandidateName" style="font-family:'Manrope', sans-serif; font-size:14px; font-weight:800; color:#0d355c; text-transform:uppercase;">CALON PKSK</span>
+              <span id="dispCandidateDivider" style="color:#cbd5e1; font-weight:300; display:none;">|</span>
+              <span id="dispCandidateIndex" style="font-family:'Manrope', sans-serif; font-size:13px; font-weight:700; color:#64748b;"></span>
+            </div>
+            <div id="navHudTimer" style="display:none; align-items:center; gap:6px; margin-top:2px;">
+              <i class="fa-solid fa-stopwatch" id="hudStopwatchIcon" style="font-size:16px; color:#1e40af;"></i>
+              <span id="dispLiveTimer" style="font-family:'JetBrains Mono', 'Manrope', monospace; font-size:19px; font-weight:800; color:#1e40af; letter-spacing:1px;">90:00</span>
+            </div>
+          </div>
+          <div style="width:46px; height:46px; min-width:46px; border-radius:50%; background:#f0f9ff; border:2px solid #0284c7; display:flex; align-items:center; justify-content:center; color:#0369a1; font-size:20px; box-shadow:0 2px 4px rgba(0,0,0,0.06);">
+            <i class="fa-solid fa-user"></i>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Navigation Menu (Matches MOE Blue Menu Bar) -->
+    <div id="navigation" style="background-color:#02264a; width:100%; border-bottom:3px solid #0d355c;">
+      <div style="max-width:1140px; margin:0 auto; padding:0 15px;">
+        <ul id="main-nav" style="list-style:none; margin:0; padding:0; display:flex; width:100%; align-items:center;">
+          <li style="flex:1; border-right:1px solid #1e3a5f; position:relative;">
+            <button id="navTabDashboard" class="nav-tab-btn active" style="width:100%; height:55px; background:transparent; border:none; color:#ffffff; font-family:'Manrope', sans-serif; font-size:13px; font-weight:700; text-transform:uppercase; cursor:pointer;">Utama</button>
+            <div class="active-indicator" style="position:absolute; bottom:0; left:0; width:100%; height:4px;"></div>
+          </li>
+          <li style="flex:1; border-right:1px solid #1e3a5f; position:relative;">
+            <button id="navTabFullSim" class="nav-tab-btn" style="width:100%; height:55px; background:transparent; border:none; color:#efefef; font-family:'Manrope', sans-serif; font-size:13px; font-weight:700; text-transform:uppercase; cursor:pointer;">Simulasi Penuh</button>
+            <div class="active-indicator" style="position:absolute; bottom:0; left:0; width:100%; height:4px; background-color:transparent;"></div>
+          </li>
+          <li style="flex:1; border-right:1px solid #1e3a5f; position:relative;">
+            <button id="navTabDiagnostic" class="nav-tab-btn" style="width:100%; height:55px; background:transparent; border:none; color:#efefef; font-family:'Manrope', sans-serif; font-size:13px; font-weight:700; text-transform:uppercase; cursor:pointer;">Diagnostik</button>
+            <div class="active-indicator" style="position:absolute; bottom:0; left:0; width:100%; height:4px; background-color:transparent;"></div>
+          </li>
+          <li style="flex:1; border-right:1px solid #1e3a5f; position:relative;">
+            <button id="navTabDrill" class="nav-tab-btn" style="width:100%; height:55px; background:transparent; border:none; color:#efefef; font-family:'Manrope', sans-serif; font-size:13px; font-weight:700; text-transform:uppercase; cursor:pointer;">Latih Tubi</button>
+            <div class="active-indicator" style="position:absolute; bottom:0; left:0; width:100%; height:4px; background-color:transparent;"></div>
+          </li>
+          <li style="flex:1; border-right:1px solid #1e3a5f; position:relative;">
+            <button id="navTabEssay" class="nav-tab-btn" style="width:100%; height:55px; background:transparent; border:none; color:#efefef; font-family:'Manrope', sans-serif; font-size:13px; font-weight:700; text-transform:uppercase; cursor:pointer;">Esei Berpandu</button>
+            <div class="active-indicator" style="position:absolute; bottom:0; left:0; width:100%; height:4px; background-color:transparent;"></div>
+          </li>
+          <li style="flex:1; position:relative;">
+            <button id="navTabSlip" class="nav-tab-btn" style="width:100%; height:55px; background:transparent; border:none; color:#efefef; font-family:'Manrope', sans-serif; font-size:13px; font-weight:700; text-transform:uppercase; cursor:pointer;">Keputusan</button>
+            <div class="active-indicator" style="position:absolute; bottom:0; left:0; width:100%; height:4px; background-color:transparent;"></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       5. VIEW 1: CANDIDATE DASHBOARD & EXAM CONFIGURATION
+       ========================================================================= -->
+  <main id="dashboardView" class="app-viewport">
+    <div class="dashboard-grid">
+      
+      <!-- Left Column: Mode Selection & Quick Start -->
+      <section class="kpm-card">
+        <div class="kpm-card-header">
+          <h2 class="kpm-card-title">
+            <i class="fa-solid fa-list-check" style="color:var(--kpm-navy);"></i>
+            Pilih Mod Pentaksiran PKSK
+          </h2>
+          <span class="badge" style="background:#e0f2fe; color:#0369a1; font-weight:700; font-size:0.75rem; padding:4px 8px; border-radius:4px;">
+            Sesi 2026 / 2027
+          </span>
+        </div>
+        <div class="kpm-card-body">
+          <p style="font-size:0.9rem; color:var(--text-muted); line-height:1.5; margin-bottom:1rem;">
+            Sila pilih mod latihan atau simulasi peperiksaan sebenar di bawah. Format soalan dan sistem permarkahan adalah 100% mematuhi piawaian Lembaga Peperiksaan Malaysia.
+          </p>
+
+          <div class="mode-selection-grid">
+            <!-- Full Simulation Card -->
+            <div id="cardModeFull" class="mode-card selected" onclick="selectMode('FULL_SIMULATION')">
+              <div>
+                <div class="mode-header">
+                  <span class="mode-badge full">Format Penuh KPM</span>
+                  <i class="fa-solid fa-circle-check" style="color:var(--kpm-blue); font-size:1.1rem;"></i>
+                </div>
+                <h3 class="mode-title">Simulasi Penuh PKSK</h3>
+                <p class="mode-desc">100 soalan aneka pilihan (Bahagian A & B) mengikut wajaran 90 minit, diikuti Bahagian C (Artikulasi Penulisan 45 minit).</p>
+              </div>
+              <div class="mode-specs-list">
+                <div class="mode-spec-row"><span>Bahagian A (Insaniah):</span><strong>30 Soalan</strong></div>
+                <div class="mode-spec-row"><span>Bahagian B (Intelek):</span><strong>70 Soalan</strong></div>
+                <div class="mode-spec-row"><span>Tempoh Masa:</span><strong>90 Minit</strong></div>
+              </div>
+            </div>
+
+            <!-- Quick Diagnostic Card -->
+            <div id="cardModeQuick" class="mode-card" onclick="selectMode('QUICK_DIAGNOSTIC')">
+              <div>
+                <div class="mode-header">
+                  <span class="mode-badge quick">Diagnostik Pantas</span>
+                  <i class="fa-regular fa-circle" style="color:var(--border-strong); font-size:1.1rem;"></i>
+                </div>
+                <h3 class="mode-title">Ujian Diagnostik 30 Soalan</h3>
+                <p class="mode-desc">Ujian saringan pantas untuk menilai tahap kesediaan awal calon merangkumi sampel soalan Insaniah dan Intelek.</p>
+              </div>
+              <div class="mode-specs-list">
+                <div class="mode-spec-row"><span>Bahagian A (Insaniah):</span><strong>10 Soalan</strong></div>
+                <div class="mode-spec-row"><span>Bahagian B (Intelek):</span><strong>20 Soalan</strong></div>
+                <div class="mode-spec-row"><span>Tempoh Masa:</span><strong>30 Minit</strong></div>
+              </div>
+            </div>
+
+            <!-- Subject Drill Card -->
+            <div id="cardModeDrill" class="mode-card" onclick="selectMode('DRILL_PRACTICE')">
+              <div>
+                <div class="mode-header">
+                  <span class="mode-badge drill">Latih Tubi Terfokus</span>
+                  <i class="fa-regular fa-circle" style="color:var(--border-strong); font-size:1.1rem;"></i>
+                </div>
+                <h3 class="mode-title">Latih Tubi Mengikut Subjek</h3>
+                <p class="mode-desc">Fokuskan latihan kepada topik-topik khusus seperti Pengetahuan Am, Sains, Matematik, BM, BI, atau Insaniah.</p>
+              </div>
+              <div class="mode-specs-list">
+                <div class="mode-spec-row"><span>Subjek:</span><strong>Boleh Dipilih</strong></div>
+                <div class="mode-spec-row"><span>Bilangan Soalan:</span><strong>30 Soalan</strong></div>
+                <div class="mode-spec-row"><span>Mod Bimbingan:</span><strong>Semakan Serta-merta</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Drill Topic Selector (Hidden by default) -->
+          <div id="drillTopicGroup" class="kpm-form-group" style="display:none; margin-top:1.25rem;">
+            <label class="kpm-form-label">Pilih Subjek / Domain Latih Tubi:</label>
+            <select id="selectDrillTopic" class="kpm-select">
+              <option value="ALL_INSANIAH">Semua Domain Kecerdasan Insaniah (EQ, SQ, SSQ)</option>
+              <option value="PENGETAHUAN_AM">Pengetahuan Am & Bahasa Melayu</option>
+              <option value="BAHASA_INGGERIS">Bahasa Inggeris (Grammar & Vocabulary)</option>
+              <option value="MATEMATIK">Matematik & Penyelesaian Masalah</option>
+              <option value="SAINS">Sains (Hayat, Fizikal, Bahan, Angkasa)</option>
+            </select>
+          </div>
+
+          <!-- Action Button -->
+          <div style="margin-top:1.5rem; text-align:right;">
+            <button id="btnLaunchInstructions" class="btn-kpm btn-kpm-primary" style="padding:0.75rem 2rem; font-size:0.95rem;">
+              <span>Teruskan ke Panduan Peperiksaan</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Candidate Profile & System Integrity -->
+      <aside class="kpm-card">
+        <div class="kpm-card-header">
+          <h3 class="kpm-card-title" style="font-size:0.95rem;">
+            <i class="fa-solid fa-address-card" style="color:var(--kpm-gold);"></i>
+            Maklumat Pendaftaran Calon
+          </h3>
+        </div>
+        <div class="kpm-card-body">
+          <div class="kpm-form-group">
+            <label class="kpm-form-label">Nama Penuh Calon:</label>
+            <input type="text" id="inputCandidateName" class="kpm-input" value="" placeholder="cth: MUHAMMAD AMIR BIN ZULKIFLI">
+          </div>
+
+          <div class="kpm-form-group">
+            <label class="kpm-form-label">No. Kad Pengenalan / MyKid:</label>
+            <input type="text" id="inputCandidateIc" class="kpm-input" value="" placeholder="cth: 130825-01-5678">
+          </div>
+
+          <div class="kpm-form-group">
+            <label class="kpm-form-label">Angka Giliran Peperiksaan:</label>
+            <input type="text" id="inputCandidateIndex" class="kpm-input" value="" placeholder="cth: SBP-2026-8892">
+          </div>
+
+          <div class="kpm-form-group">
+            <label class="kpm-form-label">Pilihan Institusi Sasaran:</label>
+            <select id="selectTargetSchool" class="kpm-select">
+              <option value="SBP">Sekolah Berasrama Penuh (SBP)</option>
+              <option value="MRSM">Maktab Rendah Sains MARA (MRSM)</option>
+              <option value="SMKA">Sekolah Menengah Kebangsaan Agama (SMKA)</option>
+              <option value="KV">Kolej Vokasional (KV / TVET)</option>
+              <option value="MTD">Maktab Tentera Diraja (MTD)</option>
+            </select>
+          </div>
+
+          <!-- Quick Stats Chip -->
+          <div style="background-color:var(--bg-surface-subtle); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:0.9rem; margin-top:1.25rem;">
+            <div style="font-size:0.75rem; font-weight:700; color:var(--kpm-navy); margin-bottom:0.5rem; text-transform:uppercase;">
+              Statistik Bank Soalan Sistem
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:0.78rem; margin-bottom:0.25rem;">
+              <span>Jumlah Soalan Aktif:</span>
+              <strong style="color:var(--kpm-navy);">510 Soalan</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:0.78rem; margin-bottom:0.25rem;">
+              <span>Rajah WebP Resolusi Tinggi:</span>
+              <strong style="color:var(--kpm-emerald);">46 Rajah</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:0.78rem;">
+              <span>Format Skema:</span>
+              <strong style="color:var(--kpm-blue);">100% KPM Standard</strong>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- =========================================================================
+       6. VIEW 2: EXAM INSTRUCTIONS & CODE OF CONDUCT
+       ========================================================================= -->
+  <main id="instructionsView" class="app-viewport hidden">
+    <div class="kpm-card" style="max-width:900px; margin:0 auto;">
+      <div class="kpm-card-header">
+        <h2 class="kpm-card-title">
+          <i class="fa-solid fa-triangle-exclamation" style="color:var(--kpm-gold);"></i>
+          Arahan Penting Peperiksaan PKSK KPM
+        </h2>
+        <span style="font-size:0.8rem; font-weight:700; color:var(--text-muted);">Sila Baca dengan Teliti</span>
+      </div>
+      <div class="kpm-card-body" style="line-height:1.7; font-size:0.92rem;">
+        <div style="background-color:#eff6ff; border-left:4px solid var(--kpm-blue); padding:1rem; border-radius:4px; margin-bottom:1.25rem;">
+          <h4 style="color:var(--kpm-navy); font-weight:700; margin-bottom:0.25rem;">
+            Struktur Peperiksaan dan Peruntukan Masa:
+          </h4>
+          <p style="margin:0; font-size:0.88rem; color:var(--text-main);">
+            Pentaksiran ini mengandungi 3 komponen utama: <strong>Bahagian A (Kecerdasan Insaniah - 20%)</strong>, <strong>Bahagian B (Kecerdasan Intelektual - 70%)</strong>, dan <strong>Bahagian C (Artikulasi Penulisan - 10%)</strong>.
+          </p>
+        </div>
+
+        <ul style="padding-left:1.25rem; color:var(--text-main); margin-bottom:1.5rem;">
+          <li>Calon diberikan masa <strong>90 minit</strong> untuk Bahagian A & B (Objektif), dan <strong>45 minit</strong> untuk Bahagian C (Esei).</li>
+          <li>Setiap soalan aneka pilihan mempunyai 4 pilihan jawapan (A, B, C, D). Pilih satu jawapan yang paling tepat.</li>
+          <li>Calon boleh menggunakan <strong>Palet Soalan</strong> di sebelah kanan skrin untuk menyemak soalan yang telah dijawab, belum dijawab, atau ditandakan untuk semakan.</li>
+          <li>Pastikan semua soalan dijawab sebelum menekan butang <strong>Hantar & Teruskan</strong>.</li>
+        </ul>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border-subtle); padding-top:1.25rem;">
+          <button id="btnBackToDashboard" class="btn-kpm btn-kpm-outline">
+            <i class="fa-solid fa-arrow-left"></i> Kembali ke Menu Utama
+          </button>
+          <button id="btnStartExamNow" class="btn-kpm btn-kpm-primary" style="padding:0.75rem 2.5rem; font-size:1rem;">
+            <i class="fa-solid fa-play"></i> Mula Menjawab Sekarang
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- =========================================================================
+       7. VIEW 3: LIVE EXAMINATION WORKSPACE (MCQ: PARTS A & B)
+       ========================================================================= -->
+  <main id="examWorkspaceView" class="app-viewport hidden">
+    <div class="exam-split-grid">
+      
+      <!-- Left Main Question Workspace -->
+      <section class="kpm-card" style="margin:0; overflow:hidden;">
+        
+        <!-- Component Indicator Banner -->
+        <div id="sectionBannerStrip" class="section-banner-strip">
+          <div style="display:flex; align-items:center; gap:0.75rem;">
+            <span class="badge" style="background:#ffffff; color:var(--kpm-navy); font-weight:800; font-size:0.75rem; padding:3px 8px; border-radius:3px;">KOMPONEN</span>
+            <span id="dispSectionTitle" style="font-weight:800; font-size:0.88rem; letter-spacing:0.5px;">BAHAGIAN A : KECERDASAN INSANIAH (EQ, SQ, SSQ)</span>
+          </div>
+          <span id="dispQuestionStatusBadge" class="q-status-badge">Belum Dijawab</span>
+        </div>
+
+        <!-- Question Content Area -->
+        <div class="q-content-area">
+          <div class="q-number-heading">
+            <div id="dispQuestionNumberLabel" class="q-number-label">
+              Soalan 1 / 100
+            </div>
+            <span id="dispSubtopicBadge" class="q-topic-badge">
+              Kecerdasan Emosi (EQ)
+            </span>
+          </div>
+
+          <!-- High-Res Diagram Canvas (Dynamic Rendering) -->
+          <div id="dispQuestionDiagram" class="q-diagram-frame" style="display:none;">
+            <!-- Rendered dynamically -->
+          </div>
+
+          <!-- Question Stem Text -->
+          <div id="dispQuestionText" class="q-text-body">
+            Memuatkan soalan autentik PKSK...
+          </div>
+
+          <!-- Options Radio List -->
+          <div id="optionsRadioContainer" class="kpm-options-group">
+            <!-- Rendered dynamically via JS -->
+          </div>
+        </div>
+
+        <!-- Question Footer Navigation -->
+        <div class="q-action-footer">
+          <div style="display:flex; gap:0.5rem;">
+            <button id="btnPrevQuestion" class="btn-kpm btn-kpm-outline">
+              <i class="fa-solid fa-chevron-left"></i> Soalan Sebelumnya
+            </button>
+            <button id="btnFlagReview" class="btn-kpm btn-kpm-outline">
+              <i class="fa-solid fa-flag"></i> <span id="btnFlagLabel">Tanda Semakan</span>
+            </button>
+          </div>
+          <button id="btnNextQuestion" class="btn-kpm btn-kpm-primary" style="padding:0.65rem 1.5rem;">
+            <span>Soalan Seterusnya</span>
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+
+      </section>
+
+      <!-- Right Column: Question Matrix Palette -->
+      <aside>
+        <div class="kpm-card" style="position:sticky; top:1rem; margin:0; overflow:hidden;">
+          <div class="kpm-card-header" style="background-color:var(--kpm-navy); color:#ffffff; padding:0.75rem 1rem;">
+            <h3 class="kpm-card-title" style="font-size:0.92rem; font-weight:800; color:#ffffff;">
+              <i class="fa-solid fa-table-cells"></i> Jumlah Soalan (<span id="countPaletteAll">100</span>)
+            </h3>
+          </div>
+          
+          <!-- Filter Tabs -->
+          <div class="palette-header-tabs">
+            <button id="paletteFilterAll" class="palette-tab-btn active">Semua</button>
+            <button id="paletteFilterA" class="palette-tab-btn">Bhg A</button>
+            <button id="paletteFilterB" class="palette-tab-btn">Bhg B</button>
+            <button id="paletteFilterFlagged" class="palette-tab-btn"><i class="fa-solid fa-flag" style="color:var(--kpm-gold);"></i> Tanda</button>
+          </div>
+
+          <!-- Numbers Grid Matrix -->
+          <div id="paletteGridMatrix" class="palette-grid-matrix">
+            <!-- Rendered dynamically -->
+          </div>
+
+          <!-- Legend Status Indicator -->
+          <div class="palette-legend">
+            <div class="legend-item"><span class="legend-dot answered"></span> Dijawab</div>
+            <div class="legend-item"><span class="legend-dot unanswered"></span> Belum Dijawab</div>
+            <div class="legend-item"><span class="legend-dot current"></span> Semasa</div>
+            <div class="legend-item"><span class="legend-dot flagged"></span> Tanda Semak</div>
+          </div>
+
+          <!-- Final Submission Trigger -->
+          <div style="padding:1rem; border-top:1px solid var(--border-subtle); background-color:var(--bg-surface-subtle);">
+            <button id="btnSubmitExamTrigger" class="btn-kpm btn-kpm-gold" style="width:100%; justify-content:center; font-weight:800;">
+              <i class="fa-solid fa-paper-plane"></i> Hantar & Teruskan
+            </button>
+          </div>
+
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- =========================================================================
+       8. VIEW 4: WRITING ARTICULATION WORKSPACE (BAHAGIAN C)
+       ========================================================================= -->
+  <main id="essayWorkspaceView" class="app-viewport hidden">
+    <div class="kpm-card" style="max-width:950px; margin:0 auto;">
+      <div class="kpm-card-header" style="background-color:var(--kpm-navy); color:#ffffff; display:flex; justify-content:space-between; align-items:center;">
+        <h2 class="kpm-card-title" style="color:#ffffff; font-size:1.1rem;">
+          <i class="fa-solid fa-feather"></i> BAHAGIAN C : ARTIKULASI PENULISAN (10%)
+        </h2>
+        <div style="display:flex; align-items:center; gap:1rem;">
+          <span id="essayAiIndicatorBadge" style="background:#0284c7; color:#ffffff; font-size:0.78rem; font-weight:700; padding:4px 10px; border-radius:12px;">
+            <i class="fa-solid fa-robot"></i> Semakan AI Bersedia
+          </span>
+          <div style="font-family:var(--font-mono); color:#fde047; font-weight:800; font-size:1rem;">
+            Masa: 45 Minit
+          </div>
+        </div>
+      </div>
+      <div class="kpm-card-body">
+        
+        <div class="essay-stimulus-box" style="position:relative;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; flex-wrap:wrap; gap:0.5rem;">
+            <div style="font-weight:800; color:#92400e; font-size:0.88rem; text-transform:uppercase; display:flex; align-items:center; gap:6px;">
+              <i class="fa-solid fa-pen-nib"></i> Tajuk Penulisan Esei Berpandu:
+            </div>
+            <button id="btnShuffleEssayTopic" class="btn-kpm btn-kpm-gold" style="font-size:0.8rem; padding:0.35rem 0.85rem; border-radius:var(--radius-sm); font-weight:800; display:flex; align-items:center; gap:6px; box-shadow:var(--shadow-sm);" title="Tukar ke Tajuk Esei PKSK yang lain secara rawak">
+              <i class="fa-solid fa-shuffle"></i> Tukar / Rawak Tajuk Esei
+            </button>
+          </div>
+          <h3 id="dispEssayTitle" style="font-size:1.2rem; color:var(--text-heading); font-weight:800; line-height:1.45; margin-bottom:0.6rem; transition:all 0.3s ease;">
+            Kepentingan Integriti dan Disiplin Kendiri dalam Membentuk Modal Insan Unggul
+          </h3>
+          <p id="dispEssayPrompt" style="font-size:1rem; color:var(--text-main); line-height:1.65; transition:all 0.3s ease;">
+            Tulis sebuah karangan berpandu mengenai bagaimana nilai amanah, kejujuran, dan resiliensi mampu membentuk kepimpinan murid cemerlang di sekolah berasrama penuh. Panjang karangan hendaklah <strong>tidak kurang daripada 100 patah perkataan</strong>.
+          </p>
+        </div>
+
+        <div class="kpm-form-group">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+            <label class="kpm-form-label" style="font-size:0.92rem; font-weight:800; margin-bottom:0;">Ruang Jawapan Karangan Calon:</label>
+            <span id="dispWordCount" style="font-family:var(--font-mono); font-size:0.88rem; font-weight:800; color:var(--kpm-blue);">
+              Jumlah Perkataan: 0 / 100
+            </span>
+          </div>
+          <textarea id="inputEssayText" class="essay-textarea" placeholder="Tuliskan karangan anda di sini..."></textarea>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.5rem; border-top:1px solid var(--border-subtle); padding-top:1.25rem;">
+          <button id="btnEssayBackToMcq" class="btn-kpm btn-kpm-outline">
+            <i class="fa-solid fa-arrow-left"></i> Semak Bahagian A & B
+          </button>
+          <button id="btnSubmitEssayFinal" class="btn-kpm btn-kpm-primary" style="padding:0.75rem 1.8rem; font-size:0.95rem;">
+            <i class="fa-solid fa-check-double"></i> Tamatkan & Semak Keseluruhan
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- =========================================================================
+       9. VIEW 5: OFFICIAL EXAMINATION RESULTS SLIP
+       ========================================================================= -->
+  <main id="resultsView" class="app-viewport hidden">
+    <div class="slip-container">
+      
+      <!-- Slip Header -->
+      <div class="slip-header-brand">
+        <img src="assets/jata_negara_kpm.svg" alt="Jata Negara" style="height:65px; margin-bottom:0.75rem;">
+        <h2 style="font-family:var(--font-sans); color:var(--kpm-navy); font-size:1.28rem; font-weight:800;">
+          KEMENTERIAN PENDIDIKAN MALAYSIA
+        </h2>
+        <h4 id="slipSubTitle" style="font-size:0.95rem; font-weight:700; color:var(--text-muted); margin-top:0.25rem;">
+          SLIP KEPUTUSAN PENTAKSIRAN KEMASUKAN SEKOLAH KHUSUS (PKSK) TINGKATAN 1
+        </h4>
+      </div>
+
+      <!-- Candidate Metadata Table -->
+      <div style="background-color:var(--bg-surface-subtle); border:1.5px solid var(--border-subtle); border-radius:var(--radius-md); padding:1.1rem; margin-bottom:1.5rem; font-size:0.92rem;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+          <div><span>Nama Calon:</span> <strong id="slipDispName">-</strong></div>
+          <div><span>No. Kad Pengenalan:</span> <strong id="slipDispIc">-</strong></div>
+          <div><span>Angka Giliran:</span> <strong id="slipDispIndex">-</strong></div>
+          <div><span>Institusi Pilihan:</span> <strong id="slipDispTarget">SEKOLAH BERASRAMA PENUH (SBP)</strong></div>
+        </div>
+      </div>
+
+      <!-- Score Hero Badge -->
+      <div id="slipHeroBadge" class="score-hero-badge">
+        <div style="font-size:0.88rem; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:#cbd5e1;">MARKAH KESELURUHAN PKSK</div>
+        <div id="slipDispTotalScore" style="font-family:var(--font-mono); font-size:3rem; font-weight:800; color:#fde047; margin:0.25rem 0;">
+          88.5%
+        </div>
+        <div id="slipDispStatus" style="font-weight:800; font-size:1.05rem; color:#86efac;">
+          TAHNIAH! ANDA MENCAPAI TAHAP KELAYAKAN CEMERLANG (BAND 5)
+        </div>
+      </div>
+
+      <!-- Breakdown Table -->
+      <table id="slipScoreTable" style="width:100%; border-collapse:collapse; margin-bottom:1.5rem; font-size:0.92rem;">
+        <thead>
+          <tr style="background-color:var(--kpm-navy); color:#ffffff; text-align:left;">
+            <th style="padding:0.65rem 0.9rem; border:1px solid var(--kpm-navy);">Komponen Pentaksiran</th>
+            <th style="padding:0.65rem 0.9rem; border:1px solid var(--kpm-navy); text-align:center;">Wajaran Skor</th>
+            <th style="padding:0.65rem 0.9rem; border:1px solid var(--kpm-navy); text-align:center;">Skor Diperoleh</th>
+            <th style="padding:0.65rem 0.9rem; border:1px solid var(--kpm-navy); text-align:center;">Prestasi</th>
+          </tr>
+        </thead>
+        <tbody id="slipScoreTableBody">
+          <!-- Injected dynamically by JS -->
+        </tbody>
+      </table>
+
+      <!-- AI Essay Assessment Card Container (Bahagian C Rubric) -->
+      <div id="aiEssayReportSection" class="ai-essay-report-card">
+        <!-- Rendered dynamically by JS -->
+      </div>
+
+      <!-- Actions -->
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; border-top:1px solid var(--border-subtle); padding-top:1.25rem; margin-top:1.5rem;">
+        <button id="btnReturnHomeFromSlip" class="btn-kpm btn-kpm-outline">
+          <i class="fa-solid fa-house"></i> Kembali ke Menu Utama
+        </button>
+        <button id="btnWriteNewEssay" class="btn-kpm btn-kpm-gold" style="display:none; font-weight:800;">
+          <i class="fa-solid fa-pen-fancy"></i> Tulis Esei Lain / Uji Semula
+        </button>
+        <button id="btnReviewAllAnswers" class="btn-kpm btn-kpm-gold" style="font-weight:800;">
+          <i class="fa-solid fa-list-check"></i> Semak Skema & Penjelasan Soalan
+        </button>
+        <button id="btnPrintSlipBtn" class="btn-kpm btn-kpm-primary" onclick="window.print()">
+          <i class="fa-solid fa-print"></i> Cetak Slip Rasmi
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- =========================================================================
+       10. VIEW 6: REVIEW WORKSPACE & EXPLANATION SCHEME (SEMAKAN JAWAPAN)
+       ========================================================================= -->
+  <main id="reviewWorkspaceView" class="app-viewport hidden">
+    <div class="review-container">
+      
+      <!-- Top Action Bar -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h2 style="color:var(--kpm-navy); font-size:1.35rem; font-weight:800; margin:0 0 0.25rem 0; display:flex; align-items:center; gap:0.5rem;">
+            <i class="fa-solid fa-list-check" style="color:var(--kpm-gold);"></i> Semakan Skema & Analisis Jawapan PKSK
+          </h2>
+          <p style="margin:0; font-size:0.92rem; color:var(--text-muted);">
+            Semak setiap jawapan anda, kenal pasti kesilapan, dan pelajari skema penerangan konsep rasmi KPM.
+          </p>
+        </div>
+        <div style="display:flex; gap:0.5rem;">
+          <button id="btnBackToSlipFromReview" class="btn-kpm btn-kpm-outline">
+            <i class="fa-solid fa-arrow-left"></i> Kembali ke Slip
+          </button>
+          <button id="btnReturnHomeFromReview" class="btn-kpm btn-kpm-primary">
+            <i class="fa-solid fa-house"></i> Menu Utama
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Stats Summary Grid -->
+      <div class="review-stats-summary">
+        <div class="review-stat-card">
+          <div class="review-stat-icon" style="background:#e0f2fe; color:#0369a1;">
+            <i class="fa-solid fa-list-ol"></i>
+          </div>
+          <div>
+            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Jumlah Soalan</div>
+            <div id="reviewStatTotal" style="font-size:1.5rem; font-weight:800; color:var(--kpm-navy);">100</div>
+          </div>
+        </div>
+
+        <div class="review-stat-card">
+          <div class="review-stat-icon" style="background:#dcfce7; color:#15803d;">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <div>
+            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Jawapan Betul</div>
+            <div id="reviewStatCorrect" style="font-size:1.5rem; font-weight:800; color:#15803d;">0</div>
+          </div>
+        </div>
+
+        <div class="review-stat-card" style="border-color:#fca5a5;">
+          <div class="review-stat-icon" style="background:#fee2e2; color:#b91c1c;">
+            <i class="fa-solid fa-xmark"></i>
+          </div>
+          <div>
+            <div style="font-size:0.75rem; color:#b91c1c; font-weight:700; text-transform:uppercase;">Jawapan Salah</div>
+            <div id="reviewStatWrong" style="font-size:1.5rem; font-weight:800; color:#b91c1c;">0</div>
+          </div>
+        </div>
+
+        <div class="review-stat-card">
+          <div class="review-stat-icon" style="background:#f1f5f9; color:#64748b;">
+            <i class="fa-solid fa-minus"></i>
+          </div>
+          <div>
+            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Tidak Dijawab</div>
+            <div id="reviewStatUnanswered" style="font-size:1.5rem; font-weight:800; color:#64748b;">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter Navigation Bar -->
+      <div class="review-filter-nav">
+        <button id="btnReviewFilterAll" class="review-filter-btn active" onclick="filterReviewQuestions('ALL')">
+          <i class="fa-solid fa-layer-group"></i> Semua Soalan (<span id="countReviewAll">100</span>)
+        </button>
+        <button id="btnReviewFilterWrong" class="review-filter-btn filter-wrong" onclick="filterReviewQuestions('WRONG')" style="color:#b91c1c;">
+          <i class="fa-solid fa-circle-xmark"></i> Salah Sahaja (<span id="countReviewWrong">0</span>)
+        </button>
+        <button id="btnReviewFilterCorrect" class="review-filter-btn filter-correct" onclick="filterReviewQuestions('CORRECT')" style="color:#15803d;">
+          <i class="fa-solid fa-circle-check"></i> Betul Sahaja (<span id="countReviewCorrect">0</span>)
+        </button>
+        <button id="btnReviewFilterUnanswered" class="review-filter-btn" onclick="filterReviewQuestions('UNANSWERED')">
+          <i class="fa-solid fa-circle-minus"></i> Tidak Dijawab (<span id="countReviewUnanswered">0</span>)
+        </button>
+      </div>
+
+      <!-- Rendered Question Review Cards List -->
+      <div id="reviewQuestionsList">
+        <!-- Rendered dynamically via JS -->
+      </div>
+
+    </div>
+  </main>
+
+  <!-- =========================================================================
+       11. CORPORATE GOVERNMENT FOOTER
+       ========================================================================= -->
+  <footer class="kpm-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h4>KEMENTERIAN PENDIDIKAN MALAYSIA</h4>
+        <p>
+          Blok E8, Kompleks E, Pusat Pentadbiran Kerajaan Persekutuan,<br>
+          62604 Putrajaya, Malaysia.<br>
+          Tel: +603-8000 8000 | E-mel: komunikasi.korporat@moe.gov.my
+        </p>
+      </div>
+      <div class="footer-nav">
+        <h5>Pautan Pantas</h5>
+        <ul class="footer-links">
+          <li><a href="https://www.moe.gov.my" target="_blank">Portal Rasmi KPM</a></li>
+          <li><a href="https://sps1.moe.gov.my" target="_blank">Sistem Permohonan SBP</a></li>
+          <li><a href="https://mrsm.mara.gov.my" target="_blank">Portal Rasmi MRSM</a></li>
+          <li><a href="https://lp.moe.gov.my" target="_blank">Lembaga Peperiksaan Malaysia</a></li>
+        </ul>
+      </div>
+      <div class="footer-nav">
+        <h5>Dasar & Keselamatan</h5>
+        <ul class="footer-links">
+          <li><a href="#">Dasar Privasi & Perlindungan Data</a></li>
+          <li><a href="#">Dasar Keselamatan Siber</a></li>
+          <li><a href="#">Penafian Tanggungjawab</a></li>
+          <li><a href="#">Peta Laman</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom-strip">
+      <span>Hak Cipta Terpelihara © 2026 Kementerian Pendidikan Malaysia. Paparan terbaik menggunakan pelayar Chrome, Firefox & Edge terkini.</span>
+      <span>© Hak Cipta Terpelihara 2026 @bHbr</span>
+    </div>
+  </footer>
+
+  <!-- Confirmation Modal Popup -->
+  <div id="kpmModalOverlay" class="kpm-modal-overlay hidden" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:#ffffff; border-radius:var(--radius-lg); padding:2rem; max-width:500px; width:90%; box-shadow:var(--shadow-xl);">
+      <h3 style="color:var(--kpm-navy); margin-bottom:0.75rem; font-family:var(--font-sans); font-size:1.15rem;">
+        PENGESAHAN TAMAT PENTAKSIRAN
+      </h3>
+      <p id="kpmModalSummaryText" style="font-size:0.92rem; line-height:1.6; color:var(--text-main); margin-bottom:1.5rem;">
+        Anda telah menjawab <strong>100</strong> daripada 100 soalan. Adakah anda pasti untuk menamatkan Bahagian A & B sekarang?
+      </p>
+      <div style="display:flex; justify-content:flex-end; gap:0.75rem;">
+        <button id="btnModalDismiss" class="btn-kpm btn-kpm-outline">Kembali Menyemak</button>
+        <button id="btnModalProceed" class="btn-kpm btn-kpm-danger">Ya, Tamatkan Sekarang</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="data/dataset.js?v=20260825_1145"></script>
+  <script src="app.js?v=20260825_1145"></script>
+</body>
+</html>

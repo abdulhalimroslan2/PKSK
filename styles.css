@@ -1,0 +1,1351 @@
+/* ==========================================================================
+   PORTAL RASMI KEMENTERIAN PENDIDIKAN MALAYSIA (KPM)
+   SISTEM PENTAKSIRAN KEMASUKAN SEKOLAH KHUSUS (PKSK) TINGKATAN 1
+   Reka Bentuk Korporat Minimalis Berpandukan www.moe.gov.my
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* Official KPM Corporate Palette */
+  --kpm-navy: #0c2340;          /* Deep Corporate Navy */
+  --kpm-navy-dark: #071526;     /* Dark Slate Header / Footer */
+  --kpm-navy-light: #163660;    /* Interactive Navy Hover */
+  --kpm-blue: #1e40af;          /* Royal Accent Blue */
+  --kpm-blue-subtle: #eff6ff;   /* Light Sky Tint */
+  
+  --kpm-gold: #c59b27;          /* Royal Malaysian Gold */
+  --kpm-gold-light: #fefce8;    /* Light Gold Accent */
+  --kpm-gold-border: #eab308;   /* Gold Highlight Border */
+
+  --kpm-emerald: #059669;       /* Insaniah Green */
+  --kpm-emerald-light: #ecfdf5; /* Emerald Tint */
+  --kpm-emerald-border: #a7f3d0;
+
+  --kpm-amber: #d97706;         /* Review Flag Amber */
+  --kpm-amber-light: #fffbeb;
+  --kpm-amber-border: #fde68a;
+
+  --kpm-danger: #dc2626;        /* Alert Red */
+  --kpm-danger-light: #fef2f2;
+  --kpm-danger-border: #fecaca;
+
+  /* Neutrals & Surfaces */
+  --bg-page: #f8fafc;           /* Crisp Corporate Off-White */
+  --bg-surface: #ffffff;        /* Pure White Card */
+  --bg-surface-subtle: #f1f5f9;  /* Secondary Panel */
+  
+  --border-subtle: #e2e8f0;     /* Crisp Border */
+  --border-strong: #cbd5e1;     /* Emphasized Border */
+  
+  --text-main: #1e293b;         /* Primary Dark Slate */
+  --text-heading: #0f172a;      /* Bold Title Slate */
+  --text-muted: #64748b;        /* Secondary Label */
+  --text-white: #ffffff;
+
+  /* Shadows & Elevations */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+
+  /* Typography */
+  --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+}
+
+/* Dark Mode Support */
+[data-theme="dark"] {
+  --bg-page: #0b1120;
+  --bg-surface: #131d31;
+  --bg-surface-subtle: #1a263f;
+  
+  --border-subtle: #243452;
+  --border-strong: #33486f;
+  
+  --text-main: #e2e8f0;
+  --text-heading: #f8fafc;
+  --text-muted: #94a3b8;
+  
+  --kpm-blue-subtle: #172554;
+  --kpm-emerald-light: #064e3b;
+  --kpm-amber-light: #451a03;
+  --kpm-danger-light: #450a0a;
+}
+
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 15.5px;
+}
+
+body {
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  font-size: 0.98rem;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   1. TOP GOV AUTHORITY BAR (UTILITY BAR)
+   ========================================================================== */
+.gov-utility-bar {
+  background-color: var(--kpm-navy-dark);
+  color: #94a3b8;
+  font-size: 0.76rem;
+  padding: 0.35rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.gov-utility-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.gov-authority-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 500;
+  color: #cbd5e1;
+}
+
+.gov-authority-badge img {
+  height: 16px;
+  width: auto;
+}
+
+.gov-tools-menu {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.gov-tool-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.74rem;
+  transition: color 0.15s ease;
+}
+
+.gov-tool-item:hover {
+  color: #ffffff;
+}
+
+.lang-toggle-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   2. MAIN CORPORATE MASTHEAD (WHITE CLEAN BRANDING)
+   ========================================================================== */
+.kpm-masthead {
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0.85rem 1.5rem;
+}
+
+.masthead-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.masthead-brand {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  text-decoration: none;
+}
+
+.jata-emblem {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
+}
+
+.brand-text-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.portal-tag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--kpm-gold);
+}
+
+.ministry-title {
+  font-family: var(--font-sans);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--kpm-navy);
+  letter-spacing: -0.2px;
+  line-height: 1.2;
+}
+
+.system-title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.masthead-right-info {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.live-candidate-chip {
+  background-color: var(--bg-surface-subtle);
+  border: 1px solid var(--border-subtle);
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.candidate-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--kpm-navy);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.candidate-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.candidate-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-heading);
+}
+
+.candidate-id {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.kpm-rebrand-logo {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* ==========================================================================
+   3. CORPORATE NAVIGATION BAR
+   ========================================================================== */
+.kpm-nav-strip {
+  background: linear-gradient(180deg, var(--kpm-navy) 0%, #081a33 100%);
+  border-bottom: 3px solid var(--kpm-gold);
+  padding: 0 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-md);
+}
+
+.nav-strip-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kpm-menu-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  list-style: none;
+}
+
+.nav-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.05rem;
+  color: #cbd5e1;
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 700;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -3px;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  background: transparent;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+.nav-tab-btn:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.nav-tab-btn.active {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-bottom-color: var(--kpm-gold);
+}
+
+.nav-hud-timer {
+  display: none; /* Shown during live exam */
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0.35rem 0.9rem;
+  border-radius: var(--radius-md);
+  color: #ffffff;
+}
+
+.timer-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.timer-label {
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  color: #94a3b8;
+  font-weight: 700;
+}
+
+.timer-digits {
+  font-family: var(--font-mono);
+  font-size: 1.18rem;
+  font-weight: 800;
+  color: #fde047;
+  letter-spacing: 1px;
+}
+
+/* ==========================================================================
+   4. AUTHENTIC ANNOUNCEMENT BANNER
+   ========================================================================== */
+.authentic-status-banner {
+  background-color: var(--kpm-emerald-light);
+  color: #065f46;
+  border-bottom: 1px solid var(--kpm-emerald-border);
+  padding: 0.55rem 1.5rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* ==========================================================================
+   5. VIEW CONTAINERS & CARD LAYOUT
+   ========================================================================== */
+.app-viewport {
+  max-width: 1440px;
+  width: 100%;
+  margin: 1.5rem auto;
+  padding: 0 1.5rem;
+  flex: 1;
+}
+
+.app-viewport.hidden {
+  display: none !important;
+}
+
+/* Dashboard Hero Cards */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 992px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.kpm-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+
+.kpm-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.kpm-card-header {
+  padding: 1.15rem 1.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--bg-surface);
+}
+
+.kpm-card-title {
+  font-family: var(--font-sans);
+  font-size: 1.08rem;
+  font-weight: 800;
+  color: var(--kpm-navy);
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.kpm-card-body {
+  padding: 1.5rem;
+}
+
+/* Form Styles */
+.kpm-form-group {
+  margin-bottom: 1.15rem;
+}
+
+.kpm-form-label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin-bottom: 0.4rem;
+}
+
+.kpm-input, .kpm-select {
+  width: 100%;
+  padding: 0.68rem 0.95rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  background-color: var(--bg-surface);
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.kpm-input:focus, .kpm-select:focus {
+  border-color: var(--kpm-navy);
+  box-shadow: 0 0 0 3px rgba(12, 35, 64, 0.1);
+}
+
+/* Mode Selection Cards */
+.mode-selection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+.mode-card {
+  background: var(--bg-surface);
+  border: 2px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.mode-card:hover {
+  border-color: var(--kpm-navy);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.mode-card.selected {
+  border-color: var(--kpm-blue);
+  background-color: var(--kpm-blue-subtle);
+}
+
+.mode-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.mode-badge {
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 0.22rem 0.6rem;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+}
+
+.mode-badge.full {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.mode-badge.quick {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.mode-badge.drill {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.mode-title {
+  font-family: var(--font-sans);
+  font-size: 1.08rem;
+  font-weight: 800;
+  color: var(--text-heading);
+  margin-bottom: 0.35rem;
+}
+
+.mode-desc {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.mode-specs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  color: var(--text-main);
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 0.75rem;
+}
+
+.mode-spec-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ==========================================================================
+   6. SPLIT SCREEN EXAM WORKSPACE (LEFT QUESTION, RIGHT PALETTE)
+   ========================================================================== */
+.exam-split-grid,
+.exam-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .exam-split-grid,
+  .exam-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Section Header Strip inside Question Card */
+.section-banner-strip {
+  background-color: #0c2340;
+  color: #ffffff;
+  padding: 0.75rem 1.35rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid var(--kpm-gold);
+}
+
+.section-banner-strip.part-b {
+  background-color: #1e3a8a;
+}
+
+.q-status-badge {
+  background: rgba(255, 255, 255, 0.18);
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 0.22rem 0.65rem;
+  border-radius: var(--radius-sm);
+}
+
+.q-content-area {
+  padding: 1.5rem;
+}
+
+.q-number-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.15rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.q-number-label {
+  font-family: var(--font-sans);
+  font-size: 1.22rem;
+  font-weight: 800;
+  color: var(--kpm-navy);
+}
+
+.q-topic-badge {
+  background-color: #e0f2fe;
+  border: 1px solid #bae6fd;
+  color: #0369a1;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.28rem 0.75rem;
+  border-radius: var(--radius-sm);
+}
+
+.q-text-body,
+.question-stem-text {
+  font-size: 1.15rem;
+  line-height: 1.68;
+  color: var(--text-heading);
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+}
+
+/* Diagram Frame */
+.q-diagram-frame {
+  margin: 1.25rem 0;
+  text-align: center;
+  background-color: #ffffff;
+  border: 1px solid var(--border-subtle);
+  padding: 1.15rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.q-diagram-frame img {
+  max-width: 100%;
+  max-height: 380px;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+}
+
+/* Radio Options Group */
+.kpm-options-group,
+.options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.kpm-option-item {
+  display: flex;
+  align-items: center;
+  gap: 0.95rem;
+  padding: 0.95rem 1.2rem;
+  background-color: var(--bg-surface);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.kpm-option-item:hover {
+  border-color: var(--kpm-blue);
+  background-color: var(--kpm-blue-subtle);
+}
+
+.kpm-option-item.selected {
+  border-color: var(--kpm-navy);
+  background-color: #f0fdf4;
+}
+
+.opt-radio-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.kpm-option-item.selected .opt-radio-circle {
+  border-color: var(--kpm-emerald);
+  background-color: var(--kpm-emerald);
+  color: #ffffff;
+}
+
+.opt-text {
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--text-main);
+  flex: 1;
+}
+
+/* Question Action Footer */
+.q-action-footer,
+.question-footer-nav {
+  padding: 1.15rem 1.5rem;
+  background-color: var(--bg-surface-subtle);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Question Palette Card */
+.palette-header-tabs,
+.palette-filter-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background-color: var(--bg-surface-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.palette-tab-btn,
+.palette-filter-btn {
+  padding: 0.68rem 0.28rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+}
+
+.palette-tab-btn.active,
+.palette-filter-btn.active {
+  color: var(--kpm-navy);
+  border-bottom-color: var(--kpm-navy);
+  background-color: var(--bg-surface);
+}
+
+.palette-legend {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.legend-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 3px;
+}
+
+.legend-dot.answered { background-color: var(--kpm-emerald); }
+.legend-dot.unanswered { background-color: #ffffff; border: 1.5px solid var(--border-strong); }
+.legend-dot.flagged { background-color: var(--kpm-amber); }
+.legend-dot.current { border: 2.5px solid var(--kpm-navy); }
+
+.palette-grid-matrix,
+.palette-grid {
+  display: grid !important;
+  grid-template-columns: repeat(5, 1fr) !important;
+  grid-auto-rows: 42px !important;
+  gap: 8px !important;
+  row-gap: 8px !important;
+  column-gap: 8px !important;
+  padding: 1rem !important;
+  max-height: 420px !important;
+  overflow-y: auto !important;
+}
+
+.palette-q-btn {
+  width: 100% !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  max-height: 42px !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background-color: var(--bg-surface);
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-heading);
+  cursor: pointer;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.1s ease;
+}
+
+.palette-q-btn:hover {
+  border-color: var(--kpm-navy);
+  background-color: var(--bg-surface-subtle);
+}
+
+.palette-q-btn.answered {
+  background-color: #dcfce7;
+  color: #15803d;
+  border-color: #86efac;
+}
+
+.palette-q-btn.flagged {
+  background-color: #fef3c7;
+  color: #b45309;
+  border-color: #fcd34d;
+}
+
+.palette-q-btn.current {
+  border: 2.5px solid var(--kpm-navy) !important;
+  box-shadow: 0 0 0 2px rgba(12, 35, 64, 0.25);
+}
+
+/* ==========================================================================
+   7. BUTTONS & CONTROLS (CORPORATE GOVERNMENT STYLE)
+   ========================================================================== */
+.btn-kpm {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  font-weight: 800;
+  padding: 0.68rem 1.35rem;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.btn-kpm-primary {
+  background-color: var(--kpm-navy);
+  color: #ffffff;
+  border-color: var(--kpm-navy-dark);
+}
+
+.btn-kpm-primary:hover {
+  background-color: var(--kpm-navy-light);
+  transform: translateY(-1px);
+}
+
+.btn-kpm-gold {
+  background-color: var(--kpm-gold);
+  color: #ffffff;
+  border-color: #b45309;
+}
+
+.btn-kpm-gold:hover {
+  background-color: #b45309;
+}
+
+.btn-kpm-outline {
+  background-color: var(--bg-surface);
+  color: var(--text-heading);
+  border-color: var(--border-strong);
+}
+
+.btn-kpm-outline:hover {
+  background-color: var(--bg-surface-subtle);
+  border-color: var(--kpm-navy);
+}
+
+.btn-kpm-danger {
+  background-color: var(--kpm-danger);
+  color: #ffffff;
+  border-color: #b91c1c;
+}
+
+.btn-kpm-danger:hover {
+  background-color: #b91c1c;
+}
+
+/* ==========================================================================
+   8. ESSAY ARTICULATION VIEW
+   ========================================================================== */
+.essay-stimulus-box {
+  background-color: var(--kpm-gold-light);
+  border: 1.5px solid var(--kpm-gold-border);
+  border-radius: var(--radius-md);
+  padding: 1.35rem;
+  margin-bottom: 1.35rem;
+}
+
+.essay-textarea {
+  width: 100%;
+  min-height: 300px;
+  padding: 1.15rem;
+  font-family: var(--font-body);
+  font-size: 1.08rem;
+  line-height: 1.7;
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  outline: none;
+  resize: vertical;
+}
+
+.essay-textarea:focus {
+  border-color: var(--kpm-navy);
+  box-shadow: 0 0 0 3px rgba(12, 35, 64, 0.1);
+}
+
+/* ==========================================================================
+   9. RESULTS SLIP VIEW
+   ========================================================================== */
+.slip-container {
+  max-width: 880px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border: 2px solid var(--kpm-navy);
+  border-radius: var(--radius-lg);
+  padding: 2.25rem;
+  box-shadow: var(--shadow-lg);
+}
+
+.slip-header-brand {
+  text-align: center;
+  border-bottom: 2px solid var(--kpm-navy);
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.score-hero-badge {
+  text-align: center;
+  background: linear-gradient(135deg, var(--kpm-navy) 0%, #1e3a8a 100%);
+  color: #ffffff;
+  border-radius: var(--radius-md);
+  padding: 1.75rem;
+  margin: 1.5rem 0;
+}
+
+/* ==========================================================================
+   10. CORPORATE GOVERNMENT FOOTER
+   ========================================================================== */
+.kpm-footer {
+  background-color: var(--kpm-navy-dark);
+  color: #94a3b8;
+  border-top: 3px solid var(--kpm-gold);
+  padding: 2.5rem 1.5rem 1.5rem 1.5rem;
+  margin-top: auto;
+}
+
+.footer-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .footer-inner {
+    grid-template-columns: 1fr;
+  }
+}
+
+.footer-brand h4 {
+  font-family: var(--font-sans);
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.footer-brand p {
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: #94a3b8;
+}
+
+.footer-nav h5 {
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.footer-links a {
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.78rem;
+  transition: color 0.15s ease;
+}
+
+.footer-links a:hover {
+  color: #ffffff;
+}
+
+.footer-bottom-strip {
+  max-width: 1440px;
+  margin: 2rem auto 0 auto;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.74rem;
+}
+
+@media (max-width: 768px) {
+  .footer-bottom-strip {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+
+/* =========================================================================
+   MOE EXACT DOM CLONE OVERRIDES
+   ========================================================================= */
+
+body {
+  font-family: 'Manrope', sans-serif !important;
+  background-color: #f8fafc; /* Very light grey/blue for corporate clean look */
+}
+
+.searchform input::placeholder {
+  color: #999;
+}
+
+#main-nav li .active-indicator {
+  background-color: transparent !important;
+  transition: background-color 0.2s ease;
+}
+
+#main-nav li button.active + .active-indicator {
+  background-color: #ffcc00 !important;
+}
+
+#main-nav li:hover .active-indicator {
+  background-color: #ffcc00 !important;
+}
+
+#main-nav li button {
+  transition: color 0.2s ease;
+}
+
+#main-nav li:hover button {
+  color: #ffffff !important;
+}
+
+#mainhead a:hover {
+  opacity: 0.9;
+}
+
+/* =========================================================================
+   11. REVIEW WORKSPACE & EXPLANATION SCHEME STYLES
+   ========================================================================= */
+.review-container {
+  max-width: 1040px;
+  margin: 0 auto 3rem auto;
+}
+
+.review-stats-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.review-stat-card {
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.review-stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.review-filter-nav {
+  display: flex;
+  gap: 0.5rem;
+  background: #ffffff;
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.review-filter-btn {
+  padding: 0.65rem 1.15rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-main);
+  font-family: 'Manrope', sans-serif;
+  font-weight: 800;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.review-filter-btn:hover {
+  background: #f1f5f9;
+}
+
+.review-filter-btn.active {
+  background: var(--kpm-navy);
+  color: #ffffff;
+}
+
+.review-filter-btn.active.filter-wrong {
+  background: #dc2626;
+  color: #ffffff;
+}
+
+.review-filter-btn.active.filter-correct {
+  background: #16a34a;
+  color: #ffffff;
+}
+
+.review-card {
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border-subtle);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s ease;
+}
+
+.review-card.is-correct {
+  border-left: 6px solid #16a34a;
+}
+
+.review-card.is-wrong {
+  border-left: 6px solid #dc2626;
+}
+
+.review-card.is-unanswered {
+  border-left: 6px solid #94a3b8;
+}
+
+.review-options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin: 1.25rem 0;
+}
+
+.review-option-item {
+  padding: 0.85rem 1.1rem;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border-subtle);
+  background: #f8fafc;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.review-option-item.selected-wrong {
+  background: #fef2f2;
+  border-color: #ef4444;
+  color: #991b1b;
+  font-weight: 700;
+}
+
+.review-option-item.selected-correct {
+  background: #f0fdf4;
+  border-color: #22c55e;
+  color: #166534;
+  font-weight: 700;
+}
+
+.review-option-item.correct-answer-target {
+  background: #ecfdf5;
+  border-color: #10b981;
+  color: #065f46;
+  font-weight: 800;
+}
+
+.review-explanation-box {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-left: 4px solid #16a34a;
+  border-radius: var(--radius-sm);
+  padding: 1.1rem 1.25rem;
+  margin-top: 1.15rem;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: #166534;
+}
+
+/* =========================================================================
+   12. AI ESSAY ASSESSMENT & RUBRIC STYLES
+   ========================================================================= */
+.ai-essay-report-card {
+  background: #ffffff;
+  border: 2px solid #0284c7;
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  margin-top: 2rem;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.1);
+}
+
+.ai-criteria-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.ai-criterion-item {
+  background: #f8fafc;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+}
+
+.ai-criterion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+  font-size: 1.02rem;
+  font-weight: 800;
+  color: var(--kpm-navy);
+}
+
+.ai-progress-track {
+  height: 10px;
+  background: #e2e8f0;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 0.6rem;
+}
+
+.ai-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0284c7, #10b981);
+  border-radius: 5px;
+  transition: width 0.6s ease;
+}
+
+.ai-feedback-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.6rem 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.ai-feedback-list li {
+  position: relative;
+  padding-left: 1.35rem;
+  margin-bottom: 0.45rem;
+}
+
+.ai-feedback-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #10b981;
+  font-weight: bold;
+}
+
+.ai-feedback-list.warning li::before {
+  content: '⚠';
+  color: #f59e0b;
+}
+
+.ai-eval-spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  border-top-color: #ffffff;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

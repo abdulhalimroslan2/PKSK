@@ -1,0 +1,137 @@
+{
+  "assessment_name": "Pentaksiran Kemasukan Sekolah Khusus (PKSK) Tingkatan 1",
+  "target_audience": "Murid Tahun 6 (Kemasukan Tingkatan 1 SBP, MRSM, SMKA, SMT, KV, MTD)",
+  "governing_body": "Kementerian Pendidikan Malaysia (KPM)",
+  "total_test_duration_minutes": 135,
+  "combined_session_part_a_b_minutes": 90,
+  "writing_session_part_c_minutes": 45,
+  "total_items_in_test": 101,
+  "sections": [
+    {
+      "section_id": "BAHAGIAN_A",
+      "name": "Kecerdasan Insaniah",
+      "weightage_percent": 20,
+      "items_count": 30,
+      "item_type": "SITUATIONAL_JUDGMENT",
+      "delivery": "COMPUTER_BASED_ONLINE",
+      "subsections": [
+        {
+          "code": "EQ",
+          "name": "Kecerdasan Emosi",
+          "target_items": 10,
+          "pool_size": 40
+        },
+        {
+          "code": "SQ",
+          "name": "Kecerdasan Rohani & Integriti",
+          "target_items": 10,
+          "pool_size": 40
+        },
+        {
+          "code": "SSQ",
+          "name": "Kecerdasan Sosial & Kepimpinan",
+          "target_items": 10,
+          "pool_size": 40
+        }
+      ]
+    },
+    {
+      "section_id": "BAHAGIAN_B",
+      "name": "Kecerdasan Intelek",
+      "weightage_percent": 70,
+      "items_count": 70,
+      "item_type": "MULTIPLE_CHOICE_4",
+      "delivery": "COMPUTER_BASED_ONLINE",
+      "subsections": [
+        {
+          "code": "IQ_LOGIK",
+          "name": "IQ & Penaakulan Logik",
+          "target_items": 18,
+          "pool_size": 110
+        },
+        {
+          "code": "PENGETAHUAN_AM",
+          "name": "Pengetahuan Am & Kenegaraan",
+          "target_items": 18,
+          "pool_size": 120
+        },
+        {
+          "code": "MATEMATIK",
+          "name": "Penyelesaian Masalah Matematik KBAT",
+          "target_items": 12,
+          "pool_size": 90
+        },
+        {
+          "code": "SAINS",
+          "name": "Kemahiran Saintifik & Sains",
+          "target_items": 12,
+          "pool_size": 80
+        },
+        {
+          "code": "BAHASA_INGGERIS",
+          "name": "Penguasaan Bahasa Inggeris (CEFR Primary)",
+          "target_items": 10,
+          "pool_size": 60
+        }
+      ]
+    },
+    {
+      "section_id": "BAHAGIAN_C",
+      "name": "Artikulasi Penulisan",
+      "weightage_percent": 10,
+      "items_count": 1,
+      "options_provided": 3,
+      "item_type": "ESSAY_WRITING",
+      "delivery": "WRITTEN_ESSAY",
+      "word_count_requirement": "Minimum 100 perkataan",
+      "subsections": [
+        {
+          "code": "ARTIKULASI_PENULISAN",
+          "name": "Karangan Bahasa Melayu Terbuka",
+          "target_items": 1,
+          "pool_size": 20
+        }
+      ]
+    }
+  ],
+  "statistics": {
+    "total_master_items": 600,
+    "pools": {
+      "POOL_A_VERIFIED_OFFICIAL": 50,
+      "POOL_B_STRONGLY_SUPPORTED_RECALL": 54,
+      "POOL_C_UNVERIFIED_RECALL": 0,
+      "POOL_D_HIGH_QUALITY_PRACTICE": 37,
+      "POOL_E_PKSK_INSPIRED_RECONSTRUCTION": 459
+    },
+    "quality": {
+      "VALID": 600,
+      "NEEDS_REVIEW": 0,
+      "INVALID": 0,
+      "DUPLICATE": 0,
+      "INCOMPLETE": 0
+    },
+    "subsections": {
+      "KECERDASAN_INSANIAH_EQ": 40,
+      "KECERDASAN_INSANIAH_SQ": 40,
+      "KECERDASAN_INSANIAH_SSQ": 40,
+      "IQ_LOGIK": 110,
+      "PENGETAHUAN_AM": 120,
+      "MATEMATIK": 90,
+      "SAINS": 80,
+      "BAHASA_INGGERIS": 60,
+      "ARTIKULASI_PENULISAN": 20
+    },
+    "difficulty": {
+      "MEDIUM": 154,
+      "EASY": 444,
+      "HARD": 2
+    },
+    "cognitive": {
+      "C4": 50,
+      "C3": 260,
+      "C2": 141,
+      "C1": 129,
+      "C6": 20
+    }
+  }
+}
