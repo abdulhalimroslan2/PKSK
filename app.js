@@ -854,24 +854,44 @@ ${essay}
      ========================================================================= */
   async function renderResultsSlip() {
     // Fill candidate details
-    dom.slipDispName.textContent = state.candidate.name;
-    dom.slipDispIc.textContent = state.candidate.ic;
-    dom.slipDispIndex.textContent = state.candidate.indexNo;
-    dom.slipDispTarget.textContent = state.candidate.targetSchool;
+    dom.slipDispName.textContent = state.candidate.name || 'CALON PKSK';
+    dom.slipDispIc.textContent = state.candidate.ic || '-';
+    dom.slipDispIndex.textContent = state.candidate.indexNo || '-';
+    dom.slipDispTarget.textContent = state.candidate.targetSchool || 'SEKOLAH BERASRAMA PENUH (SBP)';
 
     const isEssayOnly = state.mode === 'ESSAY_PRACTICE' || state.mode === 'ESSAY' || state.sessionQuestions.length === 0;
+
+    if (isEssayOnly) {
+      // Mod Semakan Esei Sahaja: Sembunyikan banner markah keseluruhan PKSK dan jadual MCQ serta-merta
+      if (dom.slipSubTitle) dom.slipSubTitle.textContent = 'LAPORAN PENILAIAN RASMI AI: ARTIKULASI PENULISAN (BAHAGIAN C)';
+      if (dom.slipHeroBadge) dom.slipHeroBadge.style.display = 'none';
+      if (dom.slipScoreTable) dom.slipScoreTable.style.display = 'none';
+      if (dom.btnReviewAllAnswers) dom.btnReviewAllAnswers.style.display = 'none';
+      if (dom.btnWriteNewEssay) dom.btnWriteNewEssay.style.display = 'inline-flex';
+    } else {
+      // Mod Simulasi Penuh: Sediakan paparan sedang mengira / kosongkan dulu sebelum AI selesai
+      if (dom.slipSubTitle) dom.slipSubTitle.textContent = 'SLIP KEPUTUSAN PENTAKSIRAN KEMASUKAN SEKOLAH KHUSUS (PKSK) TINGKATAN 1';
+      if (dom.slipHeroBadge) dom.slipHeroBadge.style.display = 'block';
+      if (dom.slipScoreTable) dom.slipScoreTable.style.display = 'table';
+      if (dom.btnReviewAllAnswers) dom.btnReviewAllAnswers.style.display = 'inline-flex';
+      if (dom.btnWriteNewEssay) dom.btnWriteNewEssay.style.display = 'none';
+
+      dom.slipDispTotalScore.textContent = '...';
+      dom.slipDispStatus.textContent = 'Sedang memproses penilaian & keputusan...';
+      dom.slipDispStatus.style.color = '#fde047';
+    }
 
     // Evaluate essay with Ox Alpha AI or retrieve cached assessment
     if (!state.aiEssayAssessment && !state.isEvaluatingAI) {
       state.isEvaluatingAI = true;
       if (dom.aiEssayReportSection) {
         dom.aiEssayReportSection.innerHTML = `
-          <div style="text-align:center; padding:2rem 1rem;">
-            <div class="ai-eval-spinner" style="width:32px; height:32px; border-width:3px; border-color:#16a34a; border-top-color:transparent; margin-bottom:0.75rem;"></div>
-            <h4 style="color:var(--kpm-navy); font-weight:800; font-size:1.05rem; margin-bottom:0.25rem;">
+          <div style="text-align:center; padding:2.5rem 1rem;">
+            <div class="ai-eval-spinner" style="width:36px; height:36px; border-width:3.5px; border-color:#16a34a; border-top-color:transparent; margin-bottom:1rem;"></div>
+            <h4 style="color:var(--kpm-navy); font-weight:800; font-size:1.1rem; margin-bottom:0.35rem;">
               <i class="fa-solid fa-brain" style="color:#16a34a;"></i> Sedang Menyemak Esei Menggunakan Ox Alpha AI...
             </h4>
-            <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">
+            <p style="font-size:0.88rem; color:var(--text-muted); margin:0;">
               Menganalisis idea, tatabahasa, struktur, dan nilai murni mengikut Rubrik Rasmi Lembaga Peperiksaan Malaysia.
             </p>
           </div>
@@ -884,21 +904,7 @@ ${essay}
     const aiAssessment = state.aiEssayAssessment || { skor_keseluruhan: 8.0 };
     const percentC = typeof aiAssessment.skor_keseluruhan === 'number' ? aiAssessment.skor_keseluruhan : 8.0;
 
-    if (isEssayOnly) {
-      // Mod Semakan Esei Sahaja: Sembunyikan banner markah keseluruhan PKSK dan jadual MCQ
-      if (dom.slipSubTitle) dom.slipSubTitle.textContent = 'LAPORAN PENILAIAN RASMI AI: ARTIKULASI PENULISAN (BAHAGIAN C)';
-      if (dom.slipHeroBadge) dom.slipHeroBadge.style.display = 'none';
-      if (dom.slipScoreTable) dom.slipScoreTable.style.display = 'none';
-      if (dom.btnReviewAllAnswers) dom.btnReviewAllAnswers.style.display = 'none';
-      if (dom.btnWriteNewEssay) dom.btnWriteNewEssay.style.display = 'inline-flex';
-    } else {
-      // Mod Simulasi Penuh: Paparkan banner penuh PKSK dan jadual Bahagian A, B & C
-      if (dom.slipSubTitle) dom.slipSubTitle.textContent = 'SLIP KEPUTUSAN PENTAKSIRAN KEMASUKAN SEKOLAH KHUSUS (PKSK) TINGKATAN 1';
-      if (dom.slipHeroBadge) dom.slipHeroBadge.style.display = 'block';
-      if (dom.slipScoreTable) dom.slipScoreTable.style.display = 'table';
-      if (dom.btnReviewAllAnswers) dom.btnReviewAllAnswers.style.display = 'inline-flex';
-      if (dom.btnWriteNewEssay) dom.btnWriteNewEssay.style.display = 'none';
-
+    if (!isEssayOnly) {
       // Calculate MCQ scores
       let correctA = 0, totalA = 0;
       let correctB = 0, totalB = 0;
