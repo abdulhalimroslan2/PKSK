@@ -38,6 +38,12 @@ ON public.pksk_licenses FOR UPDATE
 USING (true)
 WITH CHECK (true);
 
+-- 6. Polisi RLS: Benarkan Admin menjana kunci baharu (INSERT)
+DROP POLICY IF EXISTS "Allow public to insert licenses" ON public.pksk_licenses;
+CREATE POLICY "Allow public to insert licenses"
+ON public.pksk_licenses FOR INSERT
+WITH CHECK (true);
+
 -- 6. Masukkan 500 Kunci Lesen Unik (Seed Data)
 INSERT INTO public.pksk_licenses (license_key, status, tier, max_devices)
 VALUES
