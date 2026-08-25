@@ -1334,11 +1334,17 @@ ${essay}
     const isAct = window.PkskLicense && window.PkskLicense.isActivated();
     if (isAct) {
       const session = window.PkskLicense.getLicenseSession();
+      let daysRemainingText = '6 Bulan';
+      if (session?.expires_at) {
+        const diffMs = new Date(session.expires_at).getTime() - Date.now();
+        const diffDays = Math.max(1, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
+        daysRemainingText = `Baki ${diffDays} Hari`;
+      }
       dom.licenseStatusBadge.className = 'license-status-pill';
       dom.licenseStatusBadge.style.background = '#ecfdf5';
       dom.licenseStatusBadge.style.color = '#065f46';
       dom.licenseStatusBadge.style.borderColor = '#a7f3d0';
-      dom.licenseStatusText.innerHTML = `<i class="fa-solid fa-circle-check"></i> Lesen Aktif (${session?.tier || 'PREMIUM'})`;
+      dom.licenseStatusText.innerHTML = `<i class="fa-solid fa-circle-check"></i> Lesen Aktif (${daysRemainingText})`;
     } else {
       dom.licenseStatusBadge.className = 'license-status-pill unregistered';
       dom.licenseStatusBadge.style.background = '#fffbeb';

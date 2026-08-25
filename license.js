@@ -77,6 +77,13 @@
         
         // Semak padanan Device ID
         if (session.device_id !== getOrCreateDeviceId()) return false;
+
+        // Semak tempoh tamat sah (6 Bulan)
+        if (session.expires_at && new Date(session.expires_at).getTime() < Date.now()) {
+          console.warn('⚠️ Tempoh sah lesen 6 bulan telah tamat.');
+          localStorage.removeItem(STORAGE_KEY_SESSION);
+          return false;
+        }
         
         return true;
       } catch (e) {
@@ -87,7 +94,13 @@
     getLicenseSession: function() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY_SESSION);
-        return raw ? JSON.parse(raw) : null;
+        if (!raw) return null;
+        const session = JSON.parse(raw);
+        if (session && session.expires_at && new Date(session.expires_at).getTime() < Date.now()) {
+          localStorage.removeItem(STORAGE_KEY_SESSION);
+          return null;
+        }
+        return session;
       } catch (e) {
         return null;
       }
@@ -103,6 +116,11 @@
       const deviceId = getOrCreateDeviceId();
       const config = getSupabaseConfig();
 
+      const now = new Date();
+      // Tetapan Tempoh Sah: Tepat 6 Bulan (180 Hari) bermula tarikh pengaktifan
+      const sixMonthsLater = new Date(now.getTime() + (180 * 24 * 60 * 60 * 1000));
+      const expiresAtIso = sixMonthsLater.toISOString();
+
       // Sekiranya Supabase belum dikonfigurasikan atau dalam mod offline developer
       if (!this.isConfigured()) {
         console.warn('⚠️ Supabase URL / Key belum dikonfigurasikan. Menggunakan mod pengesahan tempatan.');
@@ -111,17 +129,19 @@
         const mockSession = {
           license_key: formattedKey,
           status: 'ACTIVE_SESSION',
-          tier: 'PREMIUM_FULL',
+          tier: 'PREMIUM_6_MONTHS',
           device_id: deviceId,
           activated_by_name: candidateName || 'Calon PKSK',
           activated_by_ic: candidateIc || '-',
-          activated_at: new Date().toISOString(),
+          activated_at: now.toISOString(),
+          expires_at: expiresAtIso,
+          validity_days: 180,
           is_offline_verified: true
         };
         localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(mockSession));
         return { 
           success: true, 
-          message: 'Lesen PKSK berjaya diaktifkan (Mod Sesi Tempatan)!', 
+          message: 'Lesen PKSK (Sah 6 Bulan) berjaya diaktifkan!', 
           session: mockSession 
         };
       }
@@ -153,6 +173,11 @@
           return { success: false, message: 'Kunci Lesen ini telah disekat. Sila hubungi pihak pentadbir.' };
         }
 
+        // Semak tarikh tamat tempoh 6 bulan
+        if (licenseRecord.expires_at && new Date(licenseRecord.expires_at).getTime() < Date.now()) {
+          return { success: false, message: 'Tempoh sah lesen (6 bulan) untuk kunci ini telah tamat. Sila dapatkan kunci lesen baharu.' };
+        }
+
         if (licenseRecord.status === 'EXPIRED') {
           return { success: false, message: 'Tempoh sah Kunci Lesen ini telah tamat.' };
         }
@@ -164,14 +189,14 @@
             const validSession = {
               license_key: formattedKey,
               status: 'ACTIVE_SESSION',
-              tier: licenseRecord.tier || 'PREMIUM_FULL',
+              tier: licenseRecord.tier || 'PREMIUM_6_MONTHS',
               device_id: deviceId,
               activated_by_name: licenseRecord.activated_by_name || candidateName,
               activated_at: licenseRecord.activated_at,
-              expires_at: licenseRecord.expires_at
+              expires_at: licenseRecord.expires_at || expiresAtIso
             };
             localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(validSession));
-            return { success: true, message: 'Selamat kembali! Lesen anda telah disahkan pada peranti ini.', session: validSession };
+            return { success: true, message: 'Selamat kembali! Lesen anda aktif (Sah 6 Bulan) pada peranti ini.', session: validSession };
           } else {
             return { 
               success: false, 
@@ -180,15 +205,17 @@
           }
         }
 
-        // 3. Kunci masih 'ACTIVE' -> Kemas kini status kepada 'USED' dan catat Device ID
+        // 3. Kunci masih 'ACTIVE' -> Kemas kini status kepada 'USED', tetapkan tarikh tamat 6 bulan dan catat Device ID
         if (licenseRecord.status === 'ACTIVE') {
           const updateEndpoint = `${config.url}/rest/v1/pksk_licenses?license_key=eq.${encodeURIComponent(formattedKey)}`;
           const updateBody = {
             status: 'USED',
+            tier: 'PREMIUM_6_MONTHS',
             device_id: deviceId,
             activated_by_name: candidateName || 'Calon PKSK',
             activated_by_ic: candidateIc || '-',
-            activated_at: new Date().toISOString()
+            activated_at: now.toISOString(),
+            expires_at: expiresAtIso
           };
 
           const patchRes = await fetch(updateEndpoint, {
@@ -207,19 +234,19 @@
           const savedSession = {
             license_key: formattedKey,
             status: 'ACTIVE_SESSION',
-            tier: licenseRecord.tier || 'PREMIUM_FULL',
+            tier: 'PREMIUM_6_MONTHS',
             device_id: deviceId,
             activated_by_name: candidateName || 'Calon PKSK',
             activated_by_ic: candidateIc || '-',
             activated_at: updateBody.activated_at,
-            expires_at: licenseRecord.expires_at
+            expires_at: expiresAtIso
           };
 
           localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(savedSession));
 
           return { 
             success: true, 
-            message: 'Tahniah! Akses Penuh PKSK Simulator telah berjaya diaktifkan!', 
+            message: 'Tahniah! Akses Penuh PKSK Simulator (Sah 6 Bulan) telah berjaya diaktifkan!', 
             session: savedSession 
           };
         }
