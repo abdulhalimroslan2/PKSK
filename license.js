@@ -52,7 +52,14 @@
     return 'PKSK-' + parts.join('-');
   }
 
-  const PkskLicense = {
+  // Helper untuk memproses senarai Device ID berbilang peranti (Maksimum 2 Peranti)
+  function parseRegisteredDevices(raw) {
+    if (!raw) return [];
+    if (Array.isArray(raw)) return raw;
+    return String(raw).split(',').map(s => s.trim()).filter(Boolean);
+  }
+
+  window.PkskLicense = {
     getDeviceId: getOrCreateDeviceId,
     
     getConfig: getSupabaseConfig,
@@ -75,7 +82,7 @@
         const session = JSON.parse(raw);
         if (!session || !session.license_key || session.status !== 'ACTIVE_SESSION') return false;
         
-        // Semak padanan Device ID
+        // Semak padanan Device ID tempatan
         if (session.device_id !== getOrCreateDeviceId()) return false;
 
         // Semak tempoh tamat sah (6 Bulan)
@@ -106,7 +113,7 @@
       }
     },
 
-    // Validasi & Aktifkan Kunci Lesen melalui Supabase REST API
+    // Validasi & Aktifkan Kunci Lesen melalui Supabase REST API (Had 2 Peranti)
     activateLicenseOnline: async function(rawKey, candidateName, candidateIc) {
       const formattedKey = sanitizeAndFormatKey(rawKey);
       if (!formattedKey || formattedKey.length < 19) {
@@ -131,6 +138,8 @@
           status: 'ACTIVE_SESSION',
           tier: 'PREMIUM_6_MONTHS',
           device_id: deviceId,
+          max_devices: 2,
+          device_slot: 1,
           activated_by_name: candidateName || 'Calon PKSK',
           activated_by_ic: candidateIc || '-',
           activated_at: now.toISOString(),
@@ -141,7 +150,7 @@
         localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(mockSession));
         return { 
           success: true, 
-          message: 'Lesen PKSK (Sah 6 Bulan) berjaya diaktifkan!', 
+          message: 'Lesen PKSK (Sah 6 Bulan • Peranti 1/2) berjaya diaktifkan!', 
           session: mockSession 
         };
       }
@@ -182,40 +191,47 @@
           return { success: false, message: 'Tempoh sah Kunci Lesen ini telah tamat.' };
         }
 
-        // Jika kunci sudah berstatus 'USED'
-        if (licenseRecord.status === 'USED') {
-          // Semak jika peranti ini adalah peranti asal yang mengaktifkannya
-          if (licenseRecord.device_id === deviceId) {
-            const validSession = {
-              license_key: formattedKey,
-              status: 'ACTIVE_SESSION',
-              tier: licenseRecord.tier || 'PREMIUM_6_MONTHS',
-              device_id: deviceId,
-              activated_by_name: licenseRecord.activated_by_name || candidateName,
-              activated_at: licenseRecord.activated_at,
-              expires_at: licenseRecord.expires_at || expiresAtIso
-            };
-            localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(validSession));
-            return { success: true, message: 'Selamat kembali! Lesen anda aktif (Sah 6 Bulan) pada peranti ini.', session: validSession };
-          } else {
-            return { 
-              success: false, 
-              message: 'Kunci Lesen ini telah didaftarkan pada peranti lain. Setiap kunci hanya sah untuk 1 peranti mengikut syarat jualan.' 
-            };
-          }
+        // 3. Semakan Senarai Peranti (Had 2 Peranti)
+        const registeredDevices = parseRegisteredDevices(licenseRecord.device_id);
+        const maxAllowedDevices = licenseRecord.max_devices || 2;
+        const isDeviceAlreadyRegistered = registeredDevices.includes(deviceId);
+
+        // KES A: Peranti ini telah berdaftar sebelumnya
+        if (isDeviceAlreadyRegistered) {
+          const validSession = {
+            license_key: formattedKey,
+            status: 'ACTIVE_SESSION',
+            tier: licenseRecord.tier || 'PREMIUM_6_MONTHS',
+            device_id: deviceId,
+            max_devices: maxAllowedDevices,
+            device_slot: registeredDevices.indexOf(deviceId) + 1,
+            activated_by_name: licenseRecord.activated_by_name || candidateName,
+            activated_at: licenseRecord.activated_at,
+            expires_at: licenseRecord.expires_at || expiresAtIso
+          };
+          localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(validSession));
+          return { 
+            success: true, 
+            message: `Selamat kembali! Lesen anda aktif (Peranti ${validSession.device_slot}/${maxAllowedDevices}) pada peranti ini.`, 
+            session: validSession 
+          };
         }
 
-        // 3. Kunci masih 'ACTIVE' -> Kemas kini status kepada 'USED', tetapkan tarikh tamat 6 bulan dan catat Device ID
-        if (licenseRecord.status === 'ACTIVE') {
+        // KES B: Peranti baharu dan masih ada slot (cth: 0/2 atau 1/2)
+        if (registeredDevices.length < maxAllowedDevices) {
+          registeredDevices.push(deviceId);
+          const currentSlot = registeredDevices.length;
+
           const updateEndpoint = `${config.url}/rest/v1/pksk_licenses?license_key=eq.${encodeURIComponent(formattedKey)}`;
           const updateBody = {
             status: 'USED',
             tier: 'PREMIUM_6_MONTHS',
-            device_id: deviceId,
-            activated_by_name: candidateName || 'Calon PKSK',
-            activated_by_ic: candidateIc || '-',
-            activated_at: now.toISOString(),
-            expires_at: expiresAtIso
+            max_devices: maxAllowedDevices,
+            device_id: registeredDevices.join(','),
+            activated_by_name: licenseRecord.activated_by_name || candidateName || 'Calon PKSK',
+            activated_by_ic: licenseRecord.activated_by_ic || candidateIc || '-',
+            activated_at: licenseRecord.activated_at || now.toISOString(),
+            expires_at: licenseRecord.expires_at || expiresAtIso
           };
 
           const patchRes = await fetch(updateEndpoint, {
@@ -228,7 +244,7 @@
           });
 
           if (!patchRes.ok) {
-            throw new Error('Gagal mengemas kini status lesen ke pelayan Supabase.');
+            throw new Error('Gagal mengemas kini pendaftaran peranti ke pelayan Supabase.');
           }
 
           const savedSession = {
@@ -236,22 +252,28 @@
             status: 'ACTIVE_SESSION',
             tier: 'PREMIUM_6_MONTHS',
             device_id: deviceId,
-            activated_by_name: candidateName || 'Calon PKSK',
-            activated_by_ic: candidateIc || '-',
+            max_devices: maxAllowedDevices,
+            device_slot: currentSlot,
+            activated_by_name: updateBody.activated_by_name,
+            activated_by_ic: updateBody.activated_by_ic,
             activated_at: updateBody.activated_at,
-            expires_at: expiresAtIso
+            expires_at: updateBody.expires_at
           };
 
           localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(savedSession));
 
           return { 
             success: true, 
-            message: 'Tahniah! Akses Penuh PKSK Simulator (Sah 6 Bulan) telah berjaya diaktifkan!', 
+            message: `Tahniah! Akses PKSK Simulator (Sah 6 Bulan) berjaya diaktifkan pada Peranti ${currentSlot}/${maxAllowedDevices}!`, 
             session: savedSession 
           };
         }
 
-        return { success: false, message: 'Status Kunci Lesen tidak dapat disahkan.' };
+        // KES C: Had 2 peranti telah penuh (2/2) dan peranti ke-3 cuba masuk
+        return { 
+          success: false, 
+          message: `Had ${maxAllowedDevices} peranti telah dicapai untuk kunci ini. Kunci lesen ini telah didaftarkan pada ${registeredDevices.length} peranti lain. Sila hubungi penjual jika anda ingin menukar peranti.` 
+        };
 
       } catch (err) {
         console.error('PkskLicense Error:', err);
