@@ -1617,6 +1617,26 @@ ${essay}
         }, 1000);
       };
     }
+
+    // Auto-detect and pre-fill license key from URL query param (?key=PKSK-XXXX-XXXX-XXXX)
+    checkUrlLicenseParam();
+  }
+
+  function checkUrlLicenseParam() {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlKey = urlParams.get('key') || urlParams.get('license');
+      if (urlKey && window.PkskLicense && !window.PkskLicense.isActivated()) {
+        openActivationModal();
+        if (dom.inputLicenseKey) {
+          const formatted = window.sanitizeAndFormatKey ? window.sanitizeAndFormatKey(urlKey) : urlKey.toUpperCase();
+          dom.inputLicenseKey.value = formatted;
+          if (dom.keyCharCount) dom.keyCharCount.textContent = `${formatted.length}/19`;
+        }
+      }
+    } catch (e) {
+      console.warn('URL param check error:', e);
+    }
   }
 
   // Self Initialization on DOM Ready
