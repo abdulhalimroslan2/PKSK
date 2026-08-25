@@ -169,7 +169,26 @@
     kpmModalOverlay: document.getElementById('kpmModalOverlay'),
     kpmModalSummaryText: document.getElementById('kpmModalSummaryText'),
     btnModalDismiss: document.getElementById('btnModalDismiss'),
-    btnModalProceed: document.getElementById('btnModalProceed')
+    btnModalProceed: document.getElementById('btnModalProceed'),
+
+    // Licensing & Activation Elements
+    licenseStatusBadge: document.getElementById('licenseStatusBadge'),
+    licenseStatusText: document.getElementById('licenseStatusText'),
+    activationModal: document.getElementById('activationModal'),
+    inputLicenseKey: document.getElementById('inputLicenseKey'),
+    keyCharCount: document.getElementById('keyCharCount'),
+    activationAlertBox: document.getElementById('activationAlertBox'),
+    btnActivateLicense: document.getElementById('btnActivateLicense'),
+    btnCloseActivationModal: document.getElementById('btnCloseActivationModal'),
+
+    // Supabase Settings Modal
+    btnOpenSupabaseSettings: document.getElementById('btnOpenSupabaseSettings'),
+    supabaseConfigModal: document.getElementById('supabaseConfigModal'),
+    inputSupabaseUrl: document.getElementById('inputSupabaseUrl'),
+    inputSupabaseAnonKey: document.getElementById('inputSupabaseAnonKey'),
+    supabaseConfigAlertBox: document.getElementById('supabaseConfigAlertBox'),
+    btnCloseSupabaseConfig: document.getElementById('btnCloseSupabaseConfig'),
+    btnSaveSupabaseConfig: document.getElementById('btnSaveSupabaseConfig')
   };
 
   /* =========================================================================
@@ -513,6 +532,12 @@
      EXAM WORKFLOW & SUBMISSION
      ========================================================================= */
   function startExam() {
+    // Semakan Pengaktifan Lesen Komersial
+    if (window.PkskLicense && !window.PkskLicense.isActivated()) {
+      openActivationModal(() => startExam());
+      return;
+    }
+
     // Sync candidate metadata
     state.candidate.name = dom.inputCandidateName.value.trim() || 'CALON PKSK';
     state.candidate.ic = dom.inputCandidateIc.value.trim() || '-';
@@ -1302,7 +1327,97 @@ ${essay}
   }
 
   /* =========================================================================
-     EVENT LISTENERS INITIALIZATION
+     11. LICENSE ACTIVATION & SUPABASE MODAL CONTROLLER
+     ========================================================================= */
+  function updateLicenseBadgeUI() {
+    if (!dom.licenseStatusBadge || !dom.licenseStatusText) return;
+    const isAct = window.PkskLicense && window.PkskLicense.isActivated();
+    if (isAct) {
+      const session = window.PkskLicense.getLicenseSession();
+      dom.licenseStatusBadge.className = 'license-status-pill';
+      dom.licenseStatusBadge.style.background = '#ecfdf5';
+      dom.licenseStatusBadge.style.color = '#065f46';
+      dom.licenseStatusBadge.style.borderColor = '#a7f3d0';
+      dom.licenseStatusText.innerHTML = `<i class="fa-solid fa-circle-check"></i> Lesen Aktif (${session?.tier || 'PREMIUM'})`;
+    } else {
+      dom.licenseStatusBadge.className = 'license-status-pill unregistered';
+      dom.licenseStatusBadge.style.background = '#fffbeb';
+      dom.licenseStatusBadge.style.color = '#92400e';
+      dom.licenseStatusBadge.style.borderColor = '#fde68a';
+      dom.licenseStatusText.innerHTML = `<i class="fa-solid fa-key"></i> Kunci Lesen Diperlukan`;
+    }
+  }
+
+  function openActivationModal(onSuccessCallback) {
+    state.onActivationSuccessCallback = onSuccessCallback;
+    if (dom.activationModal) {
+      dom.activationModal.classList.remove('hidden');
+      if (dom.activationAlertBox) dom.activationAlertBox.style.display = 'none';
+      if (dom.inputLicenseKey) {
+        dom.inputLicenseKey.focus();
+      }
+    }
+  }
+
+  function closeActivationModal() {
+    if (dom.activationModal) {
+      dom.activationModal.classList.add('hidden');
+    }
+  }
+
+  function showActivationAlert(message, type = 'error') {
+    if (!dom.activationAlertBox) return;
+    dom.activationAlertBox.style.display = 'block';
+    if (type === 'success') {
+      dom.activationAlertBox.style.background = '#f0fdf4';
+      dom.activationAlertBox.style.border = '1px solid #86efac';
+      dom.activationAlertBox.style.color = '#15803d';
+      dom.activationAlertBox.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${message}`;
+    } else {
+      dom.activationAlertBox.style.background = '#fef2f2';
+      dom.activationAlertBox.style.border = '1px solid #fca5a5';
+      dom.activationAlertBox.style.color = '#b91c1c';
+      dom.activationAlertBox.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${message}`;
+    }
+  }
+
+  async function handleActivateLicenseClick() {
+    if (!dom.inputLicenseKey) return;
+    const rawKey = dom.inputLicenseKey.value.trim();
+    if (!rawKey) {
+      showActivationAlert('Sila masukkan Kunci Lesen PKSK 16-digit anda.', 'error');
+      return;
+    }
+
+    dom.btnActivateLicense.disabled = true;
+    dom.btnActivateLicense.innerHTML = '<span class="ai-eval-spinner"></span> Sedang Mengesahkan Kunci...';
+
+    const candidateName = state.candidate.name || dom.inputCandidateName?.value || 'Calon PKSK';
+    const candidateIc = state.candidate.ic || dom.inputCandidateIc?.value || '-';
+
+    const result = await window.PkskLicense.activateLicenseOnline(rawKey, candidateName, candidateIc);
+
+    dom.btnActivateLicense.disabled = false;
+    dom.btnActivateLicense.innerHTML = '<i class="fa-solid fa-lock-open"></i> Sahkan & Aktifkan Akses Sekarang';
+
+    if (result.success) {
+      showActivationAlert(result.message, 'success');
+      updateLicenseBadgeUI();
+      setTimeout(() => {
+        closeActivationModal();
+        if (state.onActivationSuccessCallback) {
+          const cb = state.onActivationSuccessCallback;
+          state.onActivationSuccessCallback = null;
+          cb();
+        }
+      }, 1200);
+    } else {
+      showActivationAlert(result.message, 'error');
+    }
+  }
+
+  /* =========================================================================
+     12. EVENT LISTENERS INITIALIZATION
      ========================================================================= */
   function initEventListeners() {
     // Navigation Tabs
@@ -1310,7 +1425,14 @@ ${essay}
     dom.navTabFullSim.onclick = () => { selectMode('FULL_SIMULATION'); switchView('INSTRUCTIONS'); };
     dom.navTabDiagnostic.onclick = () => { selectMode('QUICK_DIAGNOSTIC'); switchView('INSTRUCTIONS'); };
     dom.navTabDrill.onclick = () => { selectMode('DRILL_PRACTICE'); switchView('DASHBOARD'); };
-    dom.navTabEssay.onclick = () => { state.mode = 'ESSAY_PRACTICE'; switchView('ESSAY'); };
+    dom.navTabEssay.onclick = () => { 
+      if (window.PkskLicense && !window.PkskLicense.isActivated()) {
+        openActivationModal(() => { state.mode = 'ESSAY_PRACTICE'; switchView('ESSAY'); });
+        return;
+      }
+      state.mode = 'ESSAY_PRACTICE'; 
+      switchView('ESSAY'); 
+    };
     dom.navTabSlip.onclick = () => switchView('RESULTS');
 
     // Candidate Profile Live Inputs
@@ -1421,16 +1543,86 @@ ${essay}
     if (dom.btnReviewFilterUnanswered) {
       dom.btnReviewFilterUnanswered.onclick = () => filterReviewQuestions('UNANSWERED');
     }
+
+    // License Activation Handlers
+    if (dom.licenseStatusBadge) {
+      dom.licenseStatusBadge.onclick = () => openActivationModal();
+    }
+    if (dom.btnCloseActivationModal) {
+      dom.btnCloseActivationModal.onclick = closeActivationModal;
+    }
+    if (dom.btnActivateLicense) {
+      dom.btnActivateLicense.onclick = handleActivateLicenseClick;
+    }
+
+    if (dom.inputLicenseKey) {
+      dom.inputLicenseKey.oninput = (e) => {
+        const formatted = window.sanitizeAndFormatKey ? window.sanitizeAndFormatKey(e.target.value) : e.target.value.toUpperCase();
+        e.target.value = formatted;
+        if (dom.keyCharCount) dom.keyCharCount.textContent = `${formatted.length}/19`;
+      };
+
+      dom.inputLicenseKey.onkeydown = (e) => {
+        if (e.key === 'Enter') handleActivateLicenseClick();
+      };
+    }
+
+    // Supabase Configuration Modal Handlers
+    if (dom.btnOpenSupabaseSettings) {
+      dom.btnOpenSupabaseSettings.onclick = (e) => {
+        e.preventDefault();
+        const conf = window.PkskLicense.getConfig();
+        if (dom.inputSupabaseUrl) dom.inputSupabaseUrl.value = conf.url || '';
+        if (dom.inputSupabaseAnonKey) dom.inputSupabaseAnonKey.value = conf.anonKey.startsWith('eyJ') ? conf.anonKey : '';
+        if (dom.supabaseConfigModal) dom.supabaseConfigModal.classList.remove('hidden');
+      };
+    }
+
+    if (dom.btnCloseSupabaseConfig) {
+      dom.btnCloseSupabaseConfig.onclick = () => {
+        if (dom.supabaseConfigModal) dom.supabaseConfigModal.classList.add('hidden');
+      };
+    }
+
+    if (dom.btnSaveSupabaseConfig) {
+      dom.btnSaveSupabaseConfig.onclick = () => {
+        const url = dom.inputSupabaseUrl.value.trim();
+        const key = dom.inputSupabaseAnonKey.value.trim();
+        if (!url || !key) {
+          if (dom.supabaseConfigAlertBox) {
+            dom.supabaseConfigAlertBox.style.display = 'block';
+            dom.supabaseConfigAlertBox.style.background = '#fef2f2';
+            dom.supabaseConfigAlertBox.style.color = '#b91c1c';
+            dom.supabaseConfigAlertBox.textContent = 'Sila masukkan Project URL dan Anon Key.';
+          }
+          return;
+        }
+
+        window.PkskLicense.setSupabaseConfig(url, key);
+        if (dom.supabaseConfigAlertBox) {
+          dom.supabaseConfigAlertBox.style.display = 'block';
+          dom.supabaseConfigAlertBox.style.background = '#f0fdf4';
+          dom.supabaseConfigAlertBox.style.color = '#15803d';
+          dom.supabaseConfigAlertBox.textContent = '✓ Konfigurasi Supabase berjaya disimpan!';
+        }
+
+        setTimeout(() => {
+          if (dom.supabaseConfigModal) dom.supabaseConfigModal.classList.add('hidden');
+        }, 1000);
+      };
+    }
   }
 
   // Self Initialization on DOM Ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       initEventListeners();
+      updateLicenseBadgeUI();
       switchView('DASHBOARD');
     });
   } else {
     initEventListeners();
+    updateLicenseBadgeUI();
     switchView('DASHBOARD');
   }
 

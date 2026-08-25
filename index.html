@@ -22,8 +22,13 @@
       <div style="max-width:1140px; margin:0 auto; padding:0 15px; display:flex; justify-content:space-between; align-items:center; height:45px;">
         <h2 class="tranz" style="font-family:'Manrope', sans-serif; font-size:14px; color:#ffffff; font-weight:700; margin:0;">Selamat Datang ke PORTAL KPM</h2>
         <div style="display:flex; align-items:center; gap:15px;">
+          <!-- License Status Pill -->
+          <div id="licenseStatusBadge" class="license-status-pill unregistered" style="cursor:pointer;" title="Klik untuk Pengaktifan atau Maklumat Lesen PKSK">
+            <i class="fa-solid fa-key"></i> <span id="licenseStatusText">Belum Diaktifkan</span>
+          </div>
+
           <form class="searchform" style="display:flex; align-items:center; background:#ffffff; border-radius:3px; padding:2px 5px;">
-            <input type="text" placeholder="Carian..." style="border:none; outline:none; padding:4px 8px; font-size:13px; color:#333; width:150px; background:transparent;">
+            <input type="text" placeholder="Carian..." style="border:none; outline:none; padding:4px 8px; font-size:13px; color:#333; width:130px; background:transparent;">
             <button type="button" style="background:transparent; border:none; cursor:pointer; padding:4px; color:#555;"><i class="fa-solid fa-search"></i></button>
           </form>
           <ul class="social-menu" style="list-style:none; margin:0; padding:0; display:flex; align-items:center; gap:12px;">
@@ -32,7 +37,7 @@
                 <span style="color:#0d355c;">BM</span> <span style="color:#ccc;">|</span> <span style="color:#999;">EN</span>
               </div>
             </li>
-            <li><a href="#" style="color:#ffffff; font-size:15px;"><i class="fa-solid fa-sitemap"></i></a></li>
+            <li><a href="#" id="btnOpenSupabaseSettings" style="color:#ffffff; font-size:15px;" title="Konfigurasi Supabase"><i class="fa-solid fa-database"></i></a></li>
             <li><a href="#" style="color:#ffffff; font-size:15px;"><i class="fa-solid fa-phone"></i></a></li>
             <li><a href="#" style="color:#ffffff; font-size:15px;"><i class="fa-regular fa-circle-question"></i></a></li>
             <li><a href="#" style="color:#ffffff; font-size:15px;"><i class="fa-regular fa-envelope"></i></a></li>
@@ -695,8 +700,109 @@
     </div>
   </div>
 
+  <!-- =========================================================================
+       12. LICENSE ACTIVATION LOCK MODAL (COMMERCIAL PAYWALL)
+       ========================================================================= -->
+  <div id="activationModal" class="activation-modal-backdrop hidden">
+    <div class="activation-modal-card">
+      <div class="activation-header">
+        <div class="activation-icon-badge">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h3 style="margin:0 0 0.25rem 0; font-size:1.25rem; font-weight:800; color:#ffffff;">
+          PENGAKTIFAN LESEN PKSK SIMULATOR
+        </h3>
+        <p style="margin:0; font-size:0.85rem; color:#cbd5e1;">
+          Sistem Pentaksiran Kemasukan Sekolah Khusus Tingkatan 1 (KPM)
+        </p>
+      </div>
+
+      <div class="activation-body">
+        <p style="font-size:0.92rem; color:var(--text-main); line-height:1.6; margin-bottom:1.25rem; text-align:center;">
+          Sila masukkan <strong>Kunci Lesen (*License Key*)</strong> 16-digit rasmi anda untuk membuka akses penuh ke 500+ bank soalan, simulasi masa nyata, dan semakan esei AI.
+        </p>
+
+        <div class="kpm-form-group">
+          <label class="kpm-form-label" style="font-size:0.88rem;">Kunci Lesen PKSK:</label>
+          <input type="text" id="inputLicenseKey" class="license-key-input" placeholder="PKSK-XXXX-XXXX-XXXX" maxlength="19" autocomplete="off" spellcheck="false">
+          <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.35rem; display:flex; justify-content:space-between;">
+            <span>Format: PKSK-XXXX-XXXX-XXXX</span>
+            <span id="keyCharCount">0/19</span>
+          </div>
+        </div>
+
+        <div id="activationAlertBox" style="display:none; padding:0.75rem 1rem; border-radius:var(--radius-sm); font-size:0.85rem; margin-bottom:1rem; line-height:1.5;">
+          <!-- Injected dynamically -->
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:0.75rem;">
+          <button id="btnActivateLicense" class="btn-kpm btn-kpm-primary" style="width:100%; justify-content:center; padding:0.85rem; font-size:1rem; font-weight:800;">
+            <i class="fa-solid fa-lock-open"></i> Sahkan & Aktifkan Akses Sekarang
+          </button>
+          
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; margin-top:0.5rem;">
+            <a href="https://wa.me/60123456789?text=Hai,%20saya%20berminat%20untuk%20membeli%20Kunci%20Lesen%20PKSK%20Simulator" target="_blank" class="btn-kpm btn-kpm-gold" style="flex:1; justify-content:center; font-size:0.82rem; padding:0.5rem; text-decoration:none;">
+              <i class="fa-brands fa-whatsapp"></i> Dapatkan Kunci Lesen
+            </a>
+            <button id="btnCloseActivationModal" class="btn-kpm btn-kpm-outline" style="font-size:0.82rem; padding:0.5rem 1rem;">
+              Tutup
+            </button>
+          </div>
+        </div>
+
+        <div style="margin-top:1.25rem; padding-top:1rem; border-top:1px solid var(--border-subtle); text-align:center;">
+          <small style="color:var(--text-muted); font-size:0.75rem;">
+            <i class="fa-solid fa-database"></i> Disahkan secara dalam talian melalui Pangkalan Data Awan Supabase.
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       13. SUPABASE CONFIGURATION MODAL (DEVELOPER / ADMIN)
+       ========================================================================= -->
+  <div id="supabaseConfigModal" class="activation-modal-backdrop hidden">
+    <div class="activation-modal-card" style="max-width:500px;">
+      <div class="activation-header" style="background:#0f172a;">
+        <div class="activation-icon-badge" style="border-color:#38bdf8; color:#38bdf8; background:rgba(56,189,248,0.15);">
+          <i class="fa-solid fa-database"></i>
+        </div>
+        <h3 style="margin:0 0 0.25rem 0; font-size:1.15rem; font-weight:800; color:#ffffff;">
+          KONFIGURASI PANGKALAN DATA SUPABASE
+        </h3>
+        <p style="margin:0; font-size:0.82rem; color:#94a3b8;">
+          Tetapan Projek Supabase untuk Validasi Lesen Online
+        </p>
+      </div>
+
+      <div class="activation-body">
+        <div class="kpm-form-group">
+          <label class="kpm-form-label" style="font-size:0.85rem;">Supabase Project URL:</label>
+          <input type="text" id="inputSupabaseUrl" class="kpm-input" value="https://zblynieuimcxkkaaqaxy.supabase.co" placeholder="https://xxxx.supabase.co">
+        </div>
+
+        <div class="kpm-form-group">
+          <label class="kpm-form-label" style="font-size:0.85rem;">Supabase Anon Public Key:</label>
+          <input type="password" id="inputSupabaseAnonKey" class="kpm-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
+          <small style="color:var(--text-muted); font-size:0.75rem; display:block; margin-top:4px;">
+            Dapatkan Anon Key di Supabase: Project Settings ➡️ API ➡️ anon public.
+          </small>
+        </div>
+
+        <div id="supabaseConfigAlertBox" style="display:none; padding:0.6rem 0.9rem; border-radius:var(--radius-sm); font-size:0.82rem; margin-bottom:0.9rem;"></div>
+
+        <div style="display:flex; justify-content:flex-end; gap:0.75rem;">
+          <button id="btnCloseSupabaseConfig" class="btn-kpm btn-kpm-outline">Batal</button>
+          <button id="btnSaveSupabaseConfig" class="btn-kpm btn-kpm-primary">Simpan Konfigurasi</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
-  <script src="data/dataset.js?v=20260825_1145"></script>
-  <script src="app.js?v=20260825_1145"></script>
+  <script src="data/dataset.js?v=20260825_1200"></script>
+  <script src="license.js?v=20260825_1200"></script>
+  <script src="app.js?v=20260825_1200"></script>
 </body>
 </html>
