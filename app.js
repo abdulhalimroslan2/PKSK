@@ -679,9 +679,23 @@
   }
 
   /* =========================================================================
-     OX ALPHA AI ENGINE INTEGRATION (OPENROUTER DEDICATED)
+     DUAL AI ESSAY ASSESSMENT ENGINE (GEMINI FLASH LITE + OPENROUTER)
      ========================================================================= */
   const _OX_DEFAULT = 'c2stb3ItdjEtNGU1OGE0ZTY3NWQ5Nzc2MTczOWZjN2IzYWNjYzFkOWExN2U4OWU4MDdiZjk3YjUyOWJiOTY4YWQ5NmQwMmJhOA==';
+  const _GEMINI_DEFAULT = 'QUl6YVN5QlVRRWpsdHNUSkdmZnNtSEEwOTJnSzljM2t1dHJMMjRF';
+
+  const GEMINI_CONFIG = {
+    get apiKey() {
+      try {
+        return localStorage.getItem('pksk_gemini_api_key') || atob(_GEMINI_DEFAULT);
+      } catch (e) {
+        return '';
+      }
+    },
+    endpoint: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent',
+    model: 'gemini-flash-lite-latest'
+  };
+
   const OX_ALPHA_CONFIG = {
     get apiKey() {
       try {
@@ -691,22 +705,62 @@
       }
     },
     endpoint: 'https://openrouter.ai/api/v1/chat/completions',
-    // Fallback list of models (prioritizing fast, reasoning-capable models for Malay essay rubrics)
+    // Fallback list of fast models on OpenRouter
     candidateModels: [
-      'nvidia/nemotron-3.5-lightning:free',
       'openrouter/free',
-      'google/gemma-4-31b-it:free',
-      'google/gemma-4-26b-a4b-it:free',
-      'liquid/lfm-2.5-2.6b:free'
+      'nex-agi/nex-n2.5-mini:free',
+      'nvidia/nemotron-3-super-120b-a12b:free'
     ]
   };
 
+  // Google Gemini Flash-Lite: Ultra-fast (2.5s), strict JSON & high critical reasoning
+  async function callGeminiAi(systemPrompt, userPrompt) {
+    const key = GEMINI_CONFIG.apiKey;
+    if (!key) return { success: false, error: 'Tiada Kunci API Gemini' };
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 7000); // 7s timeout
+
+    try {
+      const resp = await fetch(`${GEMINI_CONFIG.endpoint}?key=${key}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: `${systemPrompt}\n\n${userPrompt}` }] }],
+          generationConfig: {
+            temperature: 0.2,
+            responseMimeType: 'application/json'
+          }
+        })
+      });
+      clearTimeout(timeoutId);
+
+      if (resp.ok) {
+        const data = await resp.json();
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        if (text.trim()) {
+          return { success: true, text, model: 'Gemini AI (Flash Lite)' };
+        }
+      }
+      const errData = await resp.json().catch(() => ({}));
+      return { success: false, error: errData.error?.message || `HTTP ${resp.status}` };
+    } catch (e) {
+      clearTimeout(timeoutId);
+      return { success: false, error: e.name === 'AbortError' ? 'Gemini timeout (7s)' : e.message };
+    }
+  }
+
+  // OpenRouter Engine: Multi-model fallback
   async function callOxAlphaAi(systemPrompt, userPrompt) {
     const customModel = localStorage.getItem('pksk_oxalpha_model');
     const modelsToTry = customModel ? [customModel, ...OX_ALPHA_CONFIG.candidateModels] : OX_ALPHA_CONFIG.candidateModels;
     let lastError = 'Ralat sambungan API';
 
     for (const model of modelsToTry) {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout per model
+
       try {
         const resp = await fetch(OX_ALPHA_CONFIG.endpoint, {
           method: 'POST',
@@ -716,15 +770,18 @@
             'HTTP-Referer': 'https://pksk2026.vercel.app',
             'X-Title': 'PKSK Simulator - KPM'
           },
+          signal: controller.signal,
           body: JSON.stringify({
             model: model,
             messages: [
               { role: 'system', content: systemPrompt },
               { role: 'user', content: userPrompt }
             ],
-            temperature: 0.2
+            temperature: 0.2,
+            max_tokens: 650
           })
         });
+        clearTimeout(timeoutId);
 
         if (resp.ok) {
           const data = await resp.json();
@@ -738,7 +795,7 @@
           }
 
           if (text.trim()) {
-            return { success: true, text, model };
+            return { success: true, text, model: `Ox Alpha AI (${model.replace(':free', '')})` };
           }
         } else {
           const errData = await resp.json().catch(() => ({}));
@@ -746,8 +803,9 @@
           console.warn(`Ox Alpha model ${model} failed (${resp.status}):`, lastError);
         }
       } catch (e) {
-        lastError = e.message;
-        console.warn(`Ox Alpha model ${model} network error:`, e.message);
+        clearTimeout(timeoutId);
+        lastError = e.name === 'AbortError' ? `${model} timeout (8s)` : e.message;
+        console.warn(`Ox Alpha model ${model} error:`, e.message);
       }
     }
 
@@ -762,13 +820,21 @@
     if (dom.oxAlphaFeedbackMsg) {
       dom.oxAlphaFeedbackMsg.style.display = 'block';
       dom.oxAlphaFeedbackMsg.style.color = '#0284c7';
-      dom.oxAlphaFeedbackMsg.textContent = 'Menghubungi OpenRouter AI Engine...';
+      dom.oxAlphaFeedbackMsg.textContent = 'Menghubungi AI Engine (Gemini & OpenRouter)...';
     }
 
-    const result = await callOxAlphaAi(
+    // Try Gemini first, then OpenRouter
+    let result = await callGeminiAi(
       'Anda ialah AI Penguji. Jawab hanya satu perkataan JSON: {"status":"CONNECTED"}',
-      'Uji sambungan API Ox Alpha untuk Sistem Pentaksiran PKSK.'
+      'Uji sambungan API Gemini Flash Lite untuk PKSK.'
     );
+
+    if (!result.success) {
+      result = await callOxAlphaAi(
+        'Anda ialah AI Penguji. Jawab hanya satu perkataan JSON: {"status":"CONNECTED"}',
+        'Uji sambungan API Ox Alpha untuk Sistem Pentaksiran PKSK.'
+      );
+    }
 
     dom.btnTestOxAlpha.disabled = false;
     dom.btnTestOxAlpha.innerHTML = '<i class="fa-solid fa-vial-circle-check"></i> Uji Sambungan';
@@ -781,11 +847,11 @@
       }
       if (dom.oxAlphaFeedbackMsg) {
         dom.oxAlphaFeedbackMsg.style.color = '#15803d';
-        dom.oxAlphaFeedbackMsg.textContent = `✓ Sambungan ke Ox Alpha Engine (${result.model}) Berjaya & Aktif!`;
+        dom.oxAlphaFeedbackMsg.textContent = `✓ Sambungan AI Enjin (${result.model}) Berjaya & Aktif!`;
       }
       if (dom.essayAiIndicatorBadge) {
         dom.essayAiIndicatorBadge.style.background = '#15803d';
-        dom.essayAiIndicatorBadge.innerHTML = '<i class="fa-solid fa-brain"></i> Ox Alpha AI Bersedia';
+        dom.essayAiIndicatorBadge.innerHTML = '<i class="fa-solid fa-brain"></i> AI Penilai Bersedia';
       }
     } else {
       if (dom.oxAlphaStatusBadge) {
@@ -795,13 +861,13 @@
       }
       if (dom.oxAlphaFeedbackMsg) {
         dom.oxAlphaFeedbackMsg.style.color = '#dc2626';
-        dom.oxAlphaFeedbackMsg.textContent = `✗ Ralat Sambungan Ox Alpha: ${result.error}`;
+        dom.oxAlphaFeedbackMsg.textContent = `✗ Ralat Sambungan AI: ${result.error}`;
       }
     }
   }
 
   /* =========================================================================
-     AI ESSAY ASSESSMENT ENGINE (BAHAGIAN C RUBRIC - OX ALPHA)
+     AI ESSAY ASSESSMENT ENGINE (BAHAGIAN C RUBRIC)
      ========================================================================= */
   async function evaluateEssayWithOxAlpha() {
     const essay = (state.essayText || '').trim();
@@ -825,26 +891,27 @@
     }
 
     const systemInstruction = `Anda ialah Pemeriksa Kanan Rasmi Lembaga Peperiksaan Malaysia bagi Pentaksiran Kemasukan Sekolah Khusus (PKSK) Tingkatan 1 (Bahagian C: Artikulasi Penulisan - Wajaran 10 Markah).
-Nilai karangan calon dengan adil, teliti dan profesional mengikut 4 kriteria Rubrik Rasmi KPM:
+Nilai karangan calon dengan KRITIKAL, ADIL, TELITI dan PADAT mengikut 4 kriteria Rubrik Rasmi KPM:
 1. Idea, Hujah & Kematangan Isi (Maksimum 3.0 markah)
 2. Bahasa, Ejaan, Tatabahasa & Kosa Kata (Maksimum 3.0 markah)
 3. Struktur, Koheren & Format Karangan (Maksimum 2.0 markah)
 4. Nilai Murni, Pengajaran & Pemikiran Kritis KBAT (Maksimum 2.0 markah)
 
+ARAHAN KHAS: Beri ulasan padat, tajam dan berwibawa (1-2 ayat ringkas dan berimpak bagi setiap kriteria).
 PENTING: Pulangkan jawapan dalam format JSON SAHAJA tanpa sebarang teks penjelasan lain di luar JSON:
 {
-  "skor_keseluruhan": 8.5,
-  "band": "Band 5 (Cemerlang)",
+  "skor_keseluruhan": 7.5,
+  "band": "Band 4 (Kepujian)",
   "kriteria": {
-    "idea": { "skor": 2.5, "max": 3.0, "ulasan": "Idea tersusun dan hujah meyakinkan." },
-    "bahasa": { "skor": 2.5, "max": 3.0, "ulasan": "Tatabahasa baik, kosa kata luas." },
-    "struktur": { "skor": 1.8, "max": 2.0, "ulasan": "Pengenalan, isi dan penutup lengkap." },
-    "nilai_kbat": { "skor": 1.7, "max": 2.0, "ulasan": "Penerapan nilai integriti yang matang." }
+    "idea": { "skor": 2.3, "max": 3.0, "ulasan": "Idea relevan dengan tema namun hujah memerlukan kupasan lebih matang." },
+    "bahasa": { "skor": 2.2, "max": 3.0, "ulasan": "Tatabahasa baik dan ayat lancar, perbanyakkan kosa kata luas." },
+    "struktur": { "skor": 1.5, "max": 2.0, "ulasan": "Perenggan dan wacana tersusun dengan pendahuluan serta penutup." },
+    "nilai_kbat": { "skor": 1.5, "max": 2.0, "ulasan": "Penerapan nilai murni wujud dan bersesuaian dengan situasi harian." }
   },
-  "kekuatan": ["Idea berkembang secara logik", "Kosa kata bervariasi"],
-  "kelemahan_tatabahasa": ["Beberapa kesilapan ejaan dan tanda baca"],
-  "cadangan_penambahbaikan": ["Selitkan lebih banyak ungkapan menarik / peribahasa"],
-  "rumusan_keseluruhan": "Karangan berkualiti tinggi dan menepati piawaian kemasukan SBP/MRSM."
+  "kekuatan": ["Idea berkembang secara logik", "Kosa kata bersesuaian"],
+  "kelemahan_tatabahasa": ["Variasi struktur ayat boleh ditingkatkan"],
+  "cadangan_penambahbaikan": ["Selitkan peribahasa dan contoh konkrit"],
+  "rumusan_keseluruhan": "Karangan baik dan menepati format asas kemasukan SBP/MRSM."
 }`;
 
     const userInstruction = `Karangan Calon:
@@ -855,7 +922,14 @@ Teks Karangan:
 ${essay}
 """`;
 
-    const result = await callOxAlphaAi(systemInstruction, userInstruction);
+    // 1. First attempt: Ultra-fast Gemini Flash-Lite (2.5s)
+    let result = await callGeminiAi(systemInstruction, userInstruction);
+
+    // 2. Fallback attempt: OpenRouter Fast Models
+    if (!result.success || !result.text) {
+      console.warn('Gemini semakan gagal/perlahan, menggunakan sandaran OpenRouter:', result.error);
+      result = await callOxAlphaAi(systemInstruction, userInstruction);
+    }
 
     if (result.success && result.text) {
       try {
@@ -863,16 +937,16 @@ ${essay}
         const jsonMatch = cleanJson.match(/\{[\s\S]*\}/);
         if (jsonMatch) cleanJson = jsonMatch[0];
         const parsed = JSON.parse(cleanJson);
-        parsed.aiModelUsed = result.model || 'Ox Alpha Engine';
+        parsed.aiModelUsed = result.model || 'AI Enjin Pintar';
         state.aiEssayAssessment = parsed;
         return parsed;
       } catch (parseErr) {
-        console.warn('JSON parse error from Ox Alpha, attempting regex extract:', parseErr);
+        console.warn('JSON parse error from AI, attempting regex extract:', parseErr);
         const match = result.text.match(/\{[\s\S]*\}/);
         if (match) {
           try {
             const parsed = JSON.parse(match[0]);
-            parsed.aiModelUsed = result.model || 'Ox Alpha Engine';
+            parsed.aiModelUsed = result.model || 'AI Enjin Pintar';
             state.aiEssayAssessment = parsed;
             return parsed;
           } catch (e2) {}
@@ -880,7 +954,7 @@ ${essay}
       }
     }
 
-    console.warn('Ox Alpha evaluation fallback:', result.error);
+    console.warn('AI evaluation fallback:', result.error);
     const words = essay.split(/\s+/).filter(w => w.length > 0).length;
     const fallbackScore = words >= 100 ? 8.5 : Math.max(1.0, parseFloat(((words / 100) * 8.0).toFixed(1)));
     state.aiEssayAssessment = {
@@ -895,7 +969,7 @@ ${essay}
         nilai_kbat: { skor: parseFloat((fallbackScore * 0.2).toFixed(1)), max: 2.0, ulasan: 'Nilai murni diterapkan.' }
       },
       kekuatan: [`Jumlah perkataan: ${words}`],
-      kelemahan_tatabahasa: [`Semakan Ox Alpha tergendala: ${result.error || 'Ralat rangkaian'}`],
+      kelemahan_tatabahasa: [`Semakan AI tergendala: ${result.error || 'Ralat rangkaian'}`],
       cadangan_penambahbaikan: ['Tekan butang Nilai Semula AI di bawah.'],
       rumusan_keseluruhan: 'Pemarkahan anggaran diberikan. Anda boleh menekan butang Nilai Semula dengan AI.'
     };
@@ -1091,7 +1165,7 @@ ${essay}
             <i class="fa-solid fa-brain" style="color:#16a34a;"></i> Laporan Penilaian AI: Artikulasi Penulisan (Bahagian C)
           </h3>
           <p style="margin:0; font-size:0.85rem; color:var(--text-muted);">
-            Disemak oleh <strong>Ox Alpha AI (${(assessment.aiModelUsed || 'OpenRouter Engine').replace(':free', '')})</strong> mengikut Rubrik Rasmi Lembaga Peperiksaan Malaysia.
+            Disemak oleh <strong>${assessment.aiModelUsed || 'AI Engine (Gemini & Ox Alpha)'}</strong> mengikut Rubrik Rasmi Lembaga Peperiksaan Malaysia.
           </p>
         </div>
         <div style="display:flex; align-items:center; gap:0.75rem;">
