@@ -681,7 +681,7 @@
   /* =========================================================================
      OX ALPHA AI ENGINE INTEGRATION (OPENROUTER DEDICATED)
      ========================================================================= */
-  const _OX_DEFAULT = 'c2stb3ItdjEtOGY2ZjczOGJlY2Y3M2UyZmM0ZjEwZjkxOWQxNjZiZjA1OWU3Zjg1MmQ1MTNjN2E2MmU1ZTdhYjFjNzY2YWIyZA==';
+  const _OX_DEFAULT = 'c2stb3ItdjEtNGU1OGE0ZTY3NWQ5Nzc2MTczOWZjN2IzYWNjYzFkOWExN2U4OWU4MDdiZjk3YjUyOWJiOTY4YWQ5NmQwMmJhOA==';
   const OX_ALPHA_CONFIG = {
     get apiKey() {
       try {
