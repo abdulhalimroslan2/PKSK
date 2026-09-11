@@ -691,41 +691,67 @@
       }
     },
     endpoint: 'https://openrouter.ai/api/v1/chat/completions',
-    model: 'stealth/ox-alpha'
+    // Fallback list of models (prioritizing fast, reasoning-capable models for Malay essay rubrics)
+    candidateModels: [
+      'nvidia/nemotron-3.5-lightning:free',
+      'openrouter/free',
+      'google/gemma-4-31b-it:free',
+      'google/gemma-4-26b-a4b-it:free',
+      'liquid/lfm-2.5-2.6b:free'
+    ]
   };
 
   async function callOxAlphaAi(systemPrompt, userPrompt) {
-    try {
-      const resp = await fetch(OX_ALPHA_CONFIG.endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${OX_ALPHA_CONFIG.apiKey}`,
-          'HTTP-Referer': 'http://localhost:3000',
-          'X-Title': 'PKSK Simulator - KPM'
-        },
-        body: JSON.stringify({
-          model: OX_ALPHA_CONFIG.model,
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: userPrompt }
-          ],
-          temperature: 0.2
-        })
-      });
+    const customModel = localStorage.getItem('pksk_oxalpha_model');
+    const modelsToTry = customModel ? [customModel, ...OX_ALPHA_CONFIG.candidateModels] : OX_ALPHA_CONFIG.candidateModels;
+    let lastError = 'Ralat sambungan API';
 
-      if (resp.ok) {
-        const data = await resp.json();
-        const text = data.choices?.[0]?.message?.content || '';
-        return { success: true, text, model: OX_ALPHA_CONFIG.model };
-      } else {
-        const errData = await resp.json().catch(() => ({}));
-        const errMsg = errData.error?.message || `HTTP ${resp.status}`;
-        return { success: false, error: errMsg };
+    for (const model of modelsToTry) {
+      try {
+        const resp = await fetch(OX_ALPHA_CONFIG.endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${OX_ALPHA_CONFIG.apiKey}`,
+            'HTTP-Referer': 'https://pksk2026.vercel.app',
+            'X-Title': 'PKSK Simulator - KPM'
+          },
+          body: JSON.stringify({
+            model: model,
+            messages: [
+              { role: 'system', content: systemPrompt },
+              { role: 'user', content: userPrompt }
+            ],
+            temperature: 0.2
+          })
+        });
+
+        if (resp.ok) {
+          const data = await resp.json();
+          const text = data.choices?.[0]?.message?.content || '';
+          
+          // Detect deprecated stealth test notice
+          if (text.toLowerCase().includes('participating in the stealth ox alpha') || text.toLowerCase().includes('testing period')) {
+            console.warn(`Model ${model} returned retirement notice, trying next model.`);
+            lastError = text;
+            continue;
+          }
+
+          if (text.trim()) {
+            return { success: true, text, model };
+          }
+        } else {
+          const errData = await resp.json().catch(() => ({}));
+          lastError = errData.error?.message || `HTTP ${resp.status}`;
+          console.warn(`Ox Alpha model ${model} failed (${resp.status}):`, lastError);
+        }
+      } catch (e) {
+        lastError = e.message;
+        console.warn(`Ox Alpha model ${model} network error:`, e.message);
       }
-    } catch (e) {
-      return { success: false, error: e.message };
     }
+
+    return { success: false, error: lastError };
   }
 
   async function testOxAlphaConnection() {
@@ -736,7 +762,7 @@
     if (dom.oxAlphaFeedbackMsg) {
       dom.oxAlphaFeedbackMsg.style.display = 'block';
       dom.oxAlphaFeedbackMsg.style.color = '#0284c7';
-      dom.oxAlphaFeedbackMsg.textContent = 'Menghubungi OpenRouter (stealth/ox-alpha)...';
+      dom.oxAlphaFeedbackMsg.textContent = 'Menghubungi OpenRouter AI Engine...';
     }
 
     const result = await callOxAlphaAi(
@@ -755,7 +781,7 @@
       }
       if (dom.oxAlphaFeedbackMsg) {
         dom.oxAlphaFeedbackMsg.style.color = '#15803d';
-        dom.oxAlphaFeedbackMsg.textContent = '✓ Sambungan ke Ox Alpha (stealth/ox-alpha) Berjaya & Aktif!';
+        dom.oxAlphaFeedbackMsg.textContent = `✓ Sambungan ke Ox Alpha Engine (${result.model}) Berjaya & Aktif!`;
       }
       if (dom.essayAiIndicatorBadge) {
         dom.essayAiIndicatorBadge.style.background = '#15803d';
@@ -833,9 +859,11 @@ ${essay}
 
     if (result.success && result.text) {
       try {
-        const cleanJson = result.text.replace(/```json/gi, '').replace(/```/g, '').trim();
+        let cleanJson = result.text.replace(/```json/gi, '').replace(/```/g, '').trim();
+        const jsonMatch = cleanJson.match(/\{[\s\S]*\}/);
+        if (jsonMatch) cleanJson = jsonMatch[0];
         const parsed = JSON.parse(cleanJson);
-        parsed.aiModelUsed = 'Ox Alpha (stealth/ox-alpha)';
+        parsed.aiModelUsed = result.model || 'Ox Alpha Engine';
         state.aiEssayAssessment = parsed;
         return parsed;
       } catch (parseErr) {
@@ -844,7 +872,7 @@ ${essay}
         if (match) {
           try {
             const parsed = JSON.parse(match[0]);
-            parsed.aiModelUsed = 'Ox Alpha (stealth/ox-alpha)';
+            parsed.aiModelUsed = result.model || 'Ox Alpha Engine';
             state.aiEssayAssessment = parsed;
             return parsed;
           } catch (e2) {}
@@ -1063,7 +1091,7 @@ ${essay}
             <i class="fa-solid fa-brain" style="color:#16a34a;"></i> Laporan Penilaian AI: Artikulasi Penulisan (Bahagian C)
           </h3>
           <p style="margin:0; font-size:0.85rem; color:var(--text-muted);">
-            Disemak oleh <strong>Ox Alpha AI (stealth/ox-alpha)</strong> mengikut Rubrik Rasmi Lembaga Peperiksaan Malaysia.
+            Disemak oleh <strong>Ox Alpha AI (${(assessment.aiModelUsed || 'OpenRouter Engine').replace(':free', '')})</strong> mengikut Rubrik Rasmi Lembaga Peperiksaan Malaysia.
           </p>
         </div>
         <div style="display:flex; align-items:center; gap:0.75rem;">
