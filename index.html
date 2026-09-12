@@ -425,12 +425,12 @@
         <h2 class="kpm-card-title" style="color:#ffffff; font-size:1.1rem;">
           <i class="fa-solid fa-feather"></i> BAHAGIAN C : ARTIKULASI PENULISAN (10%)
         </h2>
-        <div style="display:flex; align-items:center; gap:1rem;">
+        <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
           <span id="essayAiIndicatorBadge" style="background:#0284c7; color:#ffffff; font-size:0.78rem; font-weight:700; padding:4px 10px; border-radius:12px;">
             <i class="fa-solid fa-robot"></i> Semakan AI Bersedia
           </span>
-          <div style="font-family:var(--font-mono); color:#fde047; font-weight:800; font-size:1rem;">
-            Masa: 45 Minit
+          <div id="dispEssayHeaderTimerBadge" style="background:rgba(254,240,138,0.18); border:1.5px solid #fde047; padding:4px 12px; border-radius:6px; font-family:var(--font-mono); color:#fde047; font-weight:800; font-size:0.95rem; display:flex; align-items:center; gap:6px;" title="Baki masa menjawab Bahagian C: 45 Minit">
+            <i class="fa-solid fa-stopwatch"></i> Masa Menjawab: <span id="dispEssayMainTimer">45:00</span>
           </div>
         </div>
       </div>
@@ -459,9 +459,17 @@
             <div style="display:flex; align-items:center; gap:0.5rem; font-weight:800; color:#15803d; font-size:0.95rem; flex-wrap:wrap;">
               <i class="fa-solid fa-list-check" style="color:#16a34a;"></i> Cadangan Poin Isi Esei (4–6 Poin):
               <span id="aiIdeaBadge" class="badge" style="background:#dcfce7; color:#166534; font-size:0.75rem; padding:3px 9px; font-weight:800; border-radius:4px;">Gemini AI</span>
+              
+              <!-- PEMASA 45 MINIT ESEI BERJALAN SERENTAK -->
+              <span id="essayOverallTimerBadge" style="background:#eff6ff; color:#1e40af; font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:4px; display:inline-flex; align-items:center; gap:4px; font-family:var(--font-mono); border:1px solid #bfdbfe;" title="Baki masa keseluruhan menjawab karangan: 45 Minit">
+                <i class="fa-solid fa-clock"></i> Masa Esei: <span id="dispEssayBoxTimer">45:00</span>
+              </span>
+
+              <!-- PEMASA 10 MINIT AUTO-TUTUP CADANGAN ISI -->
               <span id="aiIdeaTimerBadge" style="background:#fef3c7; color:#92400e; font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:4px; display:inline-flex; align-items:center; gap:4px; font-family:var(--font-mono); border:1px solid #fde68a;" title="Cadangan isi akan ditutup secara automatik selepas 10 minit">
                 <i class="fa-solid fa-stopwatch"></i> Auto-Tutup: <span id="aiIdeaCountdown">10:00</span>
               </span>
+
               <span style="background:#f1f5f9; color:#475569; font-size:0.72rem; font-weight:700; padding:2px 7px; border-radius:4px; display:inline-flex; align-items:center; gap:3px;" title="Teks dilindungi: Calon perlu mengolah ayat sendiri">
                 <i class="fa-solid fa-ban"></i> Anti-Salin
               </span>

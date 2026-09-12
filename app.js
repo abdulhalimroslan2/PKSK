@@ -167,6 +167,7 @@
     aiIdeaTimerSecondsLeft: 600, // 10 minit (600 saat)
     aiIdeaTimerInterval: null,
     aiIdeaTimerStarted: false,
+    essayTimerRunning: false,
 
     // AI Essay Assessment & Multi-Provider AI State
     aiProvider: localStorage.getItem('pksk_ai_provider') || 'GROQ', // 'GROQ' | 'GEMINI' | 'OPENROUTER'
@@ -259,12 +260,15 @@
     dispWordCount: document.getElementById('dispWordCount'),
     btnEssayBackToMcq: document.getElementById('btnEssayBackToMcq'),
     btnSubmitEssayFinal: document.getElementById('btnSubmitEssayFinal'),
+    dispEssayMainTimer: document.getElementById('dispEssayMainTimer'),
 
     // AI Essay Idea Starter Elements (Auto-Hide 10 Minit & Anti-Salin)
     aiIdeaBox: document.getElementById('aiIdeaBox'),
     aiIdeaBody: document.getElementById('aiIdeaBody'),
     aiIdeaContent: document.getElementById('aiIdeaContent'),
     aiIdeaBadge: document.getElementById('aiIdeaBadge'),
+    essayOverallTimerBadge: document.getElementById('essayOverallTimerBadge'),
+    dispEssayBoxTimer: document.getElementById('dispEssayBoxTimer'),
     aiIdeaTimerBadge: document.getElementById('aiIdeaTimerBadge'),
     aiIdeaCountdown: document.getElementById('aiIdeaCountdown'),
     aiIdeaExpiredNotice: document.getElementById('aiIdeaExpiredNotice'),
@@ -456,6 +460,7 @@
     else if (viewName === 'ESSAY') {
       dom.essayWorkspaceView.classList.remove('hidden');
       dom.navTabEssay.classList.add('active');
+      if (dom.navHudTimer) dom.navHudTimer.style.display = 'flex';
       
       // Jika calon belum menulis apa-apa esei, pastikan tajuk dipilih secara rawak agar tidak memuatkan tajuk statik yang sama
       const isEssayEmpty = !state.essayText || state.essayText.trim().length === 0;
@@ -466,8 +471,13 @@
         renderEssayTopicAndIdeas(false);
       }
 
-      // Mulakan pemasa auto-tutup 10 minit bagi cadangan isi esei
-      startAiIdeaTimer();
+      // Pastikan kedua-dua pemasa (45 Minit & 10 Minit Auto-Tutup) berjalan serentak
+      if (!state.essayTimerRunning || !state.timerInterval || state.timerSecondsLeft <= 0) {
+        startEssaySessionTimers(true);
+      } else {
+        startAiIdeaTimer();
+        updateTimerDisplay();
+      }
     }
     else if (viewName === 'RESULTS') {
       dom.resultsView.classList.remove('hidden');
@@ -648,8 +658,15 @@
 
       if (state.timerSecondsLeft <= 0) {
         clearInterval(state.timerInterval);
-        alert("Peringatan: Masa menjawab telah tamat. Jawapan anda sedang diproses secara automatik.");
-        handleExamCompletion();
+        state.timerInterval = null;
+        if (state.currentView === 'ESSAY') {
+          alert("Peringatan: Masa 45 minit untuk Bahagian C (Artikulasi Penulisan) telah tamat. Jawapan karangan anda disimpan secara automatik.");
+          state.aiEssayAssessment = null;
+          switchView('RESULTS');
+        } else {
+          alert("Peringatan: Masa menjawab telah tamat. Jawapan anda sedang diproses secara automatik.");
+          handleExamCompletion();
+        }
       }
     }, 1000);
   }
@@ -675,6 +692,30 @@
       const hudIcon = document.getElementById('hudStopwatchIcon');
       if (hudIcon) {
         hudIcon.style.color = timerColor;
+      }
+    }
+
+    // Kemas kini paparan pemasa 45 minit langsung dalam Bahagian C (Header Kad & Kotak Idea)
+    if (dom.dispEssayMainTimer) {
+      dom.dispEssayMainTimer.textContent = formatted;
+    }
+    if (dom.dispEssayBoxTimer) {
+      dom.dispEssayBoxTimer.textContent = formatted;
+    }
+
+    if (dom.essayOverallTimerBadge) {
+      if (state.timerSecondsLeft <= 300) {
+        dom.essayOverallTimerBadge.style.background = '#fee2e2';
+        dom.essayOverallTimerBadge.style.color = '#dc2626';
+        dom.essayOverallTimerBadge.style.borderColor = '#f87171';
+      } else if (state.timerSecondsLeft <= 600) {
+        dom.essayOverallTimerBadge.style.background = '#fef3c7';
+        dom.essayOverallTimerBadge.style.color = '#92400e';
+        dom.essayOverallTimerBadge.style.borderColor = '#fde68a';
+      } else {
+        dom.essayOverallTimerBadge.style.background = '#eff6ff';
+        dom.essayOverallTimerBadge.style.color = '#1e40af';
+        dom.essayOverallTimerBadge.style.borderColor = '#bfdbfe';
       }
     }
   }
@@ -703,6 +744,7 @@
     state.currentIndex = 0;
     state.userAnswers = {};
     resetAiIdeaTimer();
+    state.essayTimerRunning = false;
     state.flaggedQuestions = {};
 
     // Start timer (90 mins for full sim, 30 mins for others)
@@ -725,11 +767,13 @@
   function handleExamCompletion() {
     dom.kpmModalOverlay.style.display = 'none';
     clearInterval(state.timerInterval);
+    state.timerInterval = null;
 
     if (state.mode === 'FULL_SIMULATION') {
       // Proceed to Bahagian C (Artikulasi Penulisan)
+      state.essayTimerRunning = false;
       switchView('ESSAY');
-      startTimer(2700); // 45 mins for essay
+      startEssaySessionTimers(true); // 45 minit & 10 minit auto-tutup bermula serentak!
     } else {
       // Direct to results
       switchView('RESULTS');
@@ -764,6 +808,8 @@
 
   function shuffleEssayTopic() {
     renderEssayTopicAndIdeas(true);
+    resetAiIdeaTimer();
+    startAiIdeaTimer();
 
     if (dom.btnShuffleEssayTopic) {
       const origHtml = dom.btnShuffleEssayTopic.innerHTML;
@@ -969,8 +1015,28 @@ Stimulus: "${topic.prompt}"`;
   }
 
   /* =========================================================================
-     AUTO-HIDE 10 MINIT & ANTI-COPY PROTECTION ENGINE
+     AUTO-HIDE 10 MINIT & ANTI-COPY PROTECTION ENGINE (SEGERAK 45 MINIT ESEI)
      ========================================================================= */
+  function startEssaySessionTimers(forceReset = false) {
+    // 1. Mulakan Pemasa Utama 45 Minit (2700 saat) bagi Bahagian C
+    if (forceReset || !state.timerInterval || !state.essayTimerRunning || state.timerSecondsLeft <= 0) {
+      startTimer(2700); // 45 minit untuk penulisan esei
+      state.essayTimerRunning = true;
+    }
+
+    // 2. Mulakan Pemasa 10 Minit Auto-Tutup Cadangan Isi Esei (600 saat) secara serentak
+    if (forceReset) {
+      resetAiIdeaTimer();
+    }
+    startAiIdeaTimer();
+
+    // 3. Pastikan HUD timer di bar atas dipaparkan
+    if (dom.navHudTimer) {
+      dom.navHudTimer.style.display = 'flex';
+    }
+    updateTimerDisplay();
+  }
+
   function startAiIdeaTimer() {
     if (state.aiIdeaTimerStarted) return;
     state.aiIdeaTimerStarted = true;
@@ -1929,12 +1995,16 @@ ${essay}
     dom.navTabDrill.onclick = () => { selectMode('DRILL_PRACTICE'); switchView('DASHBOARD'); };
     dom.navTabEssay.onclick = () => { 
       if (window.PkskLicense && !window.PkskLicense.isActivated()) {
-        openActivationModal(() => { state.mode = 'ESSAY_PRACTICE';
-        resetAiIdeaTimer(); switchView('ESSAY'); });
+        openActivationModal(() => { 
+          state.mode = 'ESSAY_PRACTICE';
+          switchView('ESSAY'); 
+          startEssaySessionTimers(true);
+        });
         return;
       }
       state.mode = 'ESSAY_PRACTICE'; 
       switchView('ESSAY'); 
+      startEssaySessionTimers(true);
     };
     dom.navTabSlip.onclick = () => switchView('RESULTS');
 
@@ -2008,7 +2078,13 @@ ${essay}
     // Essay View Handlers
     dom.inputEssayText.oninput = updateEssayWordCount;
     if (dom.btnShuffleEssayTopic) dom.btnShuffleEssayTopic.onclick = shuffleEssayTopic;
-    if (dom.btnRegenerateAiIdeas) dom.btnRegenerateAiIdeas.onclick = () => generateAiEssayIdeas(state.essayTopic, true);
+    if (dom.btnRegenerateAiIdeas) {
+      dom.btnRegenerateAiIdeas.onclick = () => {
+        resetAiIdeaTimer();
+        startAiIdeaTimer();
+        generateAiEssayIdeas(state.essayTopic, true);
+      };
+    }
     if (dom.btnToggleAiIdeas) dom.btnToggleAiIdeas.onclick = toggleAiIdeaBox;
     initAiIdeaAntiCopy();
     dom.btnEssayBackToMcq.onclick = () => switchView('EXAM');
@@ -2022,7 +2098,11 @@ ${essay}
     if (dom.btnWriteNewEssay) {
       dom.btnWriteNewEssay.onclick = () => {
         state.mode = 'ESSAY_PRACTICE';
+        state.essayText = '';
+        if (dom.inputEssayText) dom.inputEssayText.value = '';
+        state.hasInitialEssayTopicSelected = false;
         switchView('ESSAY');
+        startEssaySessionTimers(true);
       };
     }
     dom.btnReviewAllAnswers.onclick = () => {
