@@ -11,146 +11,126 @@
      PKSK AUTHENTIC ESSAY TOPIC BANK & 6-10 SENTENCE IDEA STARTERS
      ========================================================================= */
   const PKSK_ESSAY_TOPICS = [
-    {
-        "id": "TOPIC_1",
-        "title": "Kepentingan Integriti dan Disiplin Kendiri dalam Membentuk Modal Insan Unggul",
-        "prompt": "Tulis sebuah karangan berpandu mengenai bagaimana nilai amanah, kejujuran, dan resiliensi mampu membentuk kepimpinan murid cemerlang di sekolah berasrama penuh. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
-        "defaultIdeas": [
-            "Mengamalkan sikap amanah dan jujur dalam setiap tugasan akademik serta tanggungjawab di asrama.",
-            "Mematuhi peraturan sekolah dan menolak sebarang perbuatan tidak bermoral seperti meniru dalam peperiksaan.",
-            "Menguruskan masa dengan bijak antara waktu belajar, beribadah, dan aktiviti riadah.",
-            "Membina daya tahan fizikal dan mental agar tidak mudah berputus asa apabila berhadapan dengan cabaran atau kegagalan.",
-            "Menunjukkan teladan kepimpinan yang berwibawa serta berintegriti kepada rakan-rakan sebaya.",
-            "Menghormati guru, warden, dan rakan bagi mewujudkan persekitaran pembelajaran yang harmoni dan selamat.",
-            "Menjadi modal insan berkeperibadian unggul yang sedia menyumbang bakti kepada kemajuan masyarakat dan negara."
-        ]
-    },
-    {
-        "id": "TOPIC_2",
-        "title": "Peranan Kecerdasan Buatan (AI) dan Teknologi Digital dalam Pendidikan Abad Ke-21",
-        "prompt": "Huraikan bagaimana teknologi digital dan kecerdasan buatan dapat dimanfaatkan oleh murid secara berhemah untuk meningkatkan pencapaian akademik serta inovasi sains. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
-        "defaultIdeas": [
-            "Memanfaatkan aplikasi kecerdasan buatan (AI) sebagai tutor peribadi untuk memahami topik pembelajaran yang sukar.",
-            "Menggunakan platform digital untuk mengakses pelbagai sumber rujukan dan maklumat saintifik secara pantas.",
-            "Mempraktikkan etika penggunaan teknologi dengan mengelakkan plagiarisme serta penyalahgunaan maklumat.",
-            "Mengasah kemahiran berfikir secara kritis dan tidak bergantung seratus peratus kepada jawapan yang dijana oleh AI.",
-            "Meningkatkan kemahiran menyelesaikan masalah melalui kolaborasi pembelajaran secara dalam talian.",
-            "Menggunakan perisian interaktif untuk menghasilkan reka cipta dan projek inovasi sains yang kreatif.",
-            "Mempersiapkan diri dengan literasi digital terkini bagi mendepani cabaran kerjaya pada masa hadapan."
-        ]
-    },
-    {
-        "id": "TOPIC_3",
-        "title": "Tanggungjawab Generasi Muda dalam Menangani Perubahan Iklim dan Kelestarian Alam",
-        "prompt": "Bincangkan peranan murid dan institusi sekolah dalam memupuk amalan hijau, kitar semula, dan penjimatan tenaga demi memelihara bumi untuk masa hadapan. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
-        "defaultIdeas": [
-            "Mempraktikkan amalan kitar semula dan mengurangkan penggunaan plastik sekali guna dalam kehidupan seharian.",
-            "Menjimatkan penggunaan tenaga elektrik dan air di kawasan sekolah serta asrama setiap hari.",
-            "Menyertai aktiviti menanam pokok dan projek kebun herba untuk menghijaukan persekitaran sekolah.",
-            "Menggunakan platform media sosial bagi menyebarkan kempen kesedaran tentang bahaya pemanasan global.",
-            "Mengambil bahagian secara aktif dalam program gotong-royong pembersihan kawasan komuniti dan sungai.",
-            "Mencipta inovasi hijau mudah seperti menghasilkan baja kompos organik daripada sisa makanan dewan makan.",
-            "Menyokong gaya hidup lestari seperti berjalan kaki atau berbasikal bagi mengurangkan pelepasan karbon."
-        ]
-    },
-    {
-        "id": "TOPIC_4",
-        "title": "Kepentingan Gaya Hidup Sihat dan Kesejahteraan Emosi Pelajar Asrama",
-        "prompt": "Jelaskan cara-cara mengekalkan kesihatan fizikal yang cergas dan menguruskan tekanan emosi secara positif dalam suasana pembelajaran yang kompetitif. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
-        "defaultIdeas": [
-            "Mengamalkan pemakanan seimbang dan minum air secukupnya bagi membekalkan tenaga yang berterusan.",
-            "Mendapatkan tidur dan rehat yang mencukupi agar minda kekal cergas serta fokus ketika sesi pembelajaran.",
-            "Meluangkan masa untuk bersukan dan beriadah pada waktu petang bagi mengeluarkan peluh dan meredakan keletihan.",
-            "Berkongsi masalah emosi bersama rakan rapat, guru bimbingan dan kaunseling, atau ibu bapa.",
-            "Menyusun jadual ulang kaji harian secara teratur bagi mengelakkan tekanan pada saat-saat akhir peperiksaan.",
-            "Mendekatkan diri dengan aktiviti kerohanian dan amalan menenangkan diri untuk mengawal keresahan emosi.",
-            "Mewujudkan persekitaran bilik asrama yang kemas, ceria, dan saling menyokong antara penghuni."
-        ]
-    },
-    {
-        "id": "TOPIC_5",
-        "title": "Perpaduan Kaum sebagai Teras Keharmonian dan Kemakmuran Negara",
-        "prompt": "Ulas bagaimana aktiviti kokurikulum, sukan, dan kemasyarakatan di sekolah berupaya merapatkan hubungan antara kaum serta menyemarakkan semangat cintakan tanah air. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
-        "defaultIdeas": [
-            "Melibatkan diri secara aktif dalam aktiviti sukan dan persatuan kokurikulum bersama murid berbilang kaum.",
-            "Menggunakan bahasa Melayu sebagai bahasa kebangsaan untuk berinteraksi dan merapatkan jurang persefahaman.",
-            "Menghormati kepelbagaian adat resam, budaya, dan perayaan kaum lain dengan hati yang terbuka.",
-            "Menolak sebarang bentuk diskriminasi, ejekan, atau prasangka perkauman di dalam mahupun di luar sekolah.",
-            "Bekerjasama dalam aktiviti berkumpulan bagi memupuk semangat kerja sepasukan tanpa mengira kaum.",
-            "Menganjurkan program silang budaya dan jamuan muhibah bagi menyemarakkan rasa persaudaraan sesama warganegara.",
-            "Menghayati prinsip Rukun Negara sebagai panduan utama dalam membina masyarakat Malaysia yang aman dan bersatu."
-        ]
-    },
-    {
-        "id": "TOPIC_6",
-        "title": "Etika Penggunaan Media Sosial dan Pencegahan Buli Siber dalam Kalangan Remaja",
-        "prompt": "Tulis pandangan anda mengenai adab berkomunikasi di alam maya dan langkah-langkah proaktif untuk membendung gejala buli siber dalam kalangan remaja. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
-        "defaultIdeas": [
-            "Berfikir secara matang dan berhemah sebelum memuat naik sebarang hantaran atau ulasan di alam maya.",
-            "Menggunakan bahasa yang sopan dan tidak menyebarkan kata-kata kesat yang boleh menjatuhkan maruah orang lain.",
-            "Memastikan kesahihan sesuatu berita terlebih dahulu sebelum berkongsi maklumat bagi mengelakkan penyebaran fitnah.",
-            "Menjaga kerahsiaan data peribadi dan kata laluan akaun media sosial daripada diceroboh pihak luar.",
-            "Tidak bersubahat menyebarkan bahan berunsur ejekan, ugutan, atau tohmahan yang mencetuskan buli siber.",
-            "Segera membuat laporan kepada guru, ibu bapa, atau pihak berkuasa sekiranya menjadi mangsa atau saksi buli siber.",
-            "Memanfaatkan media sosial untuk tujuan pembelajaran, perkongsian ilmu, dan membina jaringan yang bermanfaat."
-        ]
-    },
-    {
-        "id": "TOPIC_7",
-        "title": "Semangat Kesukarelawanan dalam Mempupuk Sifat Empati dan Ihsan Murid",
-        "prompt": "Huraikan faedah melibatkan diri dalam khidmat masyarakat dan bantuan bencana kepada pembentukan sahsiah murid yang prihatin serta berjiwa besar. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
-        "defaultIdeas": [
-            "Menyertai misi bantuan kecemasan dan pengagihan barang keperluan asas kepada mangsa bencana alam.",
-            "Melibatkan diri dalam aktiviti lawatan serta santunan kasih di rumah anak yatim dan pusat jagaan warga emas.",
-            "Menghulurkan bantuan tenaga dan sokongan moral kepada golongan yang kurang bernasib baik dalam masyarakat.",
-            "Menyemai rasa syukur atas nikmat kehidupan yang dinikmati sambil memahami keperitan hidup orang lain.",
-            "Mengasah kemahiran berkomunikasi, bekerjasama dalam pasukan, dan menyelesaikan masalah di lapangan kebajikan.",
-            "Memupuk amalan ikhlas berkhidmat demi kesejahteraan bersama tanpa mengharapkan sebarang ganjaran kebendaan.",
-            "Melahirkan generasi muda yang mempunyai nilai ihsan tinggi, berempati, dan prihatin terhadap isu kemanusiaan."
-        ]
-    },
-    {
-        "id": "TOPIC_8",
-        "title": "Amalan Menabung dan Pengurusan Kewangan Bijak Sejak di Bangku Sekolah",
-        "prompt": "Bincangkan kepentingan memupuk tabiat berjimat cermat, merancang perbelanjaan harian, dan menghargai titik peluh ibu bapa demi masa depan yang terjamin. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
-        "defaultIdeas": [
-            "Menyimpan sebahagian wang saku secara konsisten ke dalam tabung simpanan atau akaun bank setiap hari.",
-            "Membezakan antara barang keperluan asas hidup dengan kehendak diri yang membawa kepada pembaziran.",
-            "Mencatat perbelanjaan harian secara berdisiplin agar pengurusan aliran wang dapat dipantau dengan teratur.",
-            "Menghargai penat lelah ibu bapa mencari rezeki dengan mengelakkan pembelian barang yang tidak penting.",
-            "Menyediakan simpanan wang kecemasan yang boleh digunakan ketika menghadapi situasi yang mendesak.",
-            "Mempelajari ilmu asas literasi kewangan dan konsep simpanan masa hadapan bagi menampung kos pendidikan tinggi.",
-            "Membina tabiat berbelanja secara berhemat sejak usia muda demi kestabilan dan kemandirian masa hadapan."
-        ]
-    },
-    {
-        "id": "TOPIC_9",
-        "title": "Pemupukan Minat Terhadap Bidang Sains, Matematik dan Inovasi Robotik (STEM)",
-        "prompt": "Jelaskan bagaimana minat terhadap sains, reka cipta, dan pemikiran logik mampu melahirkan generasi inovator muda yang berdaya saing di peringkat antarabangsa. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
-        "defaultIdeas": [
-            "Menyertai aktiviti eksperimen sains dan bengkel inovasi praktikal di makmal sekolah secara aktif.",
-            "Mempelajari asas pengekodan komputer dan reka bentuk robotik bagi mengasah daya kreativiti dan pemikiran logik.",
-            "Mengambil bahagian dalam pertandingan reka cipta dan inovasi STEM di peringkat daerah mahupun kebangsaan.",
-            "Mengaplikasikan teori sains dan matematik yang dipelajari di dalam kelas untuk mencipta solusi masalah harian.",
-            "Membaca majalah ilmiah serta meneroka penemuan teknologi baharu untuk merangsang rasa ingin tahu.",
-            "Mengubah persepsi sukar terhadap subjek sains melalui kaedah pembelajaran interaktif dan permainan sains.",
-            "Mempersiapkan diri sebagai generasi saintis dan jurutera masa hadapan yang berdaya cipta di pentas antarabangsa."
-        ]
-    },
-    {
-        "id": "TOPIC_10",
-        "title": "Menghayati Sejarah Kemerdekaan dan Mempertahankan Kedaulatan Negara",
-        "prompt": "Tulis refleksi anda mengenai kepentingan menghayati erti kemerdekaan, menghormati lambang kebesaran negara, dan mengekalkan jati diri warisan bangsa Malaysia. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
-        "defaultIdeas": [
-            "Menghayati pengorbanan dan jerih perih tokoh-tokoh pejuang terdahulu yang membebaskan tanah air daripada belenggu penjajahan.",
-            "Berdiri tegak dengan penuh rasa bangga dan hormat ketika lagu kebangsaan Negaraku dinyanyikan.",
-            "Mengibarkan bendera Jalur Gemilang secara teratur dan bermaruah sepanjang sambutan Bulan Kebangsaan.",
-            "Memelihara nama baik dan kedaulatan negara daripada sebarang anasir luar yang cuba mencemarkan imej Malaysia.",
-            "Mendalami lembaran sejarah tanah air bagi mengambil iktibar tentang pentingnya menjaga keamanan dan kemakmuran bersama.",
-            "Memperkukuh jati diri nasional dan menolak pengaruh budaya songsang yang bertentangan dengan norma masyarakat tempatan.",
-            "Berazam untuk menuntut ilmu bersungguh-sungguh agar dapat menyumbang kepakaran demi mempertahankan kedaulatan pertiwi."
-        ]
-    }
+  {
+    "id": "TOPIC_1",
+    "title": "Kepentingan Integriti dan Disiplin Kendiri dalam Membentuk Modal Insan Unggul",
+    "prompt": "Tulis sebuah karangan berpandu mengenai bagaimana nilai amanah, kejujuran, dan resiliensi mampu membentuk kepimpinan murid cemerlang di sekolah berasrama penuh. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Amalkan sikap amanah dan jujur dalam akademik",
+      "Patuhi peraturan sekolah serta disiplin asrama",
+      "Urus masa secara bijak antara belajar dan riadah",
+      "Bina ketahanan diri mendepani cabaran asrama",
+      "Tunjukkan teladan kepimpinan terpuji kepada rakan"
+    ]
+  },
+  {
+    "id": "TOPIC_2",
+    "title": "Peranan Kecerdasan Buatan (AI) dan Teknologi Digital dalam Pendidikan Abad Ke-21",
+    "prompt": "Huraikan bagaimana teknologi digital dan kecerdasan buatan dapat dimanfaatkan oleh murid secara berhemah untuk meningkatkan pencapaian akademik serta inovasi sains. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Manfaatkan AI sebagai tutor pembelajaran kendiri",
+      "Akses sumber rujukan dan nota ilmiah dengan pantas",
+      "Praktikkan etika digital tanpa melakukan plagiarisme",
+      "Asah pemikiran kritis dan jangan bergantung penuh pada AI",
+      "Hasilkan projek reka cipta dan inovasi sains"
+    ]
+  },
+  {
+    "id": "TOPIC_3",
+    "title": "Tanggungjawab Generasi Muda dalam Menangani Perubahan Iklim dan Kelestarian Alam",
+    "prompt": "Bincangkan peranan murid dan institusi sekolah dalam memupuk amalan hijau, kitar semula, dan penjimatan tenaga demi memelihara bumi untuk masa hadapan. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Amalkan kitar semula dan kurangkan penggunaan plastik",
+      "Jimatkan penggunaan elektrik dan air di sekolah",
+      "Tanam pokok untuk menghijaukan persekitaran asrama",
+      "Sebar kesedaran pemanasan global di media sosial",
+      "Sertai aktiviti gotong-royong membersihkan kawasan sekitar"
+    ]
+  },
+  {
+    "id": "TOPIC_4",
+    "title": "Kepentingan Gaya Hidup Sihat dan Kesejahteraan Emosi Pelajar Asrama",
+    "prompt": "Jelaskan cara-cara mengekalkan kesihatan fizikal yang cergas dan menguruskan tekanan emosi secara positif dalam suasana pembelajaran yang kompetitif. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Amalkan pemakanan seimbang dan minum air secukupnya",
+      "Dapatkan tidur dan rehat yang berkualiti",
+      "Bersukan pada waktu petang untuk kekal cergas",
+      "Kongsi masalah emosi bersama rakan dan kaunselor",
+      "Rancang jadual mengulang kaji tanpa tekanan melampau"
+    ]
+  },
+  {
+    "id": "TOPIC_5",
+    "title": "Perpaduan Kaum sebagai Teras Keharmonian dan Kemakmuran Negara",
+    "prompt": "Ulas bagaimana aktiviti kokurikulum, sukan, dan kemasyarakatan di sekolah berupaya merapatkan hubungan antara kaum serta menyemarakkan semangat cintakan tanah air. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Pupuk semangat perpaduan antara murid pelbagai kaum",
+      "Gunakan bahasa kebangsaan sebagai alat komunikasi utama",
+      "Hormati kepelbagaian budaya, adat resam, dan perayaan",
+      "Bekerjasama dalam pasukan tanpa mengira latar belakang",
+      "Hayati prinsip Rukun Negara demi keamanan bersama"
+    ]
+  },
+  {
+    "id": "TOPIC_6",
+    "title": "Etika Penggunaan Media Sosial dan Pencegahan Buli Siber dalam Kalangan Remaja",
+    "prompt": "Tulis pandangan anda mengenai adab berkomunikasi di alam maya dan langkah-langkah proaktif untuk membendung gejala buli siber dalam kalangan remaja. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Berfikir secara matang sebelum memuat naik hantaran",
+      "Gunakan bahasa sopan dan elakkan kata-kata kesat",
+      "Sahkan kesahihan berita sebelum menyebarkan maklumat",
+      "Lindungi privasi dan keselamatan data peribadi",
+      "Laporkan segera sebarang insiden buli siber"
+    ]
+  },
+  {
+    "id": "TOPIC_7",
+    "title": "Semangat Kesukarelawanan dalam Mempupuk Sifat Empati dan Ihsan Murid",
+    "prompt": "Huraikan faedah melibatkan diri dalam khidmat masyarakat dan bantuan bencana kepada pembentukan sahsiah murid yang prihatin serta berjiwa besar. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Sertai misi bantuan mangsa bencana alam",
+      "Santuni anak yatim dan warga emas di pusat kebajikan",
+      "Hulurkan bantuan tenaga kepada golongan memerlukan",
+      "Semai rasa empati dan syukur dalam sanubari",
+      "Ikhlas berbakti tanpa mengharapkan ganjaran kebendaan"
+    ]
+  },
+  {
+    "id": "TOPIC_8",
+    "title": "Amalan Menabung dan Pengurusan Kewangan Bijak Sejak di Bangku Sekolah",
+    "prompt": "Bincangkan kepentingan memupuk tabiat berjimat cermat, merancang perbelanjaan harian, dan menghargai titik peluh ibu bapa demi masa depan yang terjamin. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Simpan sebahagian wang saku harian secara konsisten",
+      "Bezakan antara keperluan asas dengan kehendak membazir",
+      "Catat perbelanjaan harian secara berdisiplin",
+      "Hargai titik peluh ibu bapa mencari rezeki",
+      "Sediakan simpanan khas sebagai dana kecemasan"
+    ]
+  },
+  {
+    "id": "TOPIC_9",
+    "title": "Pemupukan Minat Terhadap Bidang Sains, Matematik dan Inovasi Robotik (STEM)",
+    "prompt": "Jelaskan bagaimana minat terhadap sains, reka cipta, dan pemikiran logik mampu melahirkan generasi inovator muda yang berdaya saing di peringkat antarabangsa. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Sertai amali sains dan bengkel inovasi di sekolah",
+      "Pelajari asas pengekodan komputer dan robotik",
+      "Ambil bahagian dalam pertandingan reka cipta STEM",
+      "Aplikasikan teori sains untuk selesaikan masalah harian",
+      "Kikis tanggapan bahawa subjek STEM sukar dipelajari"
+    ]
+  },
+  {
+    "id": "TOPIC_10",
+    "title": "Menghayati Sejarah Kemerdekaan dan Mempertahankan Kedaulatan Negara",
+    "prompt": "Tulis refleksi anda mengenai kepentingan menghayati erti kemerdekaan, menghormati lambang kebesaran negara, dan mengekalkan jati diri warisan bangsa Malaysia. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Hayati pengorbanan pejuang terdahulu membebaskan tanah air",
+      "Hormati lagu Negaraku dan kibarkan Jalur Gemilang",
+      "Pertahankan maruah dan imej baik negara",
+      "Ambil iktibar daripada peristiwa bersejarah negara",
+      "Bersatu hati mempertahankan kedaulatan negara"
+    ]
+  }
 ];
 
   /* =========================================================================
@@ -824,7 +804,7 @@
           <i class="fa-solid fa-list-check" style="color:#16a34a;"></i> Cadangan Poin Isi Esei (Terus Kepada Isi):
         </span>
         <span style="background:#dcfce7; color:#14532d; font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:12px; font-family:var(--font-mono); border:1px solid #86efac;">
-          ${points.length} Poin Isi
+          ${points.length} Poin Isi (4–6 Poin)
         </span>
       </div>
       <div style="display:flex; flex-direction:column; gap:0.45rem;">
@@ -868,7 +848,7 @@
     }
 
     if (dom.aiIdeaBadge) {
-      dom.aiIdeaBadge.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menjana Isi Baharu...';
+      dom.aiIdeaBadge.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menjana Poin Ringkas...';
       dom.aiIdeaBadge.style.background = '#fef3c7';
       dom.aiIdeaBadge.style.color = '#92400e';
     }
@@ -877,26 +857,30 @@
     }
 
     const sysPrompt = `Anda ialah Guru Cemerlang Bahasa Melayu pakar Pentaksiran Kemasukan Sekolah Khusus (PKSK).
-Tugas anda: Berikan terus 6 hingga 8 POIN ISI PENTING karangan dalam Bahasa Melayu standard.
+Tugas anda: Berikan terus 4 HINGGA 6 POIN FRASA RINGKAS sebagai idea karangan calon.
+CONTOH FORMAT POIN YANG DIMAHUKAN:
+"Pupuk semangat perpaduan antara murid pelbagai kaum"
+"Amalkan sikap amanah dan jujur dalam akademik"
+"Patuhi peraturan sekolah dan elakkan salah laku"
+
 SYARAT KETAT:
-1. TERUS KEPADA ISI SAHAJA (Jangan buat perenggan pendahuluan/penutup yang meleret).
-2. Tulis setiap poin dalam SATU ayat yang ringkas, padat dan berimpak.
-3. Jumlah keseluruhan poin MESTI TEPAT ANTARA 6 HINGGA 8 AYAT SAHAJA.
+1. WAJIB RINGKAS: Setiap poin HANYA frasa pendek (4 hingga 8 perkataan sahaja).
+2. JANGAN tulis ayat panjang, jangan buat huraian atau contoh berjela-jela.
+3. Terus kepada poin tindakan atau isi penting sahaja.
+4. Jumlah poin: MESTI TEPAT ANTARA 4 HINGGA 6 POIN SAHAJA.
 Format output JSON SAHAJA:
 {
-  "total_points": 7,
+  "total_points": 5,
   "isi_points": [
-    "Ayat isi 1...",
-    "Ayat isi 2...",
-    "Ayat isi 3...",
-    "Ayat isi 4...",
-    "Ayat isi 5...",
-    "Ayat isi 6...",
-    "Ayat isi 7..."
+    "Poin pendek 1...",
+    "Poin pendek 2...",
+    "Poin pendek 3...",
+    "Poin pendek 4...",
+    "Poin pendek 5..."
   ]
 }`;
 
-    const userPrompt = `Beri terus 6-8 poin isi penting karangan bagi tajuk ini:
+    const userPrompt = `Beri 4-6 poin frasa isi ringkas bagi tajuk ini:
 Tajuk: "${topic.title}"
 Stimulus: "${topic.prompt}"`;
 
@@ -923,17 +907,18 @@ Stimulus: "${topic.prompt}"`;
           points = parsed.all_sentences;
         }
 
-        if (points.length < 6 && topic.defaultIdeas) {
+        // Enforce 4 to 6 points
+        if (points.length < 4 && topic.defaultIdeas) {
           points = topic.defaultIdeas;
-        } else if (points.length > 10) {
-          points = points.slice(0, 10);
+        } else if (points.length > 6) {
+          points = points.slice(0, 6);
         }
 
         topic.aiCustomIdeas = points;
         renderAiIdeaHtml(points, aiResult.model || 'Gemini AI');
         return;
       } catch (err) {
-        console.warn('Gagal parse JSON isi AI:', err);
+        console.warn('Gagal parse JSON poin ringkas AI:', err);
       }
     }
 
@@ -945,15 +930,15 @@ Stimulus: "${topic.prompt}"`;
   function insertAiIdeasToEssay() {
     if (!state.currentEssayIdeas || !state.currentEssayIdeas.all_sentences || state.currentEssayIdeas.all_sentences.length === 0) return;
 
-    const formattedParagraphs = state.currentEssayIdeas.all_sentences.join(' ');
+    const formattedPoints = state.currentEssayIdeas.all_sentences.map((pt, i) => `${i + 1}. ${pt}.`).join('\n');
 
     if (dom.inputEssayText) {
       if (dom.inputEssayText.value.trim().length > 0) {
-        if (confirm('Ruang jawapan anda sudah mempunyai teks karangan. Adakah anda ingin menyalin idea ini di bahagian bawah teks sedia ada?')) {
-          dom.inputEssayText.value = dom.inputEssayText.value.trim() + '\n\n' + formattedParagraphs;
+        if (confirm('Ruang jawapan anda sudah mempunyai teks karangan. Adakah anda ingin menambah poin isi ini di bahagian bawah teks sedia ada?')) {
+          dom.inputEssayText.value = dom.inputEssayText.value.trim() + '\n\n' + formattedPoints;
         }
       } else {
-        dom.inputEssayText.value = formattedParagraphs;
+        dom.inputEssayText.value = formattedPoints;
       }
       updateEssayWordCount();
       dom.inputEssayText.focus();
@@ -961,7 +946,7 @@ Stimulus: "${topic.prompt}"`;
 
     if (dom.btnInsertAiIdeas) {
       const origHtml = dom.btnInsertAiIdeas.innerHTML;
-      dom.btnInsertAiIdeas.innerHTML = '<i class="fa-solid fa-check"></i> Idea Disalin!';
+      dom.btnInsertAiIdeas.innerHTML = '<i class="fa-solid fa-check"></i> Isi Disalin!';
       dom.btnInsertAiIdeas.style.background = '#dcfce7';
       dom.btnInsertAiIdeas.style.color = '#15803d';
       setTimeout(() => {
