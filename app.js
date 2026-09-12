@@ -159,11 +159,14 @@
     flaggedQuestions: {},   // { [question_id]: true }
     paletteFilter: 'ALL',  // 'ALL' | 'PART_A' | 'PART_B' | 'FLAGGED'
 
-    // Essay Articulation (Bahagian C) - Rawak Automatik Pada Setiap Sesi
+    // Essay Articulation (Bahagian C) - Rawak Automatik & Pemasa 10 Minit
     essayText: '',
     essayTopic: PKSK_ESSAY_TOPICS[Math.floor(Math.random() * PKSK_ESSAY_TOPICS.length)],
     currentEssayIdeas: null,
     hasInitialEssayTopicSelected: true,
+    aiIdeaTimerSecondsLeft: 600, // 10 minit (600 saat)
+    aiIdeaTimerInterval: null,
+    aiIdeaTimerStarted: false,
 
     // AI Essay Assessment & Multi-Provider AI State
     aiProvider: localStorage.getItem('pksk_ai_provider') || 'GROQ', // 'GROQ' | 'GEMINI' | 'OPENROUTER'
@@ -257,12 +260,14 @@
     btnEssayBackToMcq: document.getElementById('btnEssayBackToMcq'),
     btnSubmitEssayFinal: document.getElementById('btnSubmitEssayFinal'),
 
-    // AI Essay Idea Starter Elements
+    // AI Essay Idea Starter Elements (Auto-Hide 10 Minit & Anti-Salin)
     aiIdeaBox: document.getElementById('aiIdeaBox'),
     aiIdeaBody: document.getElementById('aiIdeaBody'),
     aiIdeaContent: document.getElementById('aiIdeaContent'),
     aiIdeaBadge: document.getElementById('aiIdeaBadge'),
-    btnInsertAiIdeas: document.getElementById('btnInsertAiIdeas'),
+    aiIdeaTimerBadge: document.getElementById('aiIdeaTimerBadge'),
+    aiIdeaCountdown: document.getElementById('aiIdeaCountdown'),
+    aiIdeaExpiredNotice: document.getElementById('aiIdeaExpiredNotice'),
     btnRegenerateAiIdeas: document.getElementById('btnRegenerateAiIdeas'),
     btnToggleAiIdeas: document.getElementById('btnToggleAiIdeas'),
 
@@ -460,6 +465,9 @@
       } else {
         renderEssayTopicAndIdeas(false);
       }
+
+      // Mulakan pemasa auto-tutup 10 minit bagi cadangan isi esei
+      startAiIdeaTimer();
     }
     else if (viewName === 'RESULTS') {
       dom.resultsView.classList.remove('hidden');
@@ -694,6 +702,7 @@
     state.sessionQuestions = generatePkskSession();
     state.currentIndex = 0;
     state.userAnswers = {};
+    resetAiIdeaTimer();
     state.flaggedQuestions = {};
 
     // Start timer (90 mins for full sim, 30 mins for others)
@@ -812,7 +821,7 @@
 
     points.forEach((pt, idx) => {
       html += `
-        <div style="display:flex; align-items:flex-start; gap:0.65rem; background:#ffffff; padding:0.5rem 0.8rem; border-radius:6px; border:1px solid #d1fae5; box-shadow:0 1px 2px rgba(0,0,0,0.02);">
+        <div style="display:flex; align-items:flex-start; gap:0.65rem; background:#ffffff; padding:0.5rem 0.8rem; border-radius:6px; border:1px solid #d1fae5; box-shadow:0 1px 2px rgba(0,0,0,0.02); user-select:none; -webkit-user-select:none; cursor:default;" oncopy="return false;" oncontextmenu="return false;">
           <span style="background:#15803d; color:#ffffff; font-weight:800; font-size:0.75rem; min-width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px;">
             ${idx + 1}
           </span>
@@ -957,6 +966,94 @@ Stimulus: "${topic.prompt}"`;
         }
       }, 2000);
     }
+  }
+
+  /* =========================================================================
+     AUTO-HIDE 10 MINIT & ANTI-COPY PROTECTION ENGINE
+     ========================================================================= */
+  function startAiIdeaTimer() {
+    if (state.aiIdeaTimerStarted) return;
+    state.aiIdeaTimerStarted = true;
+
+    if (state.aiIdeaTimerSecondsLeft <= 0) {
+      if (dom.aiIdeaBox) dom.aiIdeaBox.style.display = 'none';
+      if (dom.aiIdeaExpiredNotice) dom.aiIdeaExpiredNotice.classList.remove('hidden');
+      return;
+    }
+
+    if (dom.aiIdeaBox) {
+      dom.aiIdeaBox.style.display = 'block';
+      dom.aiIdeaBox.style.opacity = '1';
+    }
+    if (dom.aiIdeaExpiredNotice) dom.aiIdeaExpiredNotice.classList.add('hidden');
+
+    updateAiIdeaCountdownDisplay();
+
+    if (state.aiIdeaTimerInterval) clearInterval(state.aiIdeaTimerInterval);
+    state.aiIdeaTimerInterval = setInterval(() => {
+      state.aiIdeaTimerSecondsLeft--;
+      updateAiIdeaCountdownDisplay();
+
+      if (state.aiIdeaTimerSecondsLeft <= 0) {
+        clearInterval(state.aiIdeaTimerInterval);
+        state.aiIdeaTimerInterval = null;
+
+        // Auto-hide idea box selepas 10 minit tamat
+        if (dom.aiIdeaBox) {
+          dom.aiIdeaBox.style.opacity = '0';
+          setTimeout(() => {
+            if (dom.aiIdeaBox) dom.aiIdeaBox.style.display = 'none';
+            if (dom.aiIdeaExpiredNotice) dom.aiIdeaExpiredNotice.classList.remove('hidden');
+          }, 350);
+        }
+      }
+    }, 1000);
+  }
+
+  function updateAiIdeaCountdownDisplay() {
+    if (!dom.aiIdeaCountdown) return;
+    const secs = Math.max(0, state.aiIdeaTimerSecondsLeft);
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    dom.aiIdeaCountdown.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+
+    if (dom.aiIdeaTimerBadge) {
+      if (secs <= 120) {
+        dom.aiIdeaTimerBadge.style.background = '#fee2e2';
+        dom.aiIdeaTimerBadge.style.color = '#dc2626';
+        dom.aiIdeaTimerBadge.style.borderColor = '#f87171';
+      } else {
+        dom.aiIdeaTimerBadge.style.background = '#fef3c7';
+        dom.aiIdeaTimerBadge.style.color = '#92400e';
+        dom.aiIdeaTimerBadge.style.borderColor = '#fde68a';
+      }
+    }
+  }
+
+  function resetAiIdeaTimer() {
+    if (state.aiIdeaTimerInterval) clearInterval(state.aiIdeaTimerInterval);
+    state.aiIdeaTimerInterval = null;
+    state.aiIdeaTimerSecondsLeft = 600;
+    state.aiIdeaTimerStarted = false;
+    if (dom.aiIdeaBox) {
+      dom.aiIdeaBox.style.display = 'block';
+      dom.aiIdeaBox.style.opacity = '1';
+    }
+    if (dom.aiIdeaExpiredNotice) dom.aiIdeaExpiredNotice.classList.add('hidden');
+    updateAiIdeaCountdownDisplay();
+  }
+
+  function initAiIdeaAntiCopy() {
+    const targets = [dom.aiIdeaBox, dom.aiIdeaContent];
+    targets.forEach(el => {
+      if (!el) return;
+      ['copy', 'cut', 'contextmenu', 'selectstart', 'dragstart'].forEach(evt => {
+        el.addEventListener(evt, (e) => {
+          e.preventDefault();
+          return false;
+        });
+      });
+    });
   }
 
   function toggleAiIdeaBox() {
@@ -1832,7 +1929,8 @@ ${essay}
     dom.navTabDrill.onclick = () => { selectMode('DRILL_PRACTICE'); switchView('DASHBOARD'); };
     dom.navTabEssay.onclick = () => { 
       if (window.PkskLicense && !window.PkskLicense.isActivated()) {
-        openActivationModal(() => { state.mode = 'ESSAY_PRACTICE'; switchView('ESSAY'); });
+        openActivationModal(() => { state.mode = 'ESSAY_PRACTICE';
+        resetAiIdeaTimer(); switchView('ESSAY'); });
         return;
       }
       state.mode = 'ESSAY_PRACTICE'; 
@@ -1911,8 +2009,8 @@ ${essay}
     dom.inputEssayText.oninput = updateEssayWordCount;
     if (dom.btnShuffleEssayTopic) dom.btnShuffleEssayTopic.onclick = shuffleEssayTopic;
     if (dom.btnRegenerateAiIdeas) dom.btnRegenerateAiIdeas.onclick = () => generateAiEssayIdeas(state.essayTopic, true);
-    if (dom.btnInsertAiIdeas) dom.btnInsertAiIdeas.onclick = insertAiIdeasToEssay;
     if (dom.btnToggleAiIdeas) dom.btnToggleAiIdeas.onclick = toggleAiIdeaBox;
+    initAiIdeaAntiCopy();
     dom.btnEssayBackToMcq.onclick = () => switchView('EXAM');
     dom.btnSubmitEssayFinal.onclick = () => {
       state.aiEssayAssessment = null; // Clear old assessment for fresh run

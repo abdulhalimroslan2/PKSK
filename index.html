@@ -453,17 +453,20 @@
           </p>
         </div>
 
-        <!-- AI ESSAY IDEA STARTER BOX (POIN ISI PENTING 6-10 AYAT) -->
-        <div id="aiIdeaBox" style="margin-bottom:1.35rem; background:linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border:1.5px solid #86efac; border-radius:var(--radius-md); padding:1rem 1.25rem; box-shadow:0 2px 10px rgba(16,185,129,0.06); transition:all 0.3s ease;">
+        <!-- AI ESSAY IDEA STARTER BOX (POIN ISI PENTING 4-6 POIN - AUTO HIDE 10 MINIT & ANTI-SALIN) -->
+        <div id="aiIdeaBox" style="margin-bottom:1.35rem; background:linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border:1.5px solid #86efac; border-radius:var(--radius-md); padding:1rem 1.25rem; box-shadow:0 2px 10px rgba(16,185,129,0.06); transition:opacity 0.4s ease, transform 0.4s ease; user-select:none; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none;" oncopy="return false;" oncut="return false;" oncontextmenu="return false;" ondragstart="return false;">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem; border-bottom:1.5px solid #bbf7d0; padding-bottom:0.6rem;">
-            <div style="display:flex; align-items:center; gap:0.5rem; font-weight:800; color:#15803d; font-size:0.95rem;">
+            <div style="display:flex; align-items:center; gap:0.5rem; font-weight:800; color:#15803d; font-size:0.95rem; flex-wrap:wrap;">
               <i class="fa-solid fa-list-check" style="color:#16a34a;"></i> Cadangan Poin Isi Esei (4–6 Poin):
               <span id="aiIdeaBadge" class="badge" style="background:#dcfce7; color:#166534; font-size:0.75rem; padding:3px 9px; font-weight:800; border-radius:4px;">Gemini AI</span>
+              <span id="aiIdeaTimerBadge" style="background:#fef3c7; color:#92400e; font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:4px; display:inline-flex; align-items:center; gap:4px; font-family:var(--font-mono); border:1px solid #fde68a;" title="Cadangan isi akan ditutup secara automatik selepas 10 minit">
+                <i class="fa-solid fa-stopwatch"></i> Auto-Tutup: <span id="aiIdeaCountdown">10:00</span>
+              </span>
+              <span style="background:#f1f5f9; color:#475569; font-size:0.72rem; font-weight:700; padding:2px 7px; border-radius:4px; display:inline-flex; align-items:center; gap:3px;" title="Teks dilindungi: Calon perlu mengolah ayat sendiri">
+                <i class="fa-solid fa-ban"></i> Anti-Salin
+              </span>
             </div>
             <div style="display:flex; align-items:center; gap:0.45rem;">
-              <button id="btnInsertAiIdeas" class="btn-kpm" style="background:#ffffff; border:1px solid #86efac; color:#15803d; font-size:0.78rem; padding:0.35rem 0.75rem; border-radius:var(--radius-sm); font-weight:800; display:flex; align-items:center; gap:5px; cursor:pointer;" title="Salin poin isi ini ke ruang jawapan karangan">
-                <i class="fa-solid fa-file-import"></i> Salin Isi ke Karangan
-              </button>
               <button id="btnRegenerateAiIdeas" class="btn-kpm btn-kpm-gold" style="font-size:0.78rem; padding:0.35rem 0.75rem; border-radius:var(--radius-sm); font-weight:800; display:flex; align-items:center; gap:5px; cursor:pointer;" title="Jana semula poin isi baharu menggunakan AI">
                 <i class="fa-solid fa-rotate"></i> Jana Isi Baharu
               </button>
@@ -473,12 +476,21 @@
             </div>
           </div>
           <div id="aiIdeaBody">
-            <div id="aiIdeaContent" style="font-size:0.92rem; color:#1e293b; line-height:1.75;">
+            <div id="aiIdeaContent" style="font-size:0.92rem; color:#1e293b; line-height:1.75; user-select:none; -webkit-user-select:none;">
               <div style="display:flex; align-items:center; gap:8px; color:#15803d; font-weight:700;">
                 <i class="fa-solid fa-spinner fa-spin"></i> Menjana panduan idea esei berasaskan AI...
               </div>
             </div>
           </div>
+        </div>
+
+        <!-- NOTIS SELEPAS 10 MINIT (AUTO-HIDE) -->
+        <div id="aiIdeaExpiredNotice" class="hidden" style="margin-bottom:1.35rem; background:#fef2f2; border:1.5px solid #fca5a5; border-radius:var(--radius-md); padding:0.85rem 1.25rem; color:#991b1b; font-size:0.88rem; font-weight:700; display:flex; align-items:center; justify-content:space-between; gap:0.5rem; box-shadow:0 2px 8px rgba(239,68,68,0.06);">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <i class="fa-solid fa-clock-rotate-left" style="font-size:1.1rem; color:#dc2626;"></i>
+            <span>Masa paparan cadangan poin isi (10 minit) telah tamat. Sila teruskan penulisan karangan anda secara berdikari.</span>
+          </div>
+          <span style="font-size:0.75rem; background:#fee2e2; color:#b91c1c; padding:3px 8px; border-radius:4px; font-weight:800; border:1px solid #fca5a5; white-space:nowrap;">Tamat 10 Minit</span>
         </div>
 
         <div class="kpm-form-group">
