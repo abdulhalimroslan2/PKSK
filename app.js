@@ -8,6 +8,542 @@
   'use strict';
 
   /* =========================================================================
+     PKSK AUTHENTIC ESSAY TOPIC BANK & 6-10 SENTENCE IDEA STARTERS
+     ========================================================================= */
+  const PKSK_ESSAY_TOPICS = [
+  {
+    id: 'TOPIC_1',
+    title: 'Kepentingan Integriti dan Disiplin Kendiri dalam Membentuk Modal Insan Unggul',
+    prompt: 'Tulis sebuah karangan berpandu mengenai bagaimana nilai amanah, kejujuran, dan resiliensi mampu membentuk kepimpinan murid cemerlang di sekolah berasrama penuh. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.',
+    defaultIdeas: {
+      total_sentences: 8,
+      sections: [
+        {
+          section: 'Pendahuluan',
+          sentences: [
+            'Integriti dan disiplin kendiri merupakan teras utama dalam melahirkan modal insan cemerlang yang berkeperibadian mulia.',
+            'Setiap murid di sekolah berasrama penuh wajar mengamalkan sikap amanah dalam memikul tanggungjawab sama ada dalam bidang akademik mahupun kepimpinan asrama.'
+          ]
+        },
+        {
+          section: 'Isi Utama 1 (Pengurusan Masa & Kejujuran)',
+          sentences: [
+            'Pengurusan masa yang berdisiplin membolehkan murid membahagikan masa antara mengulang kaji pelajaran dan aktiviti riadah dengan seimbang.',
+            'Nilai kejujuran yang kukuh juga mampu menghindarkan murid daripada melakukan perbuatan tidak bermoral seperti meniru dalam peperiksaan atau melanggar peraturan sekolah.'
+          ]
+        },
+        {
+          section: 'Isi Utama 2 (Daya Tahan & Resiliensi)',
+          sentences: [
+            'Dari sudut resiliensi, murid yang berdaya tahan tidak akan mudah berputus asa apabila berhadapan dengan cabaran atau kegagalan yang menimpa.',
+            'Pihak sekolah dan guru-guru sentiasa memainkan peranan penting dalam memupuk budaya sahsiah terpuji melalui program bimbingan kepimpinan yang berterusan.'
+          ]
+        },
+        {
+          section: 'Isi Utama 3 (Elemen KBAT & Kepimpinan Masa Depan)',
+          sentences: [
+            'Penguasaan nilai-nilai murni ini amat kritikal kerana pemimpin masa hadapan memerlukan keteguhan etika untuk memacu kemajuan negara ke persada antarabangsa.'
+          ]
+        },
+        {
+          section: 'Penutup / Rumusan',
+          sentences: [
+            'Kesimpulannya, amalan integriti yang dipupuk sejak di bangku sekolah pasti melahirkan warganegara berwibawa yang mampu menyumbang bakti kepada nusa dan bangsa.'
+          ]
+        }
+      ],
+      all_sentences: [
+        'Integriti dan disiplin kendiri merupakan teras utama dalam melahirkan modal insan cemerlang yang berkeperibadian mulia.',
+        'Setiap murid di sekolah berasrama penuh wajar mengamalkan sikap amanah dalam memikul tanggungjawab sama ada dalam bidang akademik mahupun kepimpinan asrama.',
+        'Pengurusan masa yang berdisiplin membolehkan murid membahagikan masa antara mengulang kaji pelajaran dan aktiviti riadah dengan seimbang.',
+        'Nilai kejujuran yang kukuh juga mampu menghindarkan murid daripada melakukan perbuatan tidak bermoral seperti meniru dalam peperiksaan atau melanggar peraturan sekolah.',
+        'Dari sudut resiliensi, murid yang berdaya tahan tidak akan mudah berputus asa apabila berhadapan dengan cabaran atau kegagalan yang menimpa.',
+        'Pihak sekolah dan guru-guru sentiasa memainkan peranan penting dalam memupuk budaya sahsiah terpuji melalui program bimbingan kepimpinan yang berterusan.',
+        'Penguasaan nilai-nilai murni ini amat kritikal kerana pemimpin masa hadapan memerlukan keteguhan etika untuk memacu kemajuan negara ke persada antarabangsa.',
+        'Kesimpulannya, amalan integriti yang dipupuk sejak di bangku sekolah pasti melahirkan warganegara berwibawa yang mampu menyumbang bakti kepada nusa dan bangsa.'
+      ]
+    }
+  },
+  {
+    id: 'TOPIC_2',
+    title: 'Peranan Kecerdasan Buatan (AI) dan Teknologi Digital dalam Pendidikan Abad Ke-21',
+    prompt: 'Huraikan bagaimana teknologi digital dan kecerdasan buatan dapat dimanfaatkan oleh murid secara berhemah untuk meningkatkan pencapaian akademik serta inovasi sains. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.',
+    defaultIdeas: {
+      total_sentences: 8,
+      sections: [
+        {
+          section: 'Pendahuluan',
+          sentences: [
+            'Perkembangan pesat kecerdasan buatan (AI) dan teknologi digital telah merevolusikan kaedah pengajaran serta pembelajaran di sekolah era moden ini.',
+            'Murid-murid kini berpeluang memanfaatkan aplikasi AI sebagai tutor peribadi bagi memahami konsep sains dan matematik yang kompleks dengan lebih pantas.'
+          ]
+        },
+        {
+          section: 'Isi Utama 1 (Penerokaan Ilmu & Etika Digital)',
+          sentences: [
+            'Penggunaan teknologi digital ini perlulah disertai dengan etika dan sikap bertanggungjawab agar tidak menimbulkan masalah plagiarisme akademik.',
+            'Kemudahan pembelajaran dalam talian memberi ruang kepada murid untuk meneroka maklumat global dan mengasah kemahiran penyelidikan secara kendiri.'
+          ]
+        },
+        {
+          section: 'Isi Utama 2 (Pemikiran Kritis & Inovasi)',
+          sentences: [
+            'Pihak pendidik sewajarnya membimbing generasi muda agar menguasai pemikiran kritis dan tidak bergantung seratus peratus kepada teknologi semata-mata.',
+            'Melalui pendedahan digital yang berhemah, murid dapat menghasilkan inovasi baharu yang mampu menyelesaikan masalah harian masyarakat setempat.'
+          ]
+        },
+        {
+          section: 'Isi Utama 3 (Elemen KBAT & Persiapan Kerjaya)',
+          sentences: [
+            'Pengintegrasian AI dalam bilik darjah menjadi batu loncatan yang strategik untuk mempersiapkan pelajar mendepani cabaran industri masa hadapan.'
+          ]
+        },
+        {
+          section: 'Penutup / Rumusan',
+          sentences: [
+            'Tuntasnya, teknologi digital hendaklah dimanfaatkan sebagai alat pembina minda inovatif demi memacu kemajuan pendidikan negara setaraf peringkat global.'
+          ]
+        }
+      ],
+      all_sentences: [
+        'Perkembangan pesat kecerdasan buatan (AI) dan teknologi digital telah merevolusikan kaedah pengajaran serta pembelajaran di sekolah era moden ini.',
+        'Murid-murid kini berpeluang memanfaatkan aplikasi AI sebagai tutor peribadi bagi memahami konsep sains dan matematik yang kompleks dengan lebih pantas.',
+        'Penggunaan teknologi digital ini perlulah disertai dengan etika dan sikap bertanggungjawab agar tidak menimbulkan masalah plagiarisme akademik.',
+        'Kemudahan pembelajaran dalam talian memberi ruang kepada murid untuk meneroka maklumat global dan mengasah kemahiran penyelidikan secara kendiri.',
+        'Pihak pendidik sewajarnya membimbing generasi muda agar menguasai pemikiran kritis dan tidak bergantung seratus peratus kepada teknologi semata-mata.',
+        'Melalui pendedahan digital yang berhemah, murid dapat menghasilkan inovasi baharu yang mampu menyelesaikan masalah harian masyarakat setempat.',
+        'Pengintegrasian AI dalam bilik darjah menjadi batu loncatan yang strategik untuk mempersiapkan pelajar mendepani cabaran industri masa hadapan.',
+        'Tuntasnya, teknologi digital hendaklah dimanfaatkan sebagai alat pembina minda inovatif demi memacu kemajuan pendidikan negara setaraf peringkat global.'
+      ]
+    }
+  },
+  {
+    id: 'TOPIC_3',
+    title: 'Tanggungjawab Generasi Muda dalam Menangani Perubahan Iklim dan Kelestarian Alam',
+    prompt: 'Bincangkan peranan murid dan institusi sekolah dalam memupuk amalan hijau, kitar semula, dan penjimatan tenaga demi memelihara bumi untuk masa hadapan. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.',
+    defaultIdeas: {
+      total_sentences: 8,
+      sections: [
+        {
+          section: 'Pendahuluan',
+          sentences: [
+            'Isu perubahan iklim global menuntut komitmen yang serius daripada seluruh lapisan masyarakat, khususnya generasi muda yang bakal mewarisi bumi.',
+            'Murid-murid berperanan besar dalam membudayakan amalan hijau dan mengurangkan jejak karbon bermula dari kawasan sekolah lagi.'
+          ]
+        },
+        {
+          section: 'Isi Utama 1 (Amalan Kitar Semula & Penjimatan)',
+          sentences: [
+            'Generasi muda bertanggungjawab membudayakan amalan kitar semula dan mengurangkan penggunaan beg plastik sekali pakai dalam kehidupan seharian.',
+            'Institusi sekolah pula boleh menganjurkan kempen penjimatan elektrik, air, serta program penanaman pokok di sekitar kawasan asrama.'
+          ]
+        },
+        {
+          section: 'Isi Utama 2 (Kesedaran Komuniti & Kelab Alam Sekitar)',
+          sentences: [
+            'Murid digalakkan memanfaatkan kemahiran media sosial untuk menyebarkan mesej kesedaran tentang bahaya pemanasan global kepada masyarakat umum.',
+            'Sikap prihatin terhadap alam sekitar dapat diperkukuh melalui penyertaan aktif dalam aktiviti gotong-royong pembersihan komuniti setempat.'
+          ]
+        },
+        {
+          section: 'Isi Utama 3 (Elemen KBAT & Inovasi Hijau)',
+          sentences: [
+            'Dari aspek inovasi sains, pelajar berpotensi mencipta teknologi hijau berskala kecil seperti baja kompos daripada sisa makanan harian.'
+          ]
+        },
+        {
+          section: 'Penutup / Rumusan',
+          sentences: [
+            'Kesimpulannya, langkah kecil yang diambil oleh setiap murid hari ini mampu membawa impak besar ke arah menjamin kelangsungan alam sekitar yang mampan.'
+          ]
+        }
+      ],
+      all_sentences: [
+        'Isu perubahan iklim global menuntut komitmen yang serius daripada seluruh lapisan masyarakat, khususnya generasi muda yang bakal mewarisi bumi.',
+        'Murid-murid berperanan besar dalam membudayakan amalan hijau dan mengurangkan jejak karbon bermula dari kawasan sekolah lagi.',
+        'Generasi muda bertanggungjawab membudayakan amalan kitar semula dan mengurangkan penggunaan beg plastik sekali pakai dalam kehidupan seharian.',
+        'Institusi sekolah pula boleh menganjurkan kempen penjimatan elektrik, air, serta program penanaman pokok di sekitar kawasan asrama.',
+        'Murid digalakkan memanfaatkan kemahiran media sosial untuk menyebarkan mesej kesedaran tentang bahaya pemanasan global kepada masyarakat umum.',
+        'Sikap prihatin terhadap alam sekitar dapat diperkukuh melalui penyertaan aktif dalam aktiviti gotong-royong pembersihan komuniti setempat.',
+        'Dari aspek inovasi sains, pelajar berpotensi mencipta teknologi hijau berskala kecil seperti baja kompos daripada sisa makanan harian.',
+        'Kesimpulannya, langkah kecil yang diambil oleh setiap murid hari ini mampu membawa impak besar ke arah menjamin kelangsungan alam sekitar yang mampan.'
+      ]
+    }
+  },
+  {
+    id: 'TOPIC_4',
+    title: 'Kepentingan Gaya Hidup Sihat dan Kesejahteraan Emosi Pelajar Asrama',
+    prompt: 'Jelaskan cara-cara mengekalkan kesihatan fizikal yang cergas dan menguruskan tekanan emosi secara positif dalam suasana pembelajaran yang kompetitif. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.',
+    defaultIdeas: {
+      total_sentences: 8,
+      sections: [
+        {
+          section: 'Pendahuluan',
+          sentences: [
+            'Kehidupan sebagai pelajar asrama penuh memerlukan keseimbangan yang jitu antara kecemerlangan akademik dan penjagaan kesihatan menyeluruh.',
+            'Kesihatan fizikal yang cergas menjadi asas penting untuk menyokong minda yang cerdas sepanjang sesi persekolahan.'
+          ]
+        },
+        {
+          section: 'Isi Utama 1 (Pemakanan & Aktiviti Riadah)',
+          sentences: [
+            'Amalan gaya hidup sihat bermula daripada pengambilan makanan berkhasiat serta jadual tidur yang teratur bagi menjamin stamina murid.',
+            'Aktiviti riadah dan bersukan pada waktu petang membantu mengeluarkan peluh sekali gus meredakan keletihan fizikal selepas seharian belajar.'
+          ]
+        },
+        {
+          section: 'Isi Utama 2 (Pengurusan Tekanan & Sokongan Rakan)',
+          sentences: [
+            'Dari aspek emosi, murid perlu berani berkongsi masalah bersama rakan sebaya atau kaunselor bagi mengelakkan rasa tertekan yang berpanjangan.',
+            'Suasana asrama yang harmoni dan saling membantu amat berkesan dalam membina ketahanan psikologi murid semasa minggu peperiksaan.'
+          ]
+        },
+        {
+          section: 'Isi Utama 3 (Elemen KBAT & Keseimbangan Holistik)',
+          sentences: [
+            'Kesejahteraan emosi yang stabil membolehkan murid berfikir secara rasional dan membuat keputusan yang matang dalam menghadapi cabaran.'
+          ]
+        },
+        {
+          section: 'Penutup / Rumusan',
+          sentences: [
+            'Jelaslah bahawa kesihatan fizikal dan kestabilan mental merupakan aset paling berharga untuk melahirkan murid yang berdaya saing dan holistik.'
+          ]
+        }
+      ],
+      all_sentences: [
+        'Kehidupan sebagai pelajar asrama penuh memerlukan keseimbangan yang jitu antara kecemerlangan akademik dan penjagaan kesihatan menyeluruh.',
+        'Kesihatan fizikal yang cergas menjadi asas penting untuk menyokong minda yang cerdas sepanjang sesi persekolahan.',
+        'Amalan gaya hidup sihat bermula daripada pengambilan makanan berkhasiat serta jadual tidur yang teratur bagi menjamin stamina murid.',
+        'Aktiviti riadah dan bersukan pada waktu petang membantu mengeluarkan peluh sekali gus meredakan keletihan fizikal selepas seharian belajar.',
+        'Dari aspek emosi, murid perlu berani berkongsi masalah bersama rakan sebaya atau kaunselor bagi mengelakkan rasa tertekan yang berpanjangan.',
+        'Suasana asrama yang harmoni dan saling membantu amat berkesan dalam membina ketahanan psikologi murid semasa minggu peperiksaan.',
+        'Kesejahteraan emosi yang stabil membolehkan murid berfikir secara rasional dan membuat keputusan yang matang dalam menghadapi cabaran.',
+        'Jelaslah bahawa kesihatan fizikal dan kestabilan mental merupakan aset paling berharga untuk melahirkan murid yang berdaya saing dan holistik.'
+      ]
+    }
+  },
+  {
+    id: 'TOPIC_5',
+    title: 'Perpaduan Kaum sebagai Teras Keharmonian dan Kemakmuran Negara',
+    prompt: 'Ulas bagaimana aktiviti kokurikulum, sukan, dan kemasyarakatan di sekolah berupaya merapatkan hubungan antara kaum serta menyemarakkan semangat cintakan tanah air. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.',
+    defaultIdeas: {
+      total_sentences: 8,
+      sections: [
+        {
+          section: 'Pendahuluan',
+          sentences: [
+            'Keamanan dan kemakmuran Malaysia bertunjangkan keharmonian masyarakat berbilang kaum yang hidup bersatu hati sejak sekian lama.',
+            'Institusi sekolah merupakan tapak semaian paling subur untuk menyatukan generasi muda daripada pelbagai latar belakang etnik dan budaya.'
+          ]
+        },
+        {
+          section: 'Isi Utama 1 (Sukan & Kokurikulum Perpaduan)',
+          sentences: [
+            'Aktiviti sukan dan kokurikulum di sekolah menjadi wadah ampuh untuk memupuk semangat muhibah serta kerjasama erat antara murid.',
+            'Semasa bermain dalam satu pasukan, murid belajar saling mempercayai, bekerjasama, dan meraikan kepelbagaian demi mencapai kejayaan bersama.'
+          ]
+        },
+        {
+          section: 'Isi Utama 2 (Bahasa Kebangsaan & Nilai Toleransi)',
+          sentences: [
+            'Penggunaan bahasa kebangsaan sebagai bahasa komunikasi rasmi memainkan peranan penting dalam merapatkan jurang persefahaman antara kaum.',
+            'Nilai toleransi dan rasa hormat terhadap adat resam kaum lain wajar disemai agar sebarang prasangka negatif dapat dihapuskan sepenuhnya.'
+          ]
+        },
+        {
+          section: 'Isi Utama 3 (Elemen KBAT & Kestabilan Nasional)',
+          sentences: [
+            'Perpaduan yang utuh bukan sahaja menjamin kestabilan sosiopolitik, malah menjadi pemacu utama kepada kemajuan ekonomi negara tercinta.'
+          ]
+        },
+        {
+          section: 'Penutup / Rumusan',
+          sentences: [
+            'Akhir kalam, keharmonian kaum adalah tanggungjawab bersama yang mesti dipertahankan demi mengekalkan kedaulatan dan masa depan tanah air.'
+          ]
+        }
+      ],
+      all_sentences: [
+        'Keamanan dan kemakmuran Malaysia bertunjangkan keharmonian masyarakat berbilang kaum yang hidup bersatu hati sejak sekian lama.',
+        'Institusi sekolah merupakan tapak semaian paling subur untuk menyatukan generasi muda daripada pelbagai latar belakang etnik dan budaya.',
+        'Aktiviti sukan dan kokurikulum di sekolah menjadi wadah ampuh untuk memupuk semangat muhibah serta kerjasama erat antara murid.',
+        'Semasa bermain dalam satu pasukan, murid belajar saling mempercayai, bekerjasama, dan meraikan kepelbagaian demi mencapai kejayaan bersama.',
+        'Penggunaan bahasa kebangsaan sebagai bahasa komunikasi rasmi memainkan peranan penting dalam merapatkan jurang persefahaman antara kaum.',
+        'Nilai toleransi dan rasa hormat terhadap adat resam kaum lain wajar disemai agar sebarang prasangka negatif dapat dihapuskan sepenuhnya.',
+        'Perpaduan yang utuh bukan sahaja menjamin kestabilan sosiopolitik, malah menjadi pemacu utama kepada kemajuan ekonomi negara tercinta.',
+        'Akhir kalam, keharmonian kaum adalah tanggungjawab bersama yang mesti dipertahankan demi mengekalkan kedaulatan dan masa depan tanah air.'
+      ]
+    }
+  },
+  {
+    id: 'TOPIC_6',
+    title: 'Etika Penggunaan Media Sosial dan Pencegahan Buli Siber dalam Kalangan Remaja',
+    prompt: 'Tulis pandangan anda mengenai adab berkomunikasi di alam maya dan langkah-langkah proaktif untuk membendung gejala buli siber dalam kalangan remaja. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.',
+    defaultIdeas: {
+      total_sentences: 8,
+      sections: [
+        {
+          section: 'Pendahuluan',
+          sentences: [
+            'Media sosial kini menjadi sebahagian daripada medium komunikasi harian yang amat popular dalam kalangan generasi muda masa kini.',
+            'Walau bagaimanapun, kebebasan berkomunikasi di alam maya tanpa etika sering mengundang fenomena buli siber yang merosakkan kesejahteraan emosi.'
+          ]
+        },
+        {
+          section: 'Isi Utama 1 (Adab & Pertimbangan Sebelum Bertindak)',
+          sentences: [
+            'Setiap pengguna media sosial sewajarnya berfikir masak-masak sebelum menulis sebarang komen atau memuat naik hantaran yang boleh menyinggung orang lain.',
+            'Murid juga perlu membiasakan diri untuk menyemak kesahihan sesuatu maklumat sebelum menyebarkannya bagi mengelakkan fitnah berleluasa.'
+          ]
+        },
+        {
+          section: 'Isi Utama 2 (Tindakan Melapor & Kawalan Ibu Bapa)',
+          sentences: [
+            'Sekiranya menyaksikan insiden buli siber, murid digesa berani membuat laporan kepada pihak berkuasa dan tidak menjadi penyebar kandungan negatif tersebut.',
+            'Pihak ibu bapa dan guru pula bertanggungjawab memantau aktiviti digital anak-anak serta mendidik mereka tentang keselamatan data peribadi.'
+          ]
+        },
+        {
+          section: 'Isi Utama 3 (Elemen KBAT & Penguatkuasaan Undang-undang)',
+          sentences: [
+            'Undang-undang jenayah siber perlulah ditegakkan dengan tegas agar memberi pengajaran berguna kepada pelaku buli siber di media sosial.'
+          ]
+        },
+        {
+          section: 'Penutup / Rumusan',
+          sentences: [
+            'Kesimpulannya, penggunaan media sosial secara beradab dan matang berupaya mewujudkan persekitaran siber yang sihat serta membina masyarakat berminda kelas pertama.'
+          ]
+        }
+      ],
+      all_sentences: [
+        'Media sosial kini menjadi sebahagian daripada medium komunikasi harian yang amat popular dalam kalangan generasi muda masa kini.',
+        'Walau bagaimanapun, kebebasan berkomunikasi di alam maya tanpa etika sering mengundang fenomena buli siber yang merosakkan kesejahteraan emosi.',
+        'Setiap pengguna media sosial sewajarnya berfikir masak-masak sebelum menulis sebarang komen atau memuat naik hantaran yang boleh menyinggung orang lain.',
+        'Murid juga perlu membiasakan diri untuk menyemak kesahihan sesuatu maklumat sebelum menyebarkannya bagi mengelakkan fitnah berleluasa.',
+        'Sekiranya menyaksikan insiden buli siber, murid digesa berani membuat laporan kepada pihak berkuasa dan tidak menjadi penyebar kandungan negatif tersebut.',
+        'Pihak ibu bapa dan guru pula bertanggungjawab memantau aktiviti digital anak-anak serta mendidik mereka tentang keselamatan data peribadi.',
+        'Undang-undang jenayah siber perlulah ditegakkan dengan tegas agar memberi pengajaran berguna kepada pelaku buli siber di media sosial.',
+        'Kesimpulannya, penggunaan media sosial secara beradab dan matang berupaya mewujudkan persekitaran siber yang sihat serta membina masyarakat berminda kelas pertama.'
+      ]
+    }
+  },
+  {
+    id: 'TOPIC_7',
+    title: 'Semangat Kesukarelawanan dalam Memupuk Sifat Empati dan Ihsan Murid',
+    prompt: 'Huraikan faedah melibatkan diri dalam khidmat masyarakat dan bantuan bencana kepada pembentukan sahsiah murid yang prihatin serta berjiwa besar. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.',
+    defaultIdeas: {
+      total_sentences: 8,
+      sections: [
+        {
+          section: 'Pendahuluan',
+          sentences: [
+            'Semangat kesukarelawanan merupakan manifestasi keprihatinan yang mencerminkan ketinggian budi pekerti serta ihsan sesebuah masyarakat.',
+            'Penyertaan murid dalam aktiviti kesukarelawanan membuka ruang untuk memahami kepayahan hidup golongan yang memerlukan pertolongan.'
+          ]
+        },
+        {
+          section: 'Isi Utama 1 (Menyemai Empati & Rasa Syukur)',
+          sentences: [
+            'Penglibatan dalam misi bantuan bencana berupaya menyuburkan sifat empati dan belas kasihan dalam sanubari setiap murid.',
+            'Melalui khidmat sukarela, pelajar diasuh untuk bersyukur dengan nikmat kehidupan yang dimiliki di samping memupuk semangat tolong-menolong.'
+          ]
+        },
+        {
+          section: 'Isi Utama 2 (Kemahiran Insaniah & Kepimpinan)',
+          sentences: [
+            'Aktiviti kemasyarakatan ini secara tidak langsung mengasah kemahiran komunikasi dua hala dan kepimpinan murid semasa mengendalikan program bantuan.',
+            'Sekolah boleh menganjurkan program lawatan ke rumah kebajikan bagi mendekatkan murid dengan realiti kehidupan sebenar masyarakat.'
+          ]
+        },
+        {
+          section: 'Isi Utama 3 (Elemen KBAT & Masyarakat Madani)',
+          sentences: [
+            'Pengalaman berbakti tanpa mengharapkan ganjaran kebendaan ini amat penting untuk membentuk masyarakat madani yang saling berkasih sayang.'
+          ]
+        },
+        {
+          section: 'Penutup / Rumusan',
+          sentences: [
+            'Tuntasnya, amalan kesukarelawanan wajar dibudayakan sejak kecil demi melahirkan generasi pewaris negara yang berjiwa besar dan prihatin.'
+          ]
+        }
+      ],
+      all_sentences: [
+        'Semangat kesukarelawanan merupakan manifestasi keprihatinan yang mencerminkan ketinggian budi pekerti serta ihsan sesebuah masyarakat.',
+        'Penyertaan murid dalam aktiviti kesukarelawanan membuka ruang untuk memahami kepayahan hidup golongan yang memerlukan pertolongan.',
+        'Penglibatan dalam misi bantuan bencana berupaya menyuburkan sifat empati dan belas kasihan dalam sanubari setiap murid.',
+        'Melalui khidmat sukarela, pelajar diasuh untuk bersyukur dengan nikmat kehidupan yang dimiliki di samping memupuk semangat tolong-menolong.',
+        'Aktiviti kemasyarakatan ini secara tidak langsung mengasah kemahiran komunikasi dua hala dan kepimpinan murid semasa mengendalikan program bantuan.',
+        'Sekolah boleh menganjurkan program lawatan ke rumah kebajikan bagi mendekatkan murid dengan realiti kehidupan sebenar masyarakat.',
+        'Pengalaman berbakti tanpa mengharapkan ganjaran kebendaan ini amat penting untuk membentuk masyarakat madani yang saling berkasih sayang.',
+        'Tuntasnya, amalan kesukarelawanan wajar dibudayakan sejak kecil demi melahirkan generasi pewaris negara yang berjiwa besar dan prihatin.'
+      ]
+    }
+  },
+  {
+    id: 'TOPIC_8',
+    title: 'Amalan Menabung dan Pengurusan Kewangan Bijak Sejak di Bangku Sekolah',
+    prompt: 'Bincangkan kepentingan memupuk tabiat berjimat cermat, merancang perbelanjaan harian, dan menghargai titik peluh ibu bapa demi masa depan yang terjamin. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.',
+    defaultIdeas: {
+      total_sentences: 8,
+      sections: [
+        {
+          section: 'Pendahuluan',
+          sentences: [
+            'Pengurusan kewangan yang berhemah merupakan kemahiran asas hidup yang sangat penting untuk dipelajari sejak awal usia persekolahan.',
+            'Amalan menabung bukan sahaja membantu membina simpanan masa depan malah mendidik murid menjadi insan yang berdisiplin tinggi.'
+          ]
+        },
+        {
+          section: 'Isi Utama 1 (Dana Kecemasan & Berjimat Cermat)',
+          sentences: [
+            'Murid yang mengamalkan tabiat menyimpan sebahagian wang saku harian dapat menyediakan dana kecemasan bagi menghadapi waktu terdesak.',
+            'Amalan berjimat cermat mengajar remaja membezakan antara keperluan hidup yang mendesak dengan kehendak nafsu yang berlebih-lebihan.'
+          ]
+        },
+        {
+          section: 'Isi Utama 2 (Menghargai Ibu Bapa & Literasi Kewangan)',
+          sentences: [
+            'Perancangan belanjawan harian mendidik murid agar menghargai jerih payah ibu bapa yang membanting tulang mencari rezeki.',
+            'Pihak sekolah dan institusi kewangan boleh bekerjasama menganjurkan bengkel celik wang bagi meningkatkan kefahaman kewangan murid.'
+          ]
+        },
+        {
+          section: 'Isi Utama 3 (Elemen KBAT & Masa Depan Terjamin)',
+          sentences: [
+            'Penguasaan ilmu kewangan sejak bangku sekolah menghindarkan generasi muda daripada terjerumus ke dalam belenggu hutang apabila dewasa kelak.'
+          ]
+        },
+        {
+          section: 'Penutup / Rumusan',
+          sentences: [
+            'Kesimpulannya, amalan menabung yang berterusan merupakan asas kukuh ke arah membina kehidupan yang mandiri, sejahtera, dan terjamin.'
+          ]
+        }
+      ],
+      all_sentences: [
+        'Pengurusan kewangan yang berhemah merupakan kemahiran asas hidup yang sangat penting untuk dipelajari sejak awal usia persekolahan.',
+        'Amalan menabung bukan sahaja membantu membina simpanan masa depan malah mendidik murid menjadi insan yang berdisiplin tinggi.',
+        'Murid yang mengamalkan tabiat menyimpan sebahagian wang saku harian dapat menyediakan dana kecemasan bagi menghadapi waktu terdesak.',
+        'Amalan berjimat cermat mengajar remaja membezakan antara keperluan hidup yang mendesak dengan kehendak nafsu yang berlebih-lebihan.',
+        'Perancangan belanjawan harian mendidik murid agar menghargai jerih payah ibu bapa yang membanting tulang mencari rezeki.',
+        'Pihak sekolah dan institusi kewangan boleh bekerjasama menganjurkan bengkel celik wang bagi meningkatkan kefahaman kewangan murid.',
+        'Penguasaan ilmu kewangan sejak bangku sekolah menghindarkan generasi muda daripada terjerumus ke dalam belenggu hutang apabila dewasa kelak.',
+        'Kesimpulannya, amalan menabung yang berterusan merupakan asas kukuh ke arah membina kehidupan yang mandiri, sejahtera, dan terjamin.'
+      ]
+    }
+  },
+  {
+    id: 'TOPIC_9',
+    title: 'Pemupukan Minat Terhadap Bidang Sains, Matematik dan Inovasi Robotik (STEM)',
+    prompt: 'Jelaskan bagaimana minat terhadap sains, reka cipta, dan pemikiran logik mampu melahirkan generasi inovator muda yang berdaya saing di peringkat antarabangsa. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.',
+    defaultIdeas: {
+      total_sentences: 8,
+      sections: [
+        {
+          section: 'Pendahuluan',
+          sentences: [
+            'Bidang sains, teknologi, kejuruteraan, dan matematik (STEM) merupakan pemangkin utama kepada kemajuan perindustrian dan teknologi moden.',
+            'Pendedahan awal kepada bidang STEM berupaya merangsang daya imaginasi serta rasa ingin tahu murid terhadap fenomena alam.'
+          ]
+        },
+        {
+          section: 'Isi Utama 1 (Aktiviti Amali & Robotik)',
+          sentences: [
+            'Minat murid terhadap STEM wajar dicambah melalui aktiviti pembelajaran amali berasaskan projek serta eksperimen sains yang menyeronokkan.',
+            'Pendedahan kepada teknologi robotik dan pengekodan komputer sejak awal persekolahan dapat menajamkan pemikiran logik serta kemahiran reka cipta.'
+          ]
+        },
+        {
+          section: 'Isi Utama 2 (Pertandingan Inovasi & Sokongan Sekolah)',
+          sentences: [
+            'Penyertaan dalam pertandingan reka cipta peringkat kebangsaan memberi peluang kepada pelajar mengaplikasikan teori buku teks kepada situasi sebenar.',
+            'Kemudahan makmal sains yang serba lengkap di sekolah berupaya memupuk semangat penyelidikan saintifik dalam kalangan murid.'
+          ]
+        },
+        {
+          section: 'Isi Utama 3 (Elemen KBAT & Daya Saing Antarabangsa)',
+          sentences: [
+            'Negara memerlukan lebih ramai saintis dan jurutera muda yang berdaya cipta tinggi bagi bersaing di persada antarabangsa.'
+          ]
+        },
+        {
+          section: 'Penutup / Rumusan',
+          sentences: [
+            'Tuntasnya, pemerkasaan bidang STEM merupakan pelaburan masa hadapan yang amat penting untuk melahirkan modal insan pencipta teknologi negara.'
+          ]
+        }
+      ],
+      all_sentences: [
+        'Bidang sains, teknologi, kejuruteraan, dan matematik (STEM) merupakan pemangkin utama kepada kemajuan perindustrian dan teknologi moden.',
+        'Pendedahan awal kepada bidang STEM berupaya merangsang daya imaginasi serta rasa ingin tahu murid terhadap fenomena alam.',
+        'Minat murid terhadap STEM wajar dicambah melalui aktiviti pembelajaran amali berasaskan projek serta eksperimen sains yang menyeronokkan.',
+        'Pendedahan kepada teknologi robotik dan pengekodan komputer sejak awal persekolahan dapat menajamkan pemikiran logik serta kemahiran reka cipta.',
+        'Penyertaan dalam pertandingan reka cipta peringkat kebangsaan memberi peluang kepada pelajar mengaplikasikan teori buku teks kepada situasi sebenar.',
+        'Kemudahan makmal sains yang serba lengkap di sekolah berupaya memupuk semangat penyelidikan saintifik dalam kalangan murid.',
+        'Negara memerlukan lebih ramai saintis dan jurutera muda yang berdaya cipta tinggi bagi bersaing di persada antarabangsa.',
+        'Tuntasnya, pemerkasaan bidang STEM merupakan pelaburan masa hadapan yang amat penting untuk melahirkan modal insan pencipta teknologi negara.'
+      ]
+    }
+  },
+  {
+    id: 'TOPIC_10',
+    title: 'Menghayati Sejarah Kemerdekaan dan Mempertahankan Kedaulatan Negara',
+    prompt: 'Tulis refleksi anda mengenai kepentingan menghayati erti kemerdekaan, menghormati lambang kebesaran negara, dan mengekalkan jati diri warisan bangsa Malaysia. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.',
+    defaultIdeas: {
+      total_sentences: 8,
+      sections: [
+        {
+          section: 'Pendahuluan',
+          sentences: [
+            'Kemerdekaan tanah air yang kita nikmati pada hari ini adalah hasil perjuangan dan pengorbanan para pahlawan terdahulu yang tidak ternilai.',
+            'Generasi muda bertanggungjawab menghayati sejarah perjuangan ini agar nilai patriotisme sentiasa mekar dalam jiwa setiap warganegara.'
+          ]
+        },
+        {
+          section: 'Isi Utama 1 (Menghormati Lambang Negara & Jati Diri)',
+          sentences: [
+            'Penghayatan kemerdekaan dapat dizahirkan dengan menghormati lagu kebangsaan Negaraku dan mengibarkan Jalur Gemilang dengan penuh rasa bangga.',
+            'Murid perlu memperkukuh jati diri nasional bagi menangkis pengaruh budaya songsang luar yang cuba menggugat perpaduan dan akhlak mulia.'
+          ]
+        },
+        {
+          section: 'Isi Utama 2 (Aktiviti Patriotik & Semangat Setia)',
+          sentences: [
+            'Penganjuran sambutan Bulan Kebangsaan di sekolah merupakan wadah efektif untuk menyemarakkan rasa cinta dan taat setia kepada raja serta negara.',
+            'Melalui penghayatan fakta sejarah, murid akan lebih menghargai keamanan yang dikecapi dan bertekad untuk belajar bersungguh-sungguh.'
+          ]
+        },
+        {
+          section: 'Isi Utama 3 (Elemen KBAT & Mempertahankan Kedaulatan)',
+          sentences: [
+            'Kedaulatan sesebuah negara hanya dapat dipertahankan sekiranya generasi muda mempunyai iltizam yang teguh untuk menjaga maruah pertiwi.'
+          ]
+        },
+        {
+          section: 'Penutup / Rumusan',
+          sentences: [
+            'Akhir kalam, marilah kita bersama-sama berganding bahu mempertahankan kemerdekaan negara agar Malaysia terus kekal makmur, aman, dan berdaulat selamanya.'
+          ]
+        }
+      ],
+      all_sentences: [
+        'Kemerdekaan tanah air yang kita nikmati pada hari ini adalah hasil perjuangan dan pengorbanan para pahlawan terdahulu yang tidak ternilai.',
+        'Generasi muda bertanggungjawab menghayati sejarah perjuangan ini agar nilai patriotisme sentiasa mekar dalam jiwa setiap warganegara.',
+        'Penghayatan kemerdekaan dapat dizahirkan dengan menghormati lagu kebangsaan Negaraku dan mengibarkan Jalur Gemilang dengan penuh rasa bangga.',
+        'Murid perlu memperkukuh jati diri nasional bagi menangkis pengaruh budaya songsang luar yang cuba menggugat perpaduan dan akhlak mulia.',
+        'Penganjuran sambutan Bulan Kebangsaan di sekolah merupakan wadah efektif untuk menyemarakkan rasa cinta dan taat setia kepada raja serta negara.',
+        'Melalui penghayatan fakta sejarah, murid akan lebih menghargai keamanan yang dikecapi dan bertekad untuk belajar bersungguh-sungguh.',
+        'Kedaulatan sesebuah negara hanya dapat dipertahankan sekiranya generasi muda mempunyai iltizam yang teguh untuk menjaga maruah pertiwi.',
+        'Akhir kalam, marilah kita bersama-sama berganding bahu mempertahankan kemerdekaan negara agar Malaysia terus kekal makmur, aman, dan berdaulat selamanya.'
+      ]
+    }
+  }
+];
+
+  /* =========================================================================
      GLOBAL APPLICATION STATE
      ========================================================================= */
   const state = {
@@ -33,12 +569,11 @@
     flaggedQuestions: {},   // { [question_id]: true }
     paletteFilter: 'ALL',  // 'ALL' | 'PART_A' | 'PART_B' | 'FLAGGED'
 
-    // Essay Articulation (Bahagian C)
+    // Essay Articulation (Bahagian C) - Rawak Automatik Pada Setiap Sesi
     essayText: '',
-    essayTopic: {
-      title: 'Kepentingan Integriti dan Disiplin Kendiri dalam Membentuk Modal Insan Unggul',
-      prompt: 'Tulis sebuah karangan berpandu mengenai bagaimana nilai amanah, kejujuran, dan resiliensi mampu membentuk kepimpinan murid cemerlang di sekolah berasrama penuh. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.'
-    },
+    essayTopic: PKSK_ESSAY_TOPICS[Math.floor(Math.random() * PKSK_ESSAY_TOPICS.length)],
+    currentEssayIdeas: null,
+    hasInitialEssayTopicSelected: true,
 
     // AI Essay Assessment & Multi-Provider AI State
     aiProvider: localStorage.getItem('pksk_ai_provider') || 'GROQ', // 'GROQ' | 'GEMINI' | 'OPENROUTER'
@@ -131,6 +666,15 @@
     dispWordCount: document.getElementById('dispWordCount'),
     btnEssayBackToMcq: document.getElementById('btnEssayBackToMcq'),
     btnSubmitEssayFinal: document.getElementById('btnSubmitEssayFinal'),
+
+    // AI Essay Idea Starter Elements
+    aiIdeaBox: document.getElementById('aiIdeaBox'),
+    aiIdeaBody: document.getElementById('aiIdeaBody'),
+    aiIdeaContent: document.getElementById('aiIdeaContent'),
+    aiIdeaBadge: document.getElementById('aiIdeaBadge'),
+    btnInsertAiIdeas: document.getElementById('btnInsertAiIdeas'),
+    btnRegenerateAiIdeas: document.getElementById('btnRegenerateAiIdeas'),
+    btnToggleAiIdeas: document.getElementById('btnToggleAiIdeas'),
 
     // Results Slip
     slipSubTitle: document.getElementById('slipSubTitle'),
@@ -317,6 +861,15 @@
     else if (viewName === 'ESSAY') {
       dom.essayWorkspaceView.classList.remove('hidden');
       dom.navTabEssay.classList.add('active');
+      
+      // Jika calon belum menulis apa-apa esei, pastikan tajuk dipilih secara rawak agar tidak memuatkan tajuk statik yang sama
+      const isEssayEmpty = !state.essayText || state.essayText.trim().length === 0;
+      if (isEssayEmpty && !state.hasInitialEssayTopicSelected) {
+        state.hasInitialEssayTopicSelected = true;
+        renderEssayTopicAndIdeas(true);
+      } else {
+        renderEssayTopicAndIdeas(false);
+      }
     }
     else if (viewName === 'RESULTS') {
       dom.resultsView.classList.remove('hidden');
@@ -585,79 +1138,33 @@
   }
 
   /* =========================================================================
-     PKSK AUTHENTIC ESSAY TOPIC BANK & SHUFFLE ENGINE (BAHAGIAN C)
+     PKSK ESSAY ENGINE & AI IDEA STARTER (BAHAGIAN C - 6 HINGGA 10 AYAT)
      ========================================================================= */
-  const PKSK_ESSAY_TOPICS = [
-    {
-      id: 'TOPIC_1',
-      title: 'Kepentingan Integriti dan Disiplin Kendiri dalam Membentuk Modal Insan Unggul',
-      prompt: 'Tulis sebuah karangan berpandu mengenai bagaimana nilai amanah, kejujuran, dan resiliensi mampu membentuk kepimpinan murid cemerlang di sekolah berasrama penuh. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.'
-    },
-    {
-      id: 'TOPIC_2',
-      title: 'Peranan Kecerdasan Buatan (AI) dan Teknologi Digital dalam Pendidikan Abad Ke-21',
-      prompt: 'Huraikan bagaimana teknologi digital dan kecerdasan buatan dapat dimanfaatkan oleh murid secara berhemah untuk meningkatkan pencapaian akademik serta inovasi sains. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.'
-    },
-    {
-      id: 'TOPIC_3',
-      title: 'Tanggungjawab Generasi Muda dalam Menangani Perubahan Iklim dan Kelestarian Alam',
-      prompt: 'Bincangkan peranan murid dan institusi sekolah dalam memupuk amalan hijau, kitar semula, dan penjimatan tenaga demi memelihara bumi untuk masa hadapan. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.'
-    },
-    {
-      id: 'TOPIC_4',
-      title: 'Kepentingan Gaya Hidup Sihat dan Kesejahteraan Emosi Pelajar Asrama',
-      prompt: 'Jelaskan cara-cara mengekalkan kesihatan fizikal yang cergas dan menguruskan tekanan emosi secara positif dalam suasana pembelajaran yang kompetitif. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.'
-    },
-    {
-      id: 'TOPIC_5',
-      title: 'Perpaduan Kaum sebagai Teras Keharmonian dan Kemakmuran Negara',
-      prompt: 'Ulas bagaimana aktiviti kokurikulum, sukan, dan kemasyarakatan di sekolah berupaya merapatkan hubungan antara kaum serta menyemarakkan semangat cintakan tanah air. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.'
-    },
-    {
-      id: 'TOPIC_6',
-      title: 'Etika Penggunaan Media Sosial dan Pencegahan Buli Siber dalam Kalangan Remaja',
-      prompt: 'Tulis pandangan anda mengenai adab berkomunikasi di alam maya dan langkah-langkah proaktif untuk membendung gejala buli siber dalam kalangan remaja. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.'
-    },
-    {
-      id: 'TOPIC_7',
-      title: 'Semangat Kesukarelawanan dalam Memupuk Sifat Empati dan Ihsan Murid',
-      prompt: 'Huraikan faedah melibatkan diri dalam khidmat masyarakat dan bantuan bencana kepada pembentukan sahsiah murid yang prihatin serta berjiwa besar. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.'
-    },
-    {
-      id: 'TOPIC_8',
-      title: 'Amalan Menabung dan Pengurusan Kewangan Bijak Sejak di Bangku Sekolah',
-      prompt: 'Bincangkan kepentingan memupuk tabiat berjimat cermat, merancang perbelanjaan harian, dan menghargai titik peluh ibu bapa demi masa depan yang terjamin. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.'
-    },
-    {
-      id: 'TOPIC_9',
-      title: 'Pemupukan Minat Terhadap Bidang Sains, Matematik dan Inovasi Robotik (STEM)',
-      prompt: 'Jelaskan bagaimana minat terhadap sains, reka cipta, dan pemikiran logik mampu melahirkan generasi inovator muda yang berdaya saing di peringkat antarabangsa. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.'
-    },
-    {
-      id: 'TOPIC_10',
-      title: 'Menghayati Sejarah Kemerdekaan dan Mempertahankan Kedaulatan Negara',
-      prompt: 'Tulis refleksi anda mengenai kepentingan menghayati erti kemerdekaan, menghormati lambang kebesaran negara, dan mengekalkan jati diri warisan bangsa Malaysia. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.'
+  function renderEssayTopicAndIdeas(forceNewTopic = false) {
+    if (forceNewTopic || !state.essayTopic) {
+      const currentTitle = state.essayTopic ? state.essayTopic.title : '';
+      const available = PKSK_ESSAY_TOPICS.filter(t => t.title !== currentTitle);
+      state.essayTopic = available[Math.floor(Math.random() * available.length)] || PKSK_ESSAY_TOPICS[0];
+      state.aiEssayAssessment = null; // Reset assessment bagi tajuk baharu
     }
-  ];
-
-  function shuffleEssayTopic() {
-    const available = PKSK_ESSAY_TOPICS.filter(t => t.title !== state.essayTopic.title);
-    const chosen = available[Math.floor(Math.random() * available.length)] || PKSK_ESSAY_TOPICS[0];
-    
-    state.essayTopic = chosen;
-    state.aiEssayAssessment = null; // Reset assessment for the fresh topic
 
     if (dom.dispEssayTitle && dom.dispEssayPrompt) {
       dom.dispEssayTitle.style.opacity = '0';
       dom.dispEssayPrompt.style.opacity = '0';
-      
       setTimeout(() => {
-        dom.dispEssayTitle.textContent = chosen.title;
-        dom.dispEssayPrompt.innerHTML = `${chosen.prompt.replace(/tidak kurang daripada 100 patah perkataan/g, '<strong>tidak kurang daripada 100 patah perkataan</strong>')}`;
+        dom.dispEssayTitle.textContent = state.essayTopic.title;
+        dom.dispEssayPrompt.innerHTML = `${state.essayTopic.prompt.replace(/tidak kurang daripada 100 patah perkataan/g, '<strong>tidak kurang daripada 100 patah perkataan</strong>')}`;
         dom.dispEssayTitle.style.opacity = '1';
         dom.dispEssayPrompt.style.opacity = '1';
-      }, 150);
+      }, 120);
     }
+
+    generateAiEssayIdeas(state.essayTopic, false);
+    updateEssayWordCount();
+  }
+
+  function shuffleEssayTopic() {
+    renderEssayTopicAndIdeas(true);
 
     if (dom.btnShuffleEssayTopic) {
       const origHtml = dom.btnShuffleEssayTopic.innerHTML;
@@ -668,6 +1175,215 @@
         }
       }, 1000);
     }
+  }
+
+  function renderAiIdeaHtml(ideaObj, sourceBadgeText = 'Gemini AI') {
+    if (!dom.aiIdeaContent) return;
+
+    state.currentEssayIdeas = ideaObj;
+    const totalSentences = ideaObj.total_sentences || (ideaObj.all_sentences ? ideaObj.all_sentences.length : 8);
+
+    if (dom.aiIdeaBadge) {
+      dom.aiIdeaBadge.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> ${sourceBadgeText}`;
+      dom.aiIdeaBadge.style.background = '#dcfce7';
+      dom.aiIdeaBadge.style.color = '#166534';
+    }
+
+    let html = `
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.5rem; background:#ffffff; padding:0.45rem 0.85rem; border-radius:var(--radius-sm); border:1px solid #bbf7d0;">
+        <div style="font-weight:700; color:#15803d; font-size:0.86rem; display:flex; align-items:center; gap:6px;">
+          <i class="fa-solid fa-lightbulb" style="color:#eab308;"></i> 
+          <span>Kerangka Idea Penulisan Berpandu (Panduan Isi Esei):</span>
+        </div>
+        <span style="background:#dcfce7; color:#14532d; font-size:0.75rem; font-weight:800; padding:2px 9px; border-radius:12px; font-family:var(--font-mono); border:1px solid #86efac;">
+          <i class="fa-solid fa-check-circle" style="color:#16a34a;"></i> ${totalSentences} Ayat Rangka (PKSK 6–10 Ayat)
+        </span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:0.6rem;">
+    `;
+
+    if (Array.isArray(ideaObj.sections) && ideaObj.sections.length > 0) {
+      ideaObj.sections.forEach(sec => {
+        html += `
+          <div style="background:#ffffff; border:1px solid #d1fae5; border-radius:6px; padding:0.55rem 0.85rem; box-shadow:0 1px 3px rgba(0,0,0,0.02);">
+            <div style="font-weight:800; color:#166534; font-size:0.8rem; margin-bottom:0.35rem; display:flex; align-items:center; gap:5px; text-transform:uppercase; letter-spacing:0.3px;">
+              <i class="fa-solid fa-bookmark" style="color:#10b981; font-size:0.75rem;"></i> ${sec.section}:
+            </div>
+            <ol style="margin:0; padding-left:1.35rem; font-size:0.88rem; color:#1e293b; line-height:1.65;">
+        `;
+        if (Array.isArray(sec.sentences)) {
+          sec.sentences.forEach(st => {
+            html += `<li style="margin-bottom:0.25rem;">${st}</li>`;
+          });
+        }
+        html += `
+            </ol>
+          </div>
+        `;
+      });
+    } else if (Array.isArray(ideaObj.all_sentences)) {
+      html += `
+        <div style="background:#ffffff; border:1px solid #d1fae5; border-radius:6px; padding:0.6rem 0.85rem;">
+          <ol style="margin:0; padding-left:1.35rem; font-size:0.88rem; color:#1e293b; line-height:1.65;">
+      `;
+      ideaObj.all_sentences.forEach(st => {
+        html += `<li style="margin-bottom:0.25rem;">${st}</li>`;
+      });
+      html += `
+          </ol>
+        </div>
+      `;
+    }
+
+    html += `
+      </div>
+      <div style="margin-top:0.75rem; padding-top:0.55rem; border-top:1px dashed #86efac; font-size:0.8rem; color:#15803d; display:flex; align-items:center; gap:6px;">
+        <i class="fa-solid fa-circle-info" style="color:#16a34a;"></i>
+        <span><strong>Petunjuk Calon:</strong> Anda boleh menyalin atau mengolah ${totalSentences} ayat idea di atas sebagai rangka karangan sehingga mencapai <strong>tidak kurang daripada 100 patah perkataan</strong>.</span>
+      </div>
+    `;
+
+    dom.aiIdeaContent.innerHTML = html;
+  }
+
+  async function generateAiEssayIdeas(topic, forceRegen = false) {
+    if (!topic) return;
+
+    // Gunakan idea AI tersimpan jika sudah dijana sebelum ini
+    if (!forceRegen && topic.aiCustomIdeas) {
+      renderAiIdeaHtml(topic.aiCustomIdeas, 'Gemini AI');
+      return;
+    }
+
+    // Paparkan segera rangka piawai 8 ayat (6-10 ayat) agar calon tidak menunggu
+    if (topic.defaultIdeas && !forceRegen) {
+      renderAiIdeaHtml(topic.defaultIdeas, 'Idea Piawai PKSK');
+      return;
+    }
+
+    // Status memuatkan semasa jana semula
+    if (dom.aiIdeaBadge) {
+      dom.aiIdeaBadge.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menjana Idea Baharu (Gemini AI)...';
+      dom.aiIdeaBadge.style.background = '#fef3c7';
+      dom.aiIdeaBadge.style.color = '#92400e';
+    }
+    if (dom.btnRegenerateAiIdeas) {
+      dom.btnRegenerateAiIdeas.disabled = true;
+    }
+
+    const sysPrompt = `Anda ialah Guru Cemerlang Bahasa Melayu pakar Penulisan Esei PKSK (Pentaksiran Kemasukan Sekolah Khusus) Lembaga Peperiksaan Malaysia.
+Tugas anda adalah memberikan panduan rangka idea penulisan esei calon dalam Bahasa Melayu standard.
+SYARAT KETAT: Jumlah keseluruhan ayat yang dijana MESTI TEPAT ANTARA 6 HINGGA 10 AYAT SAHAJA (strictly 6 to 10 full sentences).
+Formatkan jawapan anda sebagai JSON SAHAJA tanpa sebarang teks markdown di luar JSON:
+{
+  "total_sentences": 8,
+  "sections": [
+    { "section": "Pendahuluan", "sentences": ["ayat...", "ayat..."] },
+    { "section": "Isi Utama 1", "sentences": ["ayat...", "ayat..."] },
+    { "section": "Isi Utama 2", "sentences": ["ayat...", "ayat..."] },
+    { "section": "Isi Utama 3 (KBAT)", "sentences": ["ayat...", "ayat..."] },
+    { "section": "Penutup / Rumusan", "sentences": ["ayat..."] }
+  ],
+  "all_sentences": [
+    "ayat...",
+    "ayat...",
+    ...
+  ]
+}`;
+
+    const userPrompt = `Hasilkan rangka idea 6-10 ayat bagi tajuk esei PKSK ini:
+Tajuk: "${topic.title}"
+Stimulus: "${topic.prompt}"`;
+
+    let aiResult = await callGeminiAi(sysPrompt, userPrompt);
+    if (!aiResult.success || !aiResult.text) {
+      aiResult = await callOxAlphaAi(sysPrompt, userPrompt);
+    }
+
+    if (dom.btnRegenerateAiIdeas) {
+      dom.btnRegenerateAiIdeas.disabled = false;
+    }
+
+    if (aiResult.success && aiResult.text) {
+      try {
+        let clean = aiResult.text.replace(/\`\`\`json/gi, '').replace(/\`\`\`/g, '').trim();
+        const m = clean.match(/\{[\s\S]*\}/);
+        if (m) clean = m[0];
+        const parsed = JSON.parse(clean);
+
+        let sentences = [];
+        if (Array.isArray(parsed.all_sentences) && parsed.all_sentences.length > 0) {
+          sentences = parsed.all_sentences;
+        } else if (Array.isArray(parsed.sections)) {
+          parsed.sections.forEach(s => {
+            if (Array.isArray(s.sentences)) sentences.push(...s.sentences);
+          });
+          parsed.all_sentences = sentences;
+        }
+
+        // Pastikan jumlah ayat adalah 6 hingga 10 ayat
+        if (sentences.length < 6 && topic.defaultIdeas) {
+          sentences = topic.defaultIdeas.all_sentences;
+          parsed.all_sentences = sentences;
+          parsed.sections = topic.defaultIdeas.sections;
+        } else if (sentences.length > 10) {
+          sentences = sentences.slice(0, 10);
+          parsed.all_sentences = sentences;
+        }
+        parsed.total_sentences = sentences.length;
+
+        topic.aiCustomIdeas = parsed;
+        renderAiIdeaHtml(parsed, aiResult.model || 'Gemini AI');
+        return;
+      } catch (err) {
+        console.warn('Gagal parse JSON idea AI:', err);
+      }
+    }
+
+    // Sandaran jika API luar gagal
+    if (topic.defaultIdeas) {
+      renderAiIdeaHtml(topic.defaultIdeas, 'Idea Piawai PKSK');
+    }
+  }
+
+  function insertAiIdeasToEssay() {
+    if (!state.currentEssayIdeas || !state.currentEssayIdeas.all_sentences || state.currentEssayIdeas.all_sentences.length === 0) return;
+
+    const formattedParagraphs = state.currentEssayIdeas.all_sentences.join(' ');
+
+    if (dom.inputEssayText) {
+      if (dom.inputEssayText.value.trim().length > 0) {
+        if (confirm('Ruang jawapan anda sudah mempunyai teks karangan. Adakah anda ingin menyalin idea ini di bahagian bawah teks sedia ada?')) {
+          dom.inputEssayText.value = dom.inputEssayText.value.trim() + '\n\n' + formattedParagraphs;
+        }
+      } else {
+        dom.inputEssayText.value = formattedParagraphs;
+      }
+      updateEssayWordCount();
+      dom.inputEssayText.focus();
+    }
+
+    if (dom.btnInsertAiIdeas) {
+      const origHtml = dom.btnInsertAiIdeas.innerHTML;
+      dom.btnInsertAiIdeas.innerHTML = '<i class="fa-solid fa-check"></i> Idea Disalin!';
+      dom.btnInsertAiIdeas.style.background = '#dcfce7';
+      dom.btnInsertAiIdeas.style.color = '#15803d';
+      setTimeout(() => {
+        if (dom.btnInsertAiIdeas) {
+          dom.btnInsertAiIdeas.innerHTML = origHtml;
+          dom.btnInsertAiIdeas.style.background = '#ffffff';
+          dom.btnInsertAiIdeas.style.color = '#15803d';
+        }
+      }, 2000);
+    }
+  }
+
+  function toggleAiIdeaBox() {
+    if (!dom.aiIdeaBody || !dom.btnToggleAiIdeas) return;
+    const isHidden = dom.aiIdeaBody.style.display === 'none';
+    dom.aiIdeaBody.style.display = isHidden ? 'block' : 'none';
+    dom.btnToggleAiIdeas.innerHTML = isHidden ? '<i class="fa-solid fa-chevron-up"></i>' : '<i class="fa-solid fa-chevron-down"></i>';
+    dom.btnToggleAiIdeas.title = isHidden ? 'Sembunyi idea' : 'Paparkan idea';
   }
 
   function updateEssayWordCount() {
@@ -1613,6 +2329,9 @@ ${essay}
     // Essay View Handlers
     dom.inputEssayText.oninput = updateEssayWordCount;
     if (dom.btnShuffleEssayTopic) dom.btnShuffleEssayTopic.onclick = shuffleEssayTopic;
+    if (dom.btnRegenerateAiIdeas) dom.btnRegenerateAiIdeas.onclick = () => generateAiEssayIdeas(state.essayTopic, true);
+    if (dom.btnInsertAiIdeas) dom.btnInsertAiIdeas.onclick = insertAiIdeasToEssay;
+    if (dom.btnToggleAiIdeas) dom.btnToggleAiIdeas.onclick = toggleAiIdeaBox;
     dom.btnEssayBackToMcq.onclick = () => switchView('EXAM');
     dom.btnSubmitEssayFinal.onclick = () => {
       state.aiEssayAssessment = null; // Clear old assessment for fresh run
