@@ -1,5 +1,5 @@
 // PKSK Simulator 2026 - Service Worker (Offline Resilience & PWA Cache)
-const CACHE_NAME = 'pksk-pwa-v1.0.8';
+const CACHE_NAME = 'pksk-pwa-v1.0.9';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
