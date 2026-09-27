@@ -349,6 +349,9 @@
     aiIdeaTimerInterval: null,
     aiIdeaTimerStarted: false,
     essayTimerRunning: false,
+    essayImageFile: null,
+    essayImageDataUrl: null,
+    isTranscribingOcr: false,
 
     // AI Essay Assessment & Multi-Provider AI State
     aiProvider: localStorage.getItem('pksk_ai_provider') || 'GROQ', // 'GROQ' | 'GEMINI' | 'OPENROUTER'
@@ -448,6 +451,26 @@
     btnEssayBackToMcq: document.getElementById('btnEssayBackToMcq'),
     btnSubmitEssayFinal: document.getElementById('btnSubmitEssayFinal'),
     dispEssayMainTimer: document.getElementById('dispEssayMainTimer'),
+
+    // Handwritten Essay Image Upload & OCR
+    essayDropzone: document.getElementById('essayDropzone'),
+    essayImageInput: document.getElementById('essayImageInput'),
+    dropzoneEmpty: document.getElementById('dropzoneEmpty'),
+    btnSnapPhoto: document.getElementById('btnSnapPhoto'),
+    btnChooseFile: document.getElementById('btnChooseFile'),
+    dropzonePreview: document.getElementById('dropzonePreview'),
+    essayImagePreview: document.getElementById('essayImagePreview'),
+    previewOcrBadge: document.getElementById('previewOcrBadge'),
+    previewFileName: document.getElementById('previewFileName'),
+    previewFileSize: document.getElementById('previewFileSize'),
+    btnRemoveImage: document.getElementById('btnRemoveImage'),
+    ocrProgressBox: document.getElementById('ocrProgressBox'),
+    ocrStatusText: document.getElementById('ocrStatusText'),
+    ocrModelBadge: document.getElementById('ocrModelBadge'),
+    ocrProgressBar: document.getElementById('ocrProgressBar'),
+    btnRetranscribe: document.getElementById('btnRetranscribe'),
+    btnChangeImage: document.getElementById('btnChangeImage'),
+    transcriptionNotice: document.getElementById('transcriptionNotice'),
 
     // AI Essay Idea Starter Elements (Auto-Hide 10 Minit & Anti-Salin)
     aiIdeaBox: document.getElementById('aiIdeaBox'),
@@ -1512,230 +1535,324 @@ Stimulus: "${topic.prompt}"`;
   }
 
   /* =========================================================================
-     DUAL AI ESSAY ASSESSMENT ENGINE (GEMINI FLASH LITE + OPENROUTER)
+     OPENROUTER MULTI-KEY AI & HANDWRITING OCR ENGINE (9ROUTER POOL)
+     - Vision Handwriting OCR (Fastest & Accurate): stealth/space-bunny-alpha, dots-studio/dots-3-note-preview:free, openrouter/free
+     - Official LPM Rubric Grading (Smartest Frontier): nvidia/nemotron-3-ultra-550b-a55b:free, nvidia/nemotron-3-super-120b-a12b:free
+     - Multi-Key Rotating Failover Pool from 9router (8 Keys)
      ========================================================================= */
-  const _OX_DEFAULT = 'c2stb3ItdjEtNGU1OGE0ZTY3NWQ5Nzc2MTczOWZjN2IzYWNjYzFkOWExN2U4OWU4MDdiZjk3YjUyOWJiOTY4YWQ5NmQwMmJhOA==';
-  const _GEMINI_DEFAULT = 'QUl6YVN5QlVRRWpsdHNUSkdmZnNtSEEwOTJnSzljM2t1dHJMMjRF';
+  const _OR_B64_KEYS = [
+    'c2stb3ItdjEtMjY0MTNkNzFmNTlmNmJiYTRkMmI2OGU2NGJhOWVkMWZkOTc1MDE2N2ZiMzc5MTdlYWI1OGUzMWNkMzI0MDA5Nw==',
+    'c2stb3ItdjEtOWRjMWQ2NjM4MjMzNmM5YjNhNzFiNGFjYjU1OGMyZmY3ZTgxNDFlNGYwOGVmODIwNTJjODU1ZjcwZDI5MGY2Mw==',
+    'c2stb3ItdjEtNGIzMmYzM2JhYjY4Nzk0NjQwMWMzYTI2MWY0NjU1ZjFmZDE3YTU0MWNlMGIxMTlmOTJiN2Q5NzUzZDYxYTY4Zg==',
+    'c2stb3ItdjEtODE3ODc3ZDYxZGFmYjliZTlkM2Y4MzdmNTI3YjhmZjlhMjc4MzAzN2FkOWZlYTIyOWI5N2NhYzdlMWM0YzI3Mg==',
+    'c2stb3ItdjEtOGJhYzg0MmM5MzU2ZjViMWE2M2Y0ZGQwMGRlNzQ2NmJmYTZhYjU4MTU0OGNiZmU2ZWY2ZTRlMTJlOWEzMWMyOA==',
+    'c2stb3ItdjEtODJkOTczZDdjMzY2NWNiNTllMWE0ZjU4MjhmNzQzZmQ5MzhkZWMzOWM0ZDlmZWI2OGY0MjQwMjcwOGM5YmY4NQ==',
+    'c2stb3ItdjEtZTA4MTRhYjI0MmQ2NmNiMGFjYzZmYzc2ZjI2NTdmY2VjYWFiZjEzNDhlZTU4MTQwY2E2OWJhNmJkMjI1MDNhZQ==',
+    'c2stb3ItdjEtYjNmN2IzZjIwYThjNzNjZWU1NGMxMjA2YWQwMGU5YzQxZTQzNmQ4NTAzYTdjZDk5MTM3MTk3YzI2ODg3ZjgxMA=='
+  ];
+  const OPENROUTER_KEYS_POOL = _OR_B64_KEYS.map(k => atob(k));
 
-  const GEMINI_CONFIG = {
-    get apiKey() {
-      try {
-        return localStorage.getItem('pksk_gemini_api_key') || atob(_GEMINI_DEFAULT);
-      } catch (e) {
-        return '';
-      }
-    },
-    endpoint: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent',
-    model: 'gemini-flash-lite-latest'
-  };
+  let currentOrKeyIdx = 0;
+  function getNextOrKey() {
+    const key = OPENROUTER_KEYS_POOL[currentOrKeyIdx % OPENROUTER_KEYS_POOL.length];
+    currentOrKeyIdx++;
+    return key;
+  }
 
-  const OX_ALPHA_CONFIG = {
-    get apiKey() {
-      try {
-        return localStorage.getItem('pksk_oxalpha_key') || atob(_OX_DEFAULT);
-      } catch (e) {
-        return '';
-      }
-    },
-    endpoint: 'https://openrouter.ai/api/v1/chat/completions',
-    // Fallback list of fast models on OpenRouter
-    candidateModels: [
-      'openrouter/free',
-      'nex-agi/nex-n2.5-mini:free',
-      'nvidia/nemotron-3-super-120b-a12b:free'
-    ]
-  };
+  // Vision OCR Models (Priority order: fastest & most accurate handwriting transcription)
+  const OPENROUTER_OCR_MODELS = [
+    'stealth/space-bunny-alpha',
+    'dots-studio/dots-3-note-preview:free',
+    'openrouter/free'
+  ];
 
-  // Google Gemini Flash-Lite: Ultra-fast (2.5s), strict JSON & high critical reasoning
-  async function callGeminiAi(systemPrompt, userPrompt) {
-    const key = GEMINI_CONFIG.apiKey;
-    if (!key) return { success: false, error: 'Tiada Kunci API Gemini' };
+  // Smartest Reasoning Models for Official LPM Rubric Grading
+  const OPENROUTER_EVAL_MODELS = [
+    'nvidia/nemotron-3-ultra-550b-a55b:free',
+    'nvidia/nemotron-3-super-120b-a12b:free',
+    'openrouter/free'
+  ];
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 7000); // 7s timeout
+  // Compress & resize image to max 1600px width/height and JPEG 0.85 for sub-second upload & processing
+  function compressImageForOcr(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const maxDim = 1600;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) {
+              h = Math.round((h * maxDim) / w);
+              w = maxDim;
+            } else {
+              w = Math.round((w * maxDim) / h);
+              h = maxDim;
+            }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const compressed = canvas.toDataURL('image/jpeg', 0.85);
+          resolve(compressed);
+        };
+        img.onerror = () => reject(new Error('Gagal memproses fail imej.'));
+        img.src = e.target.result;
+      };
+      reader.onerror = () => reject(new Error('Gagal membaca fail.'));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Handle image selected via Camera Snap or File Picker or Drag & Drop
+  async function handleEssayImageFile(file) {
+    if (!file || !file.type.startsWith('image/')) {
+      alert('Sila muat naik fail gambar sahaja (JPG, PNG, atau WebP).');
+      return;
+    }
+
+    state.essayImageFile = file;
+
+    // Show preview UI immediately
+    if (dom.previewFileName) dom.previewFileName.textContent = file.name;
+    if (dom.previewFileSize) dom.previewFileSize.textContent = `${Math.round(file.size / 1024)} KB`;
+    if (dom.dropzoneEmpty) dom.dropzoneEmpty.style.display = 'none';
+    if (dom.dropzonePreview) dom.dropzonePreview.style.display = 'flex';
+    if (dom.btnRetranscribe) dom.btnRetranscribe.style.display = 'none';
+
+    if (dom.ocrStatusText) dom.ocrStatusText.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memampatkan & memproses imej...';
+    if (dom.ocrProgressBar) {
+      dom.ocrProgressBar.className = 'ocr-progress-bar-fill animating';
+      dom.ocrProgressBar.style.width = '30%';
+    }
+    if (dom.previewOcrBadge) {
+      dom.previewOcrBadge.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengekstrak Tulisan...';
+      dom.previewOcrBadge.style.background = 'rgba(15, 23, 42, 0.85)';
+    }
 
     try {
-      const resp = await fetch(`${GEMINI_CONFIG.endpoint}?key=${key}`, {
+      const compressedDataUrl = await compressImageForOcr(file);
+      state.essayImageDataUrl = compressedDataUrl;
+      if (dom.essayImagePreview) dom.essayImagePreview.src = compressedDataUrl;
+
+      // Start Handwriting OCR
+      await executeHandwritingOcr(compressedDataUrl);
+    } catch (err) {
+      console.error('OCR Error:', err);
+      if (dom.ocrStatusText) dom.ocrStatusText.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:#ef4444;"></i> Ralat: ${err.message}`;
+      if (dom.previewOcrBadge) {
+        dom.previewOcrBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color:#fca5a5;"></i> Gagal';
+        dom.previewOcrBadge.style.background = 'rgba(185, 28, 28, 0.9)';
+      }
+      if (dom.btnRetranscribe) dom.btnRetranscribe.style.display = 'inline-block';
+    }
+  }
+
+  // Execute Handwriting OCR (Serverless first, direct OpenRouter failover second)
+  async function executeHandwritingOcr(imageDataUrl) {
+    if (!imageDataUrl) return;
+
+    if (dom.ocrStatusText) dom.ocrStatusText.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Mengekstrak teks tulisan tangan dengan OpenRouter Vision AI...';
+    if (dom.ocrProgressBar) {
+      dom.ocrProgressBar.className = 'ocr-progress-bar-fill animating';
+      dom.ocrProgressBar.style.width = '65%';
+    }
+
+    let extractedText = '';
+    let modelUsed = '';
+
+    // 1. Try Vercel Serverless /api/transcribe first
+    try {
+      const serverlessResp = await fetch('/api/transcribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        signal: controller.signal,
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: `${systemPrompt}\n\n${userPrompt}` }] }],
-          generationConfig: {
-            temperature: 0.2,
-            responseMimeType: 'application/json'
-          }
-        })
+        body: JSON.stringify({ image: imageDataUrl })
       });
-      clearTimeout(timeoutId);
 
-      if (resp.ok) {
-        const data = await resp.json();
-        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-        if (text.trim()) {
-          return { success: true, text, model: 'Gemini AI (Flash Lite)' };
+      if (serverlessResp.ok) {
+        const json = await serverlessResp.json();
+        if (json.success && json.transcribedText) {
+          extractedText = json.transcribedText;
+          modelUsed = json.modelUsed || 'OpenRouter Vision';
         }
       }
-      const errData = await resp.json().catch(() => ({}));
-      return { success: false, error: errData.error?.message || `HTTP ${resp.status}` };
     } catch (e) {
-      clearTimeout(timeoutId);
-      return { success: false, error: e.name === 'AbortError' ? 'Gemini timeout (7s)' : e.message };
+      console.warn('/api/transcribe offline or failed, switching to direct client OpenRouter call:', e);
     }
-  }
 
-  // OpenRouter Engine: Multi-model fallback
-  async function callOxAlphaAi(systemPrompt, userPrompt) {
-    const customModel = localStorage.getItem('pksk_oxalpha_model');
-    const modelsToTry = customModel ? [customModel, ...OX_ALPHA_CONFIG.candidateModels] : OX_ALPHA_CONFIG.candidateModels;
-    let lastError = 'Ralat sambungan API';
+    // 2. Direct client fallback across 8 keys and OCR models
+    if (!extractedText) {
+      const promptText = `Transkripsikan semua perkataan bertulis tangan Bahasa Melayu yang terdapat pada gambar kertas karangan ini.
+Peraturan:
+1. Salin perkataan secara tepat mengikut ejaan asal murid.
+2. Kekalkan susunan perenggan karangan.
+3. Jangan tambah sebarang ulasan, jangan tambah pengenalan atau penutup.
+4. Pulangkan teks karangan sahaja.`;
 
-    for (const model of modelsToTry) {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout per model
+      for (let attempt = 0; attempt < OPENROUTER_KEYS_POOL.length; attempt++) {
+        const key = getNextOrKey();
+        for (const model of OPENROUTER_OCR_MODELS) {
+          try {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 15000);
 
-      try {
-        const resp = await fetch(OX_ALPHA_CONFIG.endpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${OX_ALPHA_CONFIG.apiKey}`,
-            'HTTP-Referer': 'https://pksk2026.vercel.app',
-            'X-Title': 'PKSK Simulator - KPM'
-          },
-          signal: controller.signal,
-          body: JSON.stringify({
-            model: model,
-            messages: [
-              { role: 'system', content: systemPrompt },
-              { role: 'user', content: userPrompt }
-            ],
-            temperature: 0.2,
-            max_tokens: 650
-          })
-        });
-        clearTimeout(timeoutId);
+            const resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${key}`,
+                'HTTP-Referer': 'https://pksk2026.vercel.app',
+                'X-Title': 'PKSK Simulator - Handwriting OCR'
+              },
+              signal: controller.signal,
+              body: JSON.stringify({
+                model: model,
+                messages: [
+                  {
+                    role: 'user',
+                    content: [
+                      { type: 'text', text: promptText },
+                      { type: 'image_url', image_url: { url: imageDataUrl } }
+                    ]
+                  }
+                ],
+                temperature: 0.1,
+                max_tokens: 1500
+              })
+            });
+            clearTimeout(timeout);
 
-        if (resp.ok) {
-          const data = await resp.json();
-          const text = data.choices?.[0]?.message?.content || '';
-          
-          // Detect deprecated stealth test notice
-          if (text.toLowerCase().includes('participating in the stealth ox alpha') || text.toLowerCase().includes('testing period')) {
-            console.warn(`Model ${model} returned retirement notice, trying next model.`);
-            lastError = text;
-            continue;
+            if (resp.ok) {
+              const data = await resp.json();
+              let text = data.choices?.[0]?.message?.content || '';
+              text = text
+                .replace(/^```(?:markdown|text)?\n/i, '')
+                .replace(/```$/i, '')
+                .replace(/^(Teks yang terdapat dalam gambar adalah:?|Berikut adalah teks karangan:?)\s*/i, '')
+                .trim();
+              if (text) {
+                extractedText = text;
+                modelUsed = `OpenRouter (${model.replace(':free', '')})`;
+                break;
+              }
+            }
+          } catch (e2) {
+            console.warn(`Direct OCR attempt on ${model} error:`, e2);
           }
-
-          if (text.trim()) {
-            return { success: true, text, model: `Ox Alpha AI (${model.replace(':free', '')})` };
-          }
-        } else {
-          const errData = await resp.json().catch(() => ({}));
-          lastError = errData.error?.message || `HTTP ${resp.status}`;
-          console.warn(`Ox Alpha model ${model} failed (${resp.status}):`, lastError);
         }
-      } catch (e) {
-        clearTimeout(timeoutId);
-        lastError = e.name === 'AbortError' ? `${model} timeout (8s)` : e.message;
-        console.warn(`Ox Alpha model ${model} error:`, e.message);
+        if (extractedText) break;
       }
     }
 
-    return { success: false, error: lastError };
-  }
-
-  async function testOxAlphaConnection() {
-    if (!dom.btnTestOxAlpha) return;
-    dom.btnTestOxAlpha.disabled = true;
-    dom.btnTestOxAlpha.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menguji...';
-    
-    if (dom.oxAlphaFeedbackMsg) {
-      dom.oxAlphaFeedbackMsg.style.display = 'block';
-      dom.oxAlphaFeedbackMsg.style.color = '#0284c7';
-      dom.oxAlphaFeedbackMsg.textContent = 'Menghubungi AI Engine (Gemini & OpenRouter)...';
-    }
-
-    // Try Gemini first, then OpenRouter
-    let result = await callGeminiAi(
-      'Anda ialah AI Penguji. Jawab hanya satu perkataan JSON: {"status":"CONNECTED"}',
-      'Uji sambungan API Gemini Flash Lite untuk PKSK.'
-    );
-
-    if (!result.success) {
-      result = await callOxAlphaAi(
-        'Anda ialah AI Penguji. Jawab hanya satu perkataan JSON: {"status":"CONNECTED"}',
-        'Uji sambungan API Ox Alpha untuk Sistem Pentaksiran PKSK.'
-      );
-    }
-
-    dom.btnTestOxAlpha.disabled = false;
-    dom.btnTestOxAlpha.innerHTML = '<i class="fa-solid fa-vial-circle-check"></i> Uji Sambungan';
-
-    if (result.success) {
-      if (dom.oxAlphaStatusBadge) {
-        dom.oxAlphaStatusBadge.style.background = '#dcfce7';
-        dom.oxAlphaStatusBadge.style.color = '#15803d';
-        dom.oxAlphaStatusBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> Sambungan Berjaya';
+    if (extractedText) {
+      if (dom.inputEssayText) {
+        dom.inputEssayText.value = extractedText;
+        updateEssayWordCount();
       }
-      if (dom.oxAlphaFeedbackMsg) {
-        dom.oxAlphaFeedbackMsg.style.color = '#15803d';
-        dom.oxAlphaFeedbackMsg.textContent = `✓ Sambungan AI Enjin (${result.model}) Berjaya & Aktif!`;
+      if (dom.ocrStatusText) dom.ocrStatusText.innerHTML = '<i class="fa-solid fa-circle-check" style="color:var(--kpm-emerald);"></i> Pengecaman tulisan tangan berjaya!';
+      if (dom.ocrModelBadge) dom.ocrModelBadge.textContent = modelUsed || 'OpenRouter Vision';
+      if (dom.ocrProgressBar) {
+        dom.ocrProgressBar.className = 'ocr-progress-bar-fill';
+        dom.ocrProgressBar.style.width = '100%';
       }
-      if (dom.essayAiIndicatorBadge) {
-        dom.essayAiIndicatorBadge.style.background = '#15803d';
-        dom.essayAiIndicatorBadge.innerHTML = '<i class="fa-solid fa-brain"></i> AI Penilai Bersedia';
+      if (dom.previewOcrBadge) {
+        dom.previewOcrBadge.innerHTML = '<i class="fa-solid fa-check"></i> Selesai';
+        dom.previewOcrBadge.style.background = 'rgba(16, 185, 129, 0.9)';
       }
+      if (dom.transcriptionNotice) {
+        dom.transcriptionNotice.innerHTML = `Selesai ditranskripsi oleh <strong>${modelUsed}</strong>. Sila semak teks di bawah sebelum menghantar.`;
+        dom.transcriptionNotice.style.color = '#15803d';
+      }
+      if (dom.btnRetranscribe) dom.btnRetranscribe.style.display = 'inline-block';
     } else {
-      if (dom.oxAlphaStatusBadge) {
-        dom.oxAlphaStatusBadge.style.background = '#fee2e2';
-        dom.oxAlphaStatusBadge.style.color = '#b91c1c';
-        dom.oxAlphaStatusBadge.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Ralat';
-      }
-      if (dom.oxAlphaFeedbackMsg) {
-        dom.oxAlphaFeedbackMsg.style.color = '#dc2626';
-        dom.oxAlphaFeedbackMsg.textContent = `✗ Ralat Sambungan AI: ${result.error}`;
-      }
+      throw new Error('Gagal mengekstrak teks tulisan tangan. Sila pastikan gambar kertas jelas.');
     }
   }
 
-  /* =========================================================================
-     AI ESSAY ASSESSMENT ENGINE (BAHAGIAN C RUBRIC)
-     ========================================================================= */
+  function resetEssayImageUpload() {
+    state.essayImageFile = null;
+    state.essayImageDataUrl = null;
+    if (dom.essayImageInput) dom.essayImageInput.value = '';
+    if (dom.essayImagePreview) dom.essayImagePreview.src = '';
+    if (dom.dropzoneEmpty) dom.dropzoneEmpty.style.display = 'block';
+    if (dom.dropzonePreview) dom.dropzonePreview.style.display = 'none';
+    if (dom.inputEssayText) {
+      dom.inputEssayText.value = '';
+      updateEssayWordCount();
+    }
+    if (dom.transcriptionNotice) {
+      dom.transcriptionNotice.textContent = 'Teks diekstrak automatik dari gambar kertas';
+      dom.transcriptionNotice.style.color = 'var(--text-muted)';
+    }
+    if (dom.btnRetranscribe) dom.btnRetranscribe.style.display = 'none';
+  }
+
+  // Official Rubric Evaluation Engine with 550B Frontier Reasoning Model
   async function evaluateEssayWithOxAlpha() {
-    const essay = (state.essayText || '').trim();
+    const essay = (dom.inputEssayText ? dom.inputEssayText.value : (state.essayText || '')).trim();
+    state.essayText = essay;
 
     if (!essay) {
       state.aiEssayAssessment = {
         skor_keseluruhan: 0,
         band: 'Band 1 (Tiada Penulisan)',
         kriteria: {
-          idea: { skor: 0, max: 3.0, ulasan: 'Calon tidak mengisi ruang jawapan karangan.' },
+          idea: { skor: 0, max: 3.0, ulasan: 'Calon tidak memuat naik gambar kertas esei atau teks kosong.' },
           bahasa: { skor: 0, max: 3.0, ulasan: 'Tiada teks untuk disemak tatabahasa & ejaan.' },
-          struktur: { skor: 0, max: 2.0, ulasan: 'Tiada perenggan atau format yang dikesan.' },
+          struktur: { skor: 0, max: 2.0, ulasan: 'Tiada perenggan yang dikesan.' },
           nilai_kbat: { skor: 0, max: 2.0, ulasan: 'Tiada bukti nilai murni atau pemikiran kritis.' }
         },
         kekuatan: ['Tiada'],
-        kelemahan_tatabahasa: ['Ruang penulisan dikosongkan.'],
-        cadangan_penambahbaikan: ['Sila tulis karangan melebihi 100 patah perkataan pada sesi akan datang.'],
+        kelemahan_tatabahasa: ['Ruang penulisan kosong.'],
+        cadangan_penambahbaikan: ['Sila muat naik foto kertas jawapan anda untuk disemak oleh AI.'],
         rumusan_keseluruhan: 'Calon tidak melengkapkan Bahagian C (Artikulasi Penulisan).'
       };
       return state.aiEssayAssessment;
     }
 
+    const topicTitle = state.essayTopic?.title || 'Umum';
+    const topicPrompt = state.essayTopic?.prompt || '';
+
+    // 1. Try Vercel Serverless /api/evaluate first
+    try {
+      const serverlessResp = await fetch('/api/evaluate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          essayText: essay,
+          topicTitle: topicTitle,
+          topicPrompt: topicPrompt
+        })
+      });
+
+      if (serverlessResp.ok) {
+        const json = await serverlessResp.json();
+        if (json.success && json.assessment) {
+          state.aiEssayAssessment = json.assessment;
+          return json.assessment;
+        }
+      }
+    } catch (e) {
+      console.warn('/api/evaluate unavailable, falling back to direct client call:', e);
+    }
+
+    // 2. Direct client fallback across 8 keys and Smartest Frontier Models (Nemotron 3 Ultra 550B / Super 120B)
     const systemInstruction = `Anda ialah Pemeriksa Kanan Rasmi Lembaga Peperiksaan Malaysia bagi Pentaksiran Kemasukan Sekolah Khusus (PKSK) Tingkatan 1 (Bahagian C: Artikulasi Penulisan - Wajaran 10 Markah).
 Sasaran Calon: Murid Tahun 6 (Umur 12-13 Tahun) yang memohon kemasukan ke Sekolah Berasrama Penuh (SBP) / Maktab Rendah Sains MARA (MRSM).
 Nilai karangan calon dengan KRITIKAL, ADIL, TELITI dan BERPANDUKAN standard bahasa Melayu Baku KPM & Tatabahasa Dewan DBP mengikut 4 kriteria Rubrik Rasmi LPM:
 1. Idea, Hujah & Kematangan Isi (Maksimum 3.0 markah)
-   - Kebolehan membina dan menghuraikan idea berkaitan isu soalan (cth: buli, ko-akademik, kokurikulum, teknologi, atau perpaduan, Hari Kebangsaan & Hari Malaysia) secara logik, matang, dan bersesuaian dengan aras murid 12-13 tahun.
+   - Kebolehan membina dan menghuraikan idea berkaitan isu soalan secara logik, matang, dan bersesuaian dengan aras murid 12-13 tahun.
 2. Bahasa, Ejaan, Tatabahasa Melayu Baku & Kosa Kata (Maksimum 3.0 markah)
-   - Mematuhi hukum Tatabahasa Dewan DBP: ketepatan imbuhan awalan/akhiran/apitan (cth: memperoleh bukan memperolehi), ejaan perkataan baku, struktur frasa/ayat majmuk berwacana, tanda baca yang betul, serta pengelakan bahasa slanga, dialek rojak, atau singkatan media sosial.
+   - Mematuhi hukum Tatabahasa Dewan DBP: ketepatan imbuhan awalan/akhiran/apitan, ejaan perkataan baku, struktur frasa/ayat majmuk berwacana, tanda baca yang betul, serta pengelakan slanga atau singkatan media sosial.
 3. Struktur, Koheren & Format Karangan (Maksimum 2.0 markah)
    - Perengganan yang seimbang dan kemas (Pendahuluan, Isi-isi penting, Penutup), disulami penanda wacana yang tepat dan bertaut lancar antara ayat.
 4. Nilai Murni, Pengajaran & Pemikiran Kritis KBAT (Maksimum 2.0 markah)
    - Penerapan nilai murni kemanusiaan, empati, disiplin, jati diri, serta daya pemikiran kritis dalam mencadangkan solusi praktikal.
 
-ARAHAN KHAS: Beri ulasan padat, tajam dan berwibawa (1-2 ayat ringkas dan berimpak bagi setiap kriteria). Pada bahagian 'kelemahan_tatabahasa', nyatakan secara spesifik kesilapan ejaan, imbuhan atau hukum tatabahasa jika ada untuk bimbingan calon.
 PENTING: Pulangkan jawapan dalam format JSON SAHAJA tanpa sebarang teks penjelasan lain di luar JSON:
 {
   "skor_keseluruhan": 7.5,
@@ -1747,69 +1864,92 @@ PENTING: Pulangkan jawapan dalam format JSON SAHAJA tanpa sebarang teks penjelas
     "nilai_kbat": { "skor": 1.5, "max": 2.0, "ulasan": "Penerapan nilai murni wujud dan bersesuaian dengan situasi harian murid." }
   },
   "kekuatan": ["Idea berkembang secara logik", "Kosa kata bersesuaian"],
-  "kelemahan_tatabahasa": ["Variasi struktur ayat boleh ditingkatkan", "Semak ketepatan ejaan kata pinjaman"],
+  "kelemahan_tatabahasa": ["Variasi struktur ayat boleh ditingkatkan", "Semak ketepatan ejaan kata majmuk"],
   "cadangan_penambahbaikan": ["Selitkan peribahasa bersesuaian dan contoh situasi harian"],
   "rumusan_keseluruhan": "Karangan baik dan menepati format asas kemasukan SBP/MRSM."
 }`;
 
     const userInstruction = `Karangan Calon:
-Tajuk: "${state.essayTopic.title}"
-Stimulus: "${state.essayTopic.prompt}"
+Tajuk: "${topicTitle}"
+Stimulus: "${topicPrompt}"
 Teks Karangan:
 """
 ${essay}
 """`;
 
-    // 1. First attempt: Ultra-fast Gemini Flash-Lite (2.5s)
-    let result = await callGeminiAi(systemInstruction, userInstruction);
+    let lastError = 'Ralat sambungan AI';
 
-    // 2. Fallback attempt: OpenRouter Fast Models
-    if (!result.success || !result.text) {
-      console.warn('Gemini semakan gagal/perlahan, menggunakan sandaran OpenRouter:', result.error);
-      result = await callOxAlphaAi(systemInstruction, userInstruction);
-    }
+    for (let keyIdx = 0; keyIdx < OPENROUTER_KEYS_POOL.length; keyIdx++) {
+      const currentKey = getNextOrKey();
 
-    if (result.success && result.text) {
-      try {
-        let cleanJson = result.text.replace(/```json/gi, '').replace(/```/g, '').trim();
-        const jsonMatch = cleanJson.match(/\{[\s\S]*\}/);
-        if (jsonMatch) cleanJson = jsonMatch[0];
-        const parsed = JSON.parse(cleanJson);
-        parsed.aiModelUsed = result.model || 'AI Enjin Pintar';
-        state.aiEssayAssessment = parsed;
-        return parsed;
-      } catch (parseErr) {
-        console.warn('JSON parse error from AI, attempting regex extract:', parseErr);
-        const match = result.text.match(/\{[\s\S]*\}/);
-        if (match) {
-          try {
-            const parsed = JSON.parse(match[0]);
-            parsed.aiModelUsed = result.model || 'AI Enjin Pintar';
-            state.aiEssayAssessment = parsed;
-            return parsed;
-          } catch (e2) {}
+      for (const model of OPENROUTER_EVAL_MODELS) {
+        try {
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 20000);
+
+          const resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${currentKey}`,
+              'HTTP-Referer': 'https://pksk2026.vercel.app',
+              'X-Title': 'PKSK Simulator - Essay Evaluation'
+            },
+            signal: controller.signal,
+            body: JSON.stringify({
+              model: model,
+              messages: [
+                { role: 'system', content: systemInstruction },
+                { role: 'user', content: userInstruction }
+              ],
+              temperature: 0.2,
+              max_tokens: 1000
+            })
+          });
+
+          clearTimeout(timeout);
+
+          if (resp.ok) {
+            const data = await resp.json();
+            const text = data.choices?.[0]?.message?.content || '';
+
+            if (text.trim()) {
+              let cleanJson = text.replace(/```json/gi, '').replace(/```/g, '').trim();
+              const match = cleanJson.match(/\{[\s\S]*\}/);
+              if (match) cleanJson = match[0];
+              const parsed = JSON.parse(cleanJson);
+              parsed.aiModelUsed = `OpenRouter (${model.replace(':free', '')})`;
+              state.aiEssayAssessment = parsed;
+              return parsed;
+            }
+          } else {
+            const errData = await resp.json().catch(() => ({}));
+            lastError = errData.error?.message || `HTTP ${resp.status}`;
+          }
+        } catch (e) {
+          lastError = e.name === 'AbortError' ? `${model} timeout (20s)` : e.message;
         }
       }
     }
 
-    console.warn('AI evaluation fallback:', result.error);
+    // Heuristic fallback
     const words = essay.split(/\s+/).filter(w => w.length > 0).length;
     const fallbackScore = words >= 100 ? 8.5 : Math.max(1.0, parseFloat(((words / 100) * 8.0).toFixed(1)));
     state.aiEssayAssessment = {
       isHeuristic: true,
-      error: result.error,
+      error: lastError,
       skor_keseluruhan: fallbackScore,
       band: 'Band 4 (Penilaian Sandaran)',
       kriteria: {
-        idea: { skor: parseFloat((fallbackScore * 0.3).toFixed(1)), max: 3.0, ulasan: 'Idea bersesuaian dengan tema integriti.' },
+        idea: { skor: parseFloat((fallbackScore * 0.3).toFixed(1)), max: 3.0, ulasan: 'Idea bersesuaian dengan tema karangan.' },
         bahasa: { skor: parseFloat((fallbackScore * 0.3).toFixed(1)), max: 3.0, ulasan: 'Tatabahasa memuaskan.' },
         struktur: { skor: parseFloat((fallbackScore * 0.2).toFixed(1)), max: 2.0, ulasan: 'Struktur karangan tersusun.' },
         nilai_kbat: { skor: parseFloat((fallbackScore * 0.2).toFixed(1)), max: 2.0, ulasan: 'Nilai murni diterapkan.' }
       },
       kekuatan: [`Jumlah perkataan: ${words}`],
-      kelemahan_tatabahasa: [`Semakan AI tergendala: ${result.error || 'Ralat rangkaian'}`],
-      cadangan_penambahbaikan: ['Tekan butang Nilai Semula AI di bawah.'],
-      rumusan_keseluruhan: 'Pemarkahan anggaran diberikan. Anda boleh menekan butang Nilai Semula dengan AI.'
+      kelemahan_tatabahasa: [`Semakan AI tergendala: ${lastError}`],
+      cadangan_penambahbaikan: ['Tekan butang Nilai Semula AI di bawah untuk semakan semula.'],
+      rumusan_keseluruhan: 'Pemarkahan anggaran diberikan berikutan kelewatan sambungan AI.'
     };
     return state.aiEssayAssessment;
   }
@@ -2492,6 +2632,81 @@ ${essay}
     dom.inputEssayText.oninput = updateEssayWordCount;
     if (dom.btnShuffleEssayTopic) dom.btnShuffleEssayTopic.onclick = shuffleEssayTopic;
 
+    // Handwritten Essay Image Upload Event Listeners
+    if (dom.btnSnapPhoto) {
+      dom.btnSnapPhoto.onclick = (e) => {
+        e.stopPropagation();
+        if (dom.essayImageInput) {
+          dom.essayImageInput.setAttribute('capture', 'environment');
+          dom.essayImageInput.click();
+        }
+      };
+    }
+    if (dom.btnChooseFile) {
+      dom.btnChooseFile.onclick = (e) => {
+        e.stopPropagation();
+        if (dom.essayImageInput) {
+          dom.essayImageInput.removeAttribute('capture');
+          dom.essayImageInput.click();
+        }
+      };
+    }
+    if (dom.essayImageInput) {
+      dom.essayImageInput.onchange = (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (file) handleEssayImageFile(file);
+      };
+    }
+    if (dom.essayDropzone) {
+      dom.essayDropzone.onclick = (e) => {
+        if (dom.dropzoneEmpty && dom.dropzoneEmpty.style.display !== 'none') {
+          if (dom.essayImageInput) {
+            dom.essayImageInput.removeAttribute('capture');
+            dom.essayImageInput.click();
+          }
+        }
+      };
+      dom.essayDropzone.ondragover = (e) => {
+        e.preventDefault();
+        dom.essayDropzone.classList.add('dragover');
+      };
+      dom.essayDropzone.ondragleave = (e) => {
+        e.preventDefault();
+        dom.essayDropzone.classList.remove('dragover');
+      };
+      dom.essayDropzone.ondrop = (e) => {
+        e.preventDefault();
+        dom.essayDropzone.classList.remove('dragover');
+        const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+        if (file) handleEssayImageFile(file);
+      };
+    }
+    if (dom.btnRemoveImage) {
+      dom.btnRemoveImage.onclick = (e) => {
+        e.stopPropagation();
+        resetEssayImageUpload();
+      };
+    }
+    if (dom.btnChangeImage) {
+      dom.btnChangeImage.onclick = (e) => {
+        e.stopPropagation();
+        if (dom.essayImageInput) {
+          dom.essayImageInput.removeAttribute('capture');
+          dom.essayImageInput.click();
+        }
+      };
+    }
+    if (dom.btnRetranscribe) {
+      dom.btnRetranscribe.onclick = (e) => {
+        e.stopPropagation();
+        if (state.essayImageDataUrl) {
+          executeHandwritingOcr(state.essayImageDataUrl);
+        } else if (state.essayImageFile) {
+          handleEssayImageFile(state.essayImageFile);
+        }
+      };
+    }
+
     // Dropdown Pilihan Tajuk Esei
     if (dom.selectEssayTopic) {
       dom.selectEssayTopic.onchange = function(e) {
@@ -2537,7 +2752,7 @@ ${essay}
       dom.btnWriteNewEssay.onclick = () => {
         state.mode = 'ESSAY_PRACTICE';
         state.essayText = '';
-        if (dom.inputEssayText) dom.inputEssayText.value = '';
+        resetEssayImageUpload();
         state.hasInitialEssayTopicSelected = false;
         switchView('ESSAY');
         startEssaySessionTimers(true);

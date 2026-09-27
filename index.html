@@ -549,14 +549,101 @@
           <span style="font-size:0.75rem; background:#fee2e2; color:#b91c1c; padding:3px 8px; border-radius:4px; font-weight:800; border:1px solid #fca5a5; white-space:nowrap;">Tamat 10 Minit</span>
         </div>
 
-        <div class="kpm-form-group">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
-            <label class="kpm-form-label" style="font-size:0.92rem; font-weight:800; margin-bottom:0;">Ruang Jawapan Karangan Calon:</label>
-            <span id="dispWordCount" style="font-family:var(--font-mono); font-size:0.88rem; font-weight:800; color:var(--kpm-blue);">
-              Jumlah Perkataan: 0 / 100
-            </span>
+        <!-- RUANG MUAT NAIK GAMBAR ESEI TULISAN TANGAN (HANDWRITTEN OCR ENGINE) -->
+        <div class="essay-upload-section">
+          <div class="essay-upload-header" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.85rem; flex-wrap:wrap; gap:0.6rem;">
+            <div>
+              <label class="kpm-form-label" style="font-size:0.98rem; font-weight:800; margin-bottom:0.25rem; color:var(--kpm-navy); display:flex; align-items:center; gap:8px;">
+                <i class="fa-solid fa-camera" style="color:var(--kpm-blue); font-size:1.15rem;"></i>
+                <span>Muat Naik Gambar Helaian Kertas Esei (Tulisan Tangan)</span>
+              </label>
+              <p style="font-size:0.84rem; color:var(--text-muted); margin:0; line-height:1.5;">
+                Tulis karangan anda pada kertas helaian fizikal menggunakan pen/pensel, kemudian tangkap foto atau muat naik fail gambar untuk ditranskripsi & disemak oleh AI OpenRouter secara automatik.
+              </p>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span id="dispWordCount" style="font-family:var(--font-mono); font-size:0.88rem; font-weight:800; color:var(--kpm-blue); background:#e0f2fe; padding:5px 12px; border-radius:6px; border:1px solid #bae6fd;">
+                Jumlah Perkataan: 0 / 100
+              </span>
+            </div>
           </div>
-          <textarea id="inputEssayText" class="essay-textarea" placeholder="Tuliskan karangan anda di sini..."></textarea>
+
+          <!-- DROPZONE / FILE PICKER -->
+          <div id="essayDropzone" class="essay-upload-dropzone">
+            <input type="file" id="essayImageInput" accept="image/*" capture="environment" style="display:none;">
+            
+            <div class="dropzone-inner" id="dropzoneEmpty">
+              <div class="dropzone-icon">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+              </div>
+              <h4 style="font-size:1.05rem; font-weight:800; color:var(--kpm-navy); margin:0.35rem 0 0.25rem;">
+                Klik untuk Tangkap Foto Kertas atau Pilih Fail Gambar
+              </h4>
+              <p style="font-size:0.85rem; color:var(--text-muted); margin:0 0 1.15rem;">
+                Menyokong kamera telefon pintar, tablet, atau seret & lepas fail (JPG, PNG, WebP).
+              </p>
+              <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+                <button type="button" id="btnSnapPhoto" class="btn-kpm btn-kpm-primary" style="font-size:0.88rem; padding:0.6rem 1.35rem;">
+                  <i class="fa-solid fa-camera"></i> Tangkap Foto Kertas
+                </button>
+                <button type="button" id="btnChooseFile" class="btn-kpm btn-kpm-outline" style="font-size:0.88rem; padding:0.6rem 1.35rem; background:#ffffff;">
+                  <i class="fa-regular fa-image"></i> Pilih dari Peranti
+                </button>
+              </div>
+            </div>
+
+            <!-- PREVIEW CONTAINER (WHEN IMAGE SELECTED) -->
+            <div id="dropzonePreview" class="essay-preview-wrapper" style="display:none;">
+              <div class="preview-media-box">
+                <img id="essayImagePreview" src="" alt="Pratonton Kertas Esei" class="preview-image">
+                <div class="preview-badge-status" id="previewOcrBadge">
+                  <i class="fa-solid fa-spinner fa-spin"></i> Memproses OCR...
+                </div>
+              </div>
+              <div class="preview-details">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+                  <div>
+                    <h5 id="previewFileName" style="margin:0; font-size:0.95rem; font-weight:800; color:var(--kpm-navy);">kertas_jawapan.jpg</h5>
+                    <span id="previewFileSize" style="font-size:0.8rem; color:var(--text-muted);">0 KB</span>
+                  </div>
+                  <button type="button" id="btnRemoveImage" class="btn-remove-preview" title="Padam imej ini">
+                    <i class="fa-solid fa-trash-can"></i> Padam
+                  </button>
+                </div>
+                <div class="ocr-progress-box" id="ocrProgressBox">
+                  <div class="ocr-status-row">
+                    <span id="ocrStatusText"><i class="fa-solid fa-wand-magic-sparkles"></i> Mengekstrak teks tulisan tangan...</span>
+                    <span id="ocrModelBadge" class="badge-model">OpenRouter Vision AI</span>
+                  </div>
+                  <div class="ocr-progress-bar-bg">
+                    <div class="ocr-progress-bar-fill" id="ocrProgressBar"></div>
+                  </div>
+                </div>
+                <div style="margin-top:0.75rem; display:flex; gap:10px; flex-wrap:wrap;">
+                  <button type="button" id="btnRetranscribe" class="btn-kpm btn-kpm-gold" style="font-size:0.78rem; padding:0.4rem 0.85rem; display:none;">
+                    <i class="fa-solid fa-rotate"></i> Transkripsi Semula
+                  </button>
+                  <button type="button" id="btnChangeImage" class="btn-kpm btn-kpm-outline" style="font-size:0.78rem; padding:0.4rem 0.85rem; background:#ffffff;">
+                    <i class="fa-solid fa-arrows-rotate"></i> Tukar Gambar Lain
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TRANSCRIBED ESSAY TEXT REVIEW (HASIL PENGECAMAN TULISAN TANGAN) -->
+          <div id="transcribedSection" class="transcribed-text-container" style="margin-top:1.25rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.45rem; flex-wrap:wrap; gap:0.4rem;">
+              <label class="kpm-form-label" style="font-size:0.92rem; font-weight:800; margin-bottom:0; color:var(--kpm-navy); display:flex; align-items:center; gap:6px;">
+                <i class="fa-solid fa-file-pen" style="color:var(--kpm-emerald);"></i>
+                <span>Hasil Transkripsi Tulisan Tangan (Boleh disemak & disunting jika perlu):</span>
+              </label>
+              <span id="transcriptionNotice" style="font-size:0.78rem; color:var(--text-muted); background:#f1f5f9; padding:2px 8px; border-radius:4px;">
+                Teks diekstrak automatik dari gambar kertas
+              </span>
+            </div>
+            <textarea id="inputEssayText" class="essay-textarea essay-transcribed-box" placeholder="Teks karangan bertulis tangan anda akan diekstrak dan dipaparkan di sini secara automatik selepas gambar dimuat naik..."></textarea>
+          </div>
         </div>
 
         <div class="essay-action-footer" style="display:flex; justify-content:space-between; align-items:center; margin-top:1.5rem; border-top:1px solid var(--border-subtle); padding-top:1.25rem;">
