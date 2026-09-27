@@ -387,6 +387,13 @@
     loginViewLicenseKey: document.getElementById('loginViewLicenseKey'),
     btnLoginViewValidateLicense: document.getElementById('btnLoginViewValidateLicense'),
     btnLoginViewGuestEnter: document.getElementById('btnLoginViewGuestEnter'),
+    splitInputUsername: document.getElementById('splitInputUsername'),
+    splitInputPassword: document.getElementById('splitInputPassword'),
+    splitChkRemember: document.getElementById('splitChkRemember'),
+    btnSplitSignIn: document.getElementById('btnSplitSignIn'),
+    formSplitLogin: document.getElementById('formSplitLogin'),
+    linkCreateAccount: document.getElementById('linkCreateAccount'),
+    linkForgotPassword: document.getElementById('linkForgotPassword'),
     loginStatusBanner: document.getElementById('loginStatusBanner'),
     btnLoginOpenSupabaseConfig: document.getElementById('btnLoginOpenSupabaseConfig'),
     navTabFullSim: document.getElementById('navTabFullSim'),
@@ -667,12 +674,23 @@
       }
     }
 
+    // Toggle portal masthead and sticky navigation bar for dedicated split login experience (Gambar 3)
+    const topPortalHeader = document.getElementById('acc-page-wrap');
+    const mainNav = document.getElementById('navigation');
     if (viewName === 'LOGIN') {
+      document.body.classList.add('in-login-mode');
+      if (topPortalHeader) topPortalHeader.style.display = 'none';
+      if (mainNav) mainNav.style.display = 'none';
       if (dom.loginView) dom.loginView.classList.remove('hidden');
       if (dom.navTabLogin) dom.navTabLogin.classList.add('active');
       renderLoginViewState();
+    } else {
+      document.body.classList.remove('in-login-mode');
+      if (topPortalHeader) topPortalHeader.style.display = '';
+      if (mainNav) mainNav.style.display = '';
     }
-    else if (viewName === 'DASHBOARD') {
+
+    if (viewName === 'DASHBOARD') {
       dom.dashboardView.classList.remove('hidden');
       dom.navTabDashboard.classList.add('active');
     } 
@@ -2822,6 +2840,51 @@ Wajib sediakan JSON SAHAJA mengikut skema:
     }
   }
 
+    function handleSplitLoginSubmit() {
+    const usernameInput = dom.splitInputUsername ? dom.splitInputUsername.value.trim() : '';
+    const passwordInput = dom.splitInputPassword ? dom.splitInputPassword.value.trim() : '';
+    const rememberMe = dom.splitChkRemember ? dom.splitChkRemember.checked : true;
+
+    if (!usernameInput) {
+      alert("Sila masukkan ID Calon, No. Kad Pengenalan atau Emel anda.");
+      if (dom.splitInputUsername) dom.splitInputUsername.focus();
+      return;
+    }
+
+    // Set candidate data in global state
+    state.candidate.ic = usernameInput;
+    state.candidate.name = passwordInput || usernameInput;
+    if (state.candidate.ic && !state.candidate.indexNumber) {
+      const cleanNum = usernameInput.replace(/[^0-9]/g, '');
+      state.candidate.indexNumber = 'PKSK-2026-' + (cleanNum.slice(-4) || '8899');
+    }
+
+    // Synchronize UI inputs and displays
+    if (dom.dispCandidateName) dom.dispCandidateName.textContent = state.candidate.name;
+    if (dom.dispCandidateIndex) dom.dispCandidateIndex.textContent = state.candidate.indexNumber;
+    if (dom.inputCandidateName) dom.inputCandidateName.value = state.candidate.name;
+    if (dom.inputCandidateIc) dom.inputCandidateIc.value = state.candidate.ic;
+
+    // Remember login credentials
+    if (rememberMe) {
+      try {
+        localStorage.setItem('pksk_saved_user', JSON.stringify({
+          username: usernameInput,
+          name: state.candidate.name
+        }));
+      } catch (e) {
+        console.warn('Could not save login info:', e);
+      }
+    } else {
+      try {
+        localStorage.removeItem('pksk_saved_user');
+      } catch (e) {}
+    }
+
+    switchView('DASHBOARD');
+  }
+  window.handleSplitLoginSubmit = handleSplitLoginSubmit;
+
   async function handleLoginViewGoogleSignIn() {
     if (!window.PkskLicense) {
       alert("Modul autentikasi belum sedia. Sila muat semula.");
@@ -2845,10 +2908,55 @@ Wajib sediakan JSON SAHAJA mengikut skema:
     if (dom.navTabLogin) dom.navTabLogin.onclick = () => switchView('LOGIN');
     dom.navTabDashboard.onclick = () => switchView('DASHBOARD');
 
-    // Login View Actions
+    // Split-Screen Login View Actions (Gambar 3)
+    if (dom.btnSplitSignIn) {
+      dom.btnSplitSignIn.onclick = (e) => {
+        e.preventDefault();
+        handleSplitLoginSubmit();
+      };
+    }
+    if (dom.formSplitLogin) {
+      dom.formSplitLogin.onsubmit = (e) => {
+        e.preventDefault();
+        handleSplitLoginSubmit();
+      };
+    }
+    if (dom.linkCreateAccount) {
+      dom.linkCreateAccount.onclick = (e) => {
+        e.preventDefault();
+        const newName = prompt("Pendaftaran Calon PKSK Baharu: Sila masukkan Nama Penuh Calon:", "");
+        if (newName && newName.trim()) {
+          const newIc = prompt("Sila masukkan No. Kad Pengenalan Calon:", "");
+          if (dom.splitInputUsername && newIc) dom.splitInputUsername.value = newIc.trim();
+          if (dom.splitInputPassword) dom.splitInputPassword.value = newName.trim();
+          alert("Pendaftaran berjaya! Sila tekan butang Sign In / Masuk Sistem untuk masuk.");
+        }
+      };
+    }
+    if (dom.linkForgotPassword) {
+      dom.linkForgotPassword.onclick = (e) => {
+        e.preventDefault();
+        alert("Bantuan Kata Laluan PKSK: Untuk calon PKSK, kata laluan lalai adalah Nama Penuh atau No. Kad Pengenalan anda. Sila hubungi guru penyelaras jika anda terlupa maklumat pendaftaran.");
+      };
+    }
     if (dom.btnLoginViewGoogle) dom.btnLoginViewGoogle.onclick = handleLoginViewGoogleSignIn;
     if (dom.btnLoginViewValidateLicense) dom.btnLoginViewValidateLicense.onclick = handleLoginViewLicenseSubmit;
-    if (dom.btnLoginViewGuestEnter) dom.btnLoginViewGuestEnter.onclick = () => switchView('DASHBOARD');
+    if (dom.btnLoginViewGuestEnter) dom.btnLoginViewGuestEnter.onclick = () => {
+      state.candidate.name = state.candidate.name || 'Calon Tetamu PKSK';
+      state.candidate.ic = state.candidate.ic || '990101-14-1234';
+      if (dom.dispCandidateName) dom.dispCandidateName.textContent = state.candidate.name;
+      switchView('DASHBOARD');
+    };
+
+    // Auto-restore remembered credentials
+    try {
+      const savedUserStr = localStorage.getItem('pksk_saved_user');
+      if (savedUserStr) {
+        const savedUser = JSON.parse(savedUserStr);
+        if (dom.splitInputUsername && savedUser.username) dom.splitInputUsername.value = savedUser.username;
+        if (dom.splitInputPassword && savedUser.name) dom.splitInputPassword.value = savedUser.name;
+      }
+    } catch (e) {}
     if (dom.btnLoginOpenSupabaseConfig) {
       dom.btnLoginOpenSupabaseConfig.onclick = (e) => {
         e.preventDefault();

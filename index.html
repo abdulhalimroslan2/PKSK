@@ -58,10 +58,9 @@
     <div id="mainhead" style="background-color:#ffffff; width:100%;">
       <div class="portal-mainhead-wrap">
         
-        <!-- Left: Logo & Title (Exactly like MOE portal) -->
+        <!-- Left: Logo & Title -->
         <a href="#" class="portal-brand-anchor">
-          <img src="assets/jata_negara_kpm.svg" alt="Logo Pentaksiran" class="portal-logo-jata">
-          <img src="assets/pksk_icon_official.png" alt="PKSK AI Official Icon" class="portal-logo-pksk">
+          <img src="assets/pksk_icon_official.png" alt="PKSK AI Official Icon" class="portal-logo-pksk" style="height:72px; width:auto; border-radius:12px; filter:drop-shadow(0 3px 6px rgba(0,0,0,0.12));">
           <div class="portal-brand-text">
             <div class="portal-brand-tag">PORTAL RASMI</div>
             <div class="portal-brand-name">Portal Pentaksiran</div>
@@ -130,37 +129,159 @@
   </nav>
 
   <!-- =========================================================================
-       0. VIEW 0: DEDICATED MINIMALIST PURE-WHITE CORPORATE LOGIN VIEW
+       0. VIEW 0: SPLIT-SCREEN CORPORATE LOGIN VIEW (MATCHING GAMBAR 3)
        ========================================================================= -->
-  <main id="loginView" class="app-viewport login-page-viewport">
-    <div class="login-page-container">
-      <div class="corporate-login-card">
-        
-        <!-- Header Banner / Jata & Branding -->
-        <div class="corporate-login-header">
-          <div class="corporate-logo-wrap">
-            <img src="assets/jata_negara_kpm.svg" alt="Logo Pentaksiran" class="login-brand-logo">
+  <main id="loginView" class="split-login-viewport">
+    <div class="split-login-container">
+      
+      <!-- LEFT PANEL: Corporate Blue Brand & Illustration -->
+      <div class="split-login-hero">
+        <div class="split-hero-content">
+          
+          <!-- Brand Header -->
+          <div class="split-brand-header">
+            <img src="assets/pksk_icon_official.png" alt="PKSK Icon" class="split-brand-logo">
+            <div class="split-brand-title-wrap">
+              <span class="split-brand-name">PKSK Simulator</span>
+              <span class="split-brand-badge">Portal Rasmi</span>
+            </div>
           </div>
-          <div>
-            <span class="corporate-badge-pill">
-              <i class="fa-solid fa-shield-halved"></i> PORTAL RASMI PKSK 2026
-            </span>
-          </div>
-          <h1 class="corporate-login-title">Log Masuk Calon & Pengguna</h1>
-          <p class="corporate-login-subtitle">
-            Sistem Pentaksiran Kemasukan Sekolah Khusus Tingkatan 1
-          </p>
-        </div>
 
-        <div class="corporate-login-body">
+          <!-- Hero Illustration matching Gambar 3 -->
+          <div class="split-hero-illustration">
+            <svg class="illustration-svg" viewBox="0 0 420 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Background glowing shapes & clouds -->
+              <ellipse cx="210" cy="180" rx="170" ry="110" fill="rgba(255, 255, 255, 0.12)" />
+              <rect x="50" y="140" width="320" height="40" rx="20" fill="rgba(255, 255, 255, 0.08)" />
+              <rect x="80" y="195" width="260" height="30" rx="15" fill="rgba(255, 255, 255, 0.08)" />
+              
+              <!-- Clipboard Main Body -->
+              <g filter="url(#dropShadow)">
+                <rect x="125" y="45" width="170" height="230" rx="22" fill="#ffffff" />
+                <rect x="125" y="45" width="170" height="230" rx="22" stroke="#e2e8f0" stroke-width="2" />
+                
+                <!-- Clipboard Header Clip -->
+                <rect x="175" y="32" width="70" height="26" rx="8" fill="#1e40af" />
+                <rect x="190" y="24" width="40" height="16" rx="6" fill="#02264a" />
+                <circle cx="210" cy="32" r="5" fill="#ffffff" />
+
+                <!-- Checklist Items inside Clipboard (exactly like Gambar 3) -->
+                <!-- Item 1: Check -->
+                <path d="M152 95L158 101L170 89" stroke="#22c55e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="180" y="91" width="85" height="8" rx="4" fill="#93c5fd" />
+                <rect x="180" y="103" width="55" height="5" rx="2.5" fill="#cbd5e1" />
+
+                <!-- Item 2: Cross/Review -->
+                <path d="M152 135L168 151M168 135L152 151" stroke="#3b82f6" stroke-width="3" stroke-linecap="round"/>
+                <rect x="180" y="137" width="92" height="8" rx="4" fill="#93c5fd" />
+                <rect x="180" y="149" width="60" height="5" rx="2.5" fill="#cbd5e1" />
+
+                <!-- Item 3: Check -->
+                <path d="M152 181L158 187L170 175" stroke="#22c55e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="180" y="177" width="78" height="8" rx="4" fill="#93c5fd" />
+                <rect x="180" y="189" width="45" height="5" rx="2.5" fill="#cbd5e1" />
+
+                <!-- Item 4: Check -->
+                <path d="M152 227L158 233L170 221" stroke="#22c55e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="180" y="223" width="88" height="8" rx="4" fill="#93c5fd" />
+              </g>
+
+              <!-- Stylized Pen on the left (matching Gambar 3) -->
+              <g transform="translate(100, 210) rotate(-35)">
+                <rect x="0" y="0" width="16" height="75" rx="6" fill="#1e40af" />
+                <rect x="0" y="15" width="16" height="35" fill="#3b82f6" />
+                <path d="M0 75L8 92L16 75Z" fill="#02264a" />
+                <path d="M6 86L8 92L10 86Z" fill="#ffffff" />
+                <rect x="4" y="-8" width="8" height="10" rx="3" fill="#cbd5e1" />
+              </g>
+
+              <!-- Floating Sparkle Stars / Dots -->
+              <circle cx="105" cy="85" r="4" fill="#60a5fa" />
+              <circle cx="320" cy="110" r="5" fill="#facc15" />
+              <path d="M310 170L313 177L320 180L313 183L310 190L307 183L300 180L307 177Z" fill="#fde047" opacity="0.9"/>
+              <path d="M85 120L87 124L91 126L87 128L85 132L83 128L79 126L83 124Z" fill="#ffffff" opacity="0.8"/>
+
+              <defs>
+                <filter id="dropShadow" x="110" y="20" width="200" height="270" filterUnits="userSpaceOnUse">
+                  <feDropShadow dx="0" dy="12" stdDeviation="15" flood-color="#021a36" flood-opacity="0.35"/>
+                </filter>
+              </defs>
+            </svg>
+          </div>
+
+          <!-- Hero Text -->
+          <div class="split-hero-text">
+            <h2 class="split-hero-title">Selamat Datang!</h2>
+            <p class="split-hero-desc">
+              Portal simulasi dan persediaan pintar Pentaksiran Kemasukan Sekolah Khusus (PKSK) Tingkatan 1 sesi 2026/2027.
+            </p>
+            <div class="split-carousel-dots">
+              <span class="dot active"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL: Clean White Login Form -->
+      <div class="split-login-form-panel">
+        <div class="split-form-inner">
+          
+          <div class="split-form-header">
+            <h1 class="split-login-heading">Log Masuk</h1>
+            <p class="split-login-subheading">
+              Belum mempunyai akaun? <a href="#" id="linkCreateAccount" class="split-link-highlight">Daftar calon baru</a>
+            </p>
+          </div>
+
           <!-- Status Banner if Already Logged In -->
           <div id="loginStatusBanner" class="login-status-notice" style="display:none;"></div>
 
-          <!-- Section A: Google OAuth Direct Sign-In -->
-          <div class="login-action-section">
-            <label class="corporate-input-label">Pilihan 1: Log Masuk Pantas (Google / Gmail)</label>
-            <button id="btnLoginViewGoogle" class="btn-google-auth-corporate" type="button">
-              <svg width="22" height="22" viewBox="0 0 24 24" style="flex-shrink:0;">
+          <form id="formSplitLogin" onsubmit="event.preventDefault(); window.handleSplitLoginSubmit();">
+            
+            <!-- Field 1: Username / ID / Email -->
+            <div class="split-field-wrap">
+              <label for="splitInputUsername" class="split-label">ID Calon / No. Kad Pengenalan / Emel</label>
+              <div class="split-input-box">
+                <input type="text" id="splitInputUsername" class="split-input" placeholder="cth: 120101-01-1234 atau email@contoh.com" required autocomplete="username">
+                <i class="fa-regular fa-user split-icon"></i>
+              </div>
+            </div>
+
+            <!-- Field 2: Password / Nama Calon -->
+            <div class="split-field-wrap">
+              <label for="splitInputPassword" class="split-label">Nama Penuh Calon / Kata Laluan</label>
+              <div class="split-input-box">
+                <input type="password" id="splitInputPassword" class="split-input" placeholder="Masukkan nama calon atau kata laluan" required autocomplete="current-password">
+                <i class="fa-solid fa-lock split-icon"></i>
+              </div>
+            </div>
+
+            <!-- Options Row -->
+            <div class="split-options-row">
+              <label class="split-checkbox-label">
+                <input type="checkbox" id="splitChkRemember" checked>
+                <span>Ingat maklumat saya</span>
+              </label>
+              <a href="#" id="linkForgotPassword" class="split-link-subtle">Lupa kata laluan?</a>
+            </div>
+
+            <!-- Submit Button (Primary Royal Blue matching Gambar 3) -->
+            <button type="submit" id="btnSplitSignIn" class="btn-split-primary">
+              <span>Sign In / Masuk Sistem</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+            <!-- Divider -->
+            <div class="split-divider">
+              <span>ATAU</span>
+            </div>
+
+            <!-- Google OAuth Direct Button -->
+            <button type="button" id="btnLoginViewGoogle" class="btn-split-google">
+              <svg width="20" height="20" viewBox="0 0 24 24" style="flex-shrink:0;">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
@@ -168,55 +289,19 @@
               </svg>
               <span>Log Masuk dengan Google</span>
             </button>
-            <p class="login-hint-text">
-              <i class="fa-solid fa-circle-check" style="color:#10b981;"></i> Pengesahan automatik melalui Supabase Auth & Cloud Sync.
-            </p>
-          </div>
 
-          <!-- Divider -->
-          <div class="corporate-divider">
-            <span>ATAU LOG MASUK DENGAN KUNCI LESEN</span>
-          </div>
-
-          <!-- Section B: License Key Input -->
-          <div class="login-action-section">
-            <label for="loginViewLicenseKey" class="corporate-input-label">Pilihan 2: Kunci Lesen PKSK Komersial</label>
-            <div class="license-input-wrapper">
-              <i class="fa-solid fa-key license-input-icon"></i>
-              <input type="text" id="loginViewLicenseKey" class="corporate-license-input" placeholder="PKSK-XXXX-XXXX-XXXX" maxlength="25" autocomplete="off" spellcheck="false">
+            <!-- Direct Guest Action -->
+            <div class="split-guest-footer">
+              <button type="button" id="btnLoginViewGuestEnter" class="btn-split-guest">
+                <i class="fa-solid fa-bolt"></i> Masuk Terus Sebagai Tetamu (Simulasi Percuma)
+              </button>
             </div>
-            <button id="btnLoginViewValidateLicense" class="btn-corporate-primary" type="button">
-              <i class="fa-solid fa-arrow-right-to-bracket"></i>
-              <span>Sahkan Lesen & Log Masuk</span>
-            </button>
-          </div>
 
-          <!-- Section C: Direct Entry / Guest / Bypass -->
-          <div class="login-guest-wrap">
-            <button id="btnLoginViewGuestEnter" class="btn-corporate-secondary" type="button">
-              <i class="fa-solid fa-door-open"></i>
-              <span>Masuk Sebagai Tetamu (Mod Latihan Terhad)</span>
-            </button>
-          </div>
-
-          <!-- Footer Information in Card -->
-          <div class="corporate-login-card-footer">
-            <div class="security-assurance">
-              <i class="fa-solid fa-lock"></i> Sambungan Disulitkan SSL / TLS 256-bit
-            </div>
-            <div class="support-links">
-              <a href="https://wa.me/60123456789?text=Hai,%20saya%20perlukan%20bantuan%20Kunci%20Lesen%20PKSK%20Simulator" target="_blank" class="login-help-link">
-                <i class="fa-brands fa-whatsapp" style="color:#25d366;"></i> Hubungi Khidmat Pelanggan
-              </a>
-              <span class="support-sep">•</span>
-              <a href="#" id="btnLoginOpenSupabaseConfig" class="login-help-link">
-                <i class="fa-solid fa-gear"></i> Konfigurasi DB
-              </a>
-            </div>
-          </div>
+          </form>
 
         </div>
       </div>
+
     </div>
   </main>
 
@@ -764,7 +849,7 @@
       
       <!-- Slip Header -->
       <div class="slip-header-brand">
-        <img src="assets/jata_negara_kpm.svg" alt="Jata Negara" style="height:65px; margin-bottom:0.75rem;">
+        <img src="assets/pksk_icon_official.png" alt="PKSK AI Official Icon" style="height:68px; width:auto; border-radius:14px; margin-bottom:0.75rem; filter:drop-shadow(0 3px 6px rgba(0,0,0,0.12));">
         <h2 style="font-family:var(--font-sans); color:var(--kpm-navy); font-size:1.28rem; font-weight:800;">
           PENTAKSIRAN KEMASUKAN SEKOLAH KHUSUS (PKSK)
         </h2>
