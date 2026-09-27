@@ -1,5 +1,5 @@
 /* ==========================================================================
-   PORTAL RASMI KEMENTERIAN PENDIDIKAN MALAYSIA (KPM)
+   PORTAL RASMI PKSK SIMULATOR 2026
    SISTEM PENTAKSIRAN KEMASUKAN SEKOLAH KHUSUS (PKSK) TINGKATAN 1
    Reka Bentuk Korporat Minimalis Berpandukan www.moe.gov.my
    ========================================================================== */
@@ -2313,4 +2313,351 @@ body {
 
 .portal-user-meta {
   cursor: pointer;
+}
+
+
+/* ==========================================================================
+   15. MINIMALIST PURE-WHITE CORPORATE LOGIN VIEW (WITH CHATGPT DALL-E ASSET)
+   ========================================================================== */
+.login-page-viewport {
+  position: relative;
+  min-height: calc(100vh - 180px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1rem !important;
+  background-color: #ffffff;
+  background-image: 
+    linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(248, 250, 252, 0.92) 50%, rgba(241, 245, 249, 0.95) 100%),
+    url('assets/login_bg_corporate.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.login-page-viewport.hidden {
+  display: none !important;
+}
+
+.login-page-container {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+  animation: corporateFadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes corporateFadeInUp {
+  0% { opacity: 0; transform: translateY(18px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.corporate-login-card {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 
+    0 20px 45px -10px rgba(15, 23, 42, 0.08),
+    0 4px 12px rgba(15, 23, 42, 0.03),
+    0 0 0 1px rgba(226, 232, 240, 0.6);
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.corporate-login-header {
+  padding: 2.2rem 2rem 1.4rem 2rem;
+  text-align: center;
+  background: #ffffff;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.corporate-logo-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  background: #f8fafc;
+  border-radius: 50%;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+}
+
+.login-brand-logo {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+}
+
+.corporate-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #0d355c;
+  background: #e0f2fe;
+  border: 1px solid #bae6fd;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 0.75rem;
+}
+
+.corporate-login-title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 0.35rem 0;
+  letter-spacing: -0.2px;
+}
+
+.corporate-login-subtitle {
+  font-size: 0.88rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.corporate-login-body {
+  padding: 1.8rem 2rem 2.2rem 2rem;
+  background: #ffffff;
+}
+
+.login-status-notice {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.login-action-section {
+  margin-bottom: 1rem;
+}
+
+.corporate-input-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #334155;
+  margin-bottom: 0.5rem;
+}
+
+.btn-google-auth-corporate {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #1e293b;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 0.78rem 1.25rem;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+
+.btn-google-auth-corporate:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+.login-hint-text {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin: 0.5rem 0 0 0;
+  line-height: 1.4;
+}
+
+.corporate-divider {
+  display: flex;
+  align-items: center;
+  margin: 1.4rem 0;
+  text-align: center;
+}
+
+.corporate-divider::before,
+.corporate-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.corporate-divider span {
+  padding: 0 14px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #94a3b8;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.license-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.license-input-icon {
+  position: absolute;
+  left: 14px;
+  color: #94a3b8;
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.corporate-license-input {
+  width: 100%;
+  padding: 0.8rem 1rem 0.8rem 2.75rem;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #0f172a;
+  text-transform: uppercase;
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.corporate-license-input:focus {
+  outline: none;
+  background: #ffffff;
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+.btn-corporate-primary {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #0d355c;
+  color: #ffffff;
+  border: none;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  padding: 0.85rem 1.25rem;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(13, 53, 92, 0.2);
+  transition: all 0.2s ease;
+}
+
+.btn-corporate-primary:hover {
+  background: #082542;
+  box-shadow: 0 6px 16px rgba(13, 53, 92, 0.3);
+  transform: translateY(-1px);
+}
+
+.login-guest-wrap {
+  margin-top: 1.1rem;
+  padding-top: 1.1rem;
+  border-top: 1px dashed #e2e8f0;
+}
+
+.btn-corporate-secondary {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #f8fafc;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 0.65rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-corporate-secondary:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+  border-color: #94a3b8;
+}
+
+.corporate-login-card-footer {
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #f1f5f9;
+  text-align: center;
+}
+
+.security-assurance {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #64748b;
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.support-links {
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.login-help-link {
+  color: #0284c7;
+  text-decoration: none;
+  font-weight: 700;
+  transition: color 0.15s ease;
+}
+
+.login-help-link:hover {
+  color: #0369a1;
+  text-decoration: underline;
+}
+
+.support-sep {
+  color: #cbd5e1;
+}
+
+@media (max-width: 600px) {
+  .corporate-login-card {
+    border-radius: 14px;
+  }
+  .corporate-login-header {
+    padding: 1.5rem 1.25rem 1rem 1.25rem;
+  }
+  .corporate-login-body {
+    padding: 1.25rem 1.25rem 1.5rem 1.25rem;
+  }
+  .corporate-login-title {
+    font-size: 1.2rem;
+  }
 }

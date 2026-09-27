@@ -1,6 +1,6 @@
 /**
  * SISTEM PENTAKSIRAN KEMASUKAN SEKOLAH KHUSUS (PKSK) TINGKATAN 1
- * Portal Rasmi Kementerian Pendidikan Malaysia (KPM) - www.moe.gov.my Style
+ * Portal Rasmi PKSK Simulator 2026
  * Version: 3.2 (510 Authentic Questions Engine)
  */
 
@@ -372,6 +372,7 @@
      ========================================================================= */
   const dom = {
     // Views
+    loginView: document.getElementById('loginView'),
     dashboardView: document.getElementById('dashboardView'),
     instructionsView: document.getElementById('instructionsView'),
     examWorkspaceView: document.getElementById('examWorkspaceView'),
@@ -380,7 +381,14 @@
     reviewWorkspaceView: document.getElementById('reviewWorkspaceView'),
 
     // Navigation Tabs
+    navTabLogin: document.getElementById('navTabLogin'),
     navTabDashboard: document.getElementById('navTabDashboard'),
+    btnLoginViewGoogle: document.getElementById('btnLoginViewGoogle'),
+    loginViewLicenseKey: document.getElementById('loginViewLicenseKey'),
+    btnLoginViewValidateLicense: document.getElementById('btnLoginViewValidateLicense'),
+    btnLoginViewGuestEnter: document.getElementById('btnLoginViewGuestEnter'),
+    loginStatusBanner: document.getElementById('loginStatusBanner'),
+    btnLoginOpenSupabaseConfig: document.getElementById('btnLoginOpenSupabaseConfig'),
     navTabFullSim: document.getElementById('navTabFullSim'),
     navTabDiagnostic: document.getElementById('navTabDiagnostic'),
     navTabDrill: document.getElementById('navTabDrill'),
@@ -639,6 +647,7 @@
     state.currentView = viewName;
 
     // Hide all view containers
+    if (dom.loginView) dom.loginView.classList.add('hidden');
     dom.dashboardView.classList.add('hidden');
     dom.instructionsView.classList.add('hidden');
     dom.examWorkspaceView.classList.add('hidden');
@@ -658,7 +667,12 @@
       }
     }
 
-    if (viewName === 'DASHBOARD') {
+    if (viewName === 'LOGIN') {
+      if (dom.loginView) dom.loginView.classList.remove('hidden');
+      if (dom.navTabLogin) dom.navTabLogin.classList.add('active');
+      renderLoginViewState();
+    }
+    else if (viewName === 'DASHBOARD') {
       dom.dashboardView.classList.remove('hidden');
       dom.navTabDashboard.classList.add('active');
     } 
@@ -1843,7 +1857,7 @@ Peraturan:
     // 2. Direct client fallback across 8 keys and Smartest Frontier Models (Nemotron 3 Ultra 550B / Super 120B)
     const systemInstruction = `Anda ialah Pemeriksa Kanan Rasmi Lembaga Peperiksaan Malaysia bagi Pentaksiran Kemasukan Sekolah Khusus (PKSK) Tingkatan 1 (Bahagian C: Artikulasi Penulisan - Wajaran 10 Markah).
 Sasaran Calon: Murid Tahun 6 (Umur 12-13 Tahun) yang memohon kemasukan ke Sekolah Berasrama Penuh (SBP) / Maktab Rendah Sains MARA (MRSM).
-Nilai karangan calon dengan KRITIKAL, ADIL, TELITI dan BERPANDUKAN standard bahasa Melayu Baku KPM & Tatabahasa Dewan DBP mengikut 4 kriteria Rubrik Rasmi LPM:
+Nilai karangan calon dengan KRITIKAL, ADIL, TELITI dan BERPANDUKAN standard bahasa Melayu Baku Pentaksiran Rasmi & Tatabahasa Dewan DBP mengikut 4 kriteria Rubrik Rasmi LPM:
 1. Idea, Hujah & Kematangan Isi (Maksimum 3.0 markah)
    - Kebolehan membina dan menghuraikan idea berkaitan isu soalan secara logik, matang, dan bersesuaian dengan aras murid 12-13 tahun.
 2. Bahasa, Ejaan, Tatabahasa Melayu Baku & Kosa Kata (Maksimum 3.0 markah)
@@ -2087,7 +2101,7 @@ ${essay}
           <td style="text-align:center; padding:0.75rem 0.9rem; color:${ratingB.color}; font-weight:700;">${ratingB.text}</td>
         </tr>
         <tr style="border-bottom:1px solid var(--border-subtle);">
-          <td style="padding:0.75rem 0.9rem;"><strong>Bahagian C:</strong> Artikulasi Penulisan (Semakan AI Rubrik KPM)</td>
+          <td style="padding:0.75rem 0.9rem;"><strong>Bahagian C:</strong> Artikulasi Penulisan (Semakan AI Rubrik Pentaksiran Rasmi)</td>
           <td style="text-align:center; padding:0.75rem 0.9rem;">10%</td>
           <td style="text-align:center; padding:0.75rem 0.9rem;"><strong>${percentC.toFixed(1)}%</strong> (${words} perkataan)</td>
           <td style="text-align:center; padding:0.75rem 0.9rem; color:${ratingC.color}; font-weight:700;">${ratingC.text}</td>
@@ -2397,7 +2411,7 @@ ${essay}
 
           <div class="review-explanation-box">
             <div style="font-weight:800; font-size:0.98rem; margin-bottom:0.35rem; display:flex; align-items:center; gap:6px;">
-              <i class="fa-solid fa-lightbulb" style="color:#16a34a;"></i> Skema & Penjelasan Konsep KPM:
+              <i class="fa-solid fa-lightbulb" style="color:#16a34a;"></i> Skema & Penjelasan Konsep PKSK:
             </div>
             <div style="font-size:0.95rem; line-height:1.65;">${explanationText}</div>
           </div>
@@ -2532,11 +2546,128 @@ ${essay}
   }
 
   /* =========================================================================
+     LOGIN VIEW CONTROLLER (CORPORATE MINIMALIST ACCESS)
+     ========================================================================= */
+  function renderLoginViewState() {
+    if (!dom.loginView) return;
+    const isAct = window.PkskLicense && window.PkskLicense.isActivated();
+    const session = window.PkskLicense ? window.PkskLicense.getLicenseSession() : null;
+
+    if (isAct && session) {
+      if (dom.loginStatusBanner) {
+        dom.loginStatusBanner.style.display = 'flex';
+        const displayName = session.activated_by_name || state.candidate.name || 'Pengguna Berdaftar';
+        const keyDisplay = session.license_key || (session.is_gmail_auth ? 'Google ID' : 'Aktif');
+        dom.loginStatusBanner.innerHTML = `
+          <div style="flex:1;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <i class="fa-solid fa-circle-check" style="color:#10b981; font-size:1.15rem;"></i>
+              <span>Sesi Aktif: <strong>${displayName}</strong> (${keyDisplay})</span>
+            </div>
+            <div style="font-size:0.78rem; color:#475569; margin-top:4px;">
+              Akses Penuh PKSK Simulator 2026 sedia digunakan pada peranti ini.
+            </div>
+          </div>
+          <button id="btnContinueToDashboard" class="btn-corporate-primary" style="width:auto; padding:0.45rem 1rem; font-size:0.82rem;" type="button">
+            Terus ke Utama <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        `;
+        const btnContinue = document.getElementById('btnContinueToDashboard');
+        if (btnContinue) btnContinue.onclick = () => switchView('DASHBOARD');
+      }
+    } else {
+      if (dom.loginStatusBanner) {
+        dom.loginStatusBanner.style.display = 'none';
+      }
+    }
+  }
+
+  async function handleLoginViewLicenseSubmit() {
+    const rawKey = dom.loginViewLicenseKey ? dom.loginViewLicenseKey.value.trim() : '';
+    if (!rawKey) {
+      alert("Sila masukkan Kunci Lesen PKSK anda (contoh: PKSK-XXXX-XXXX-XXXX).");
+      if (dom.loginViewLicenseKey) dom.loginViewLicenseKey.focus();
+      return;
+    }
+
+    if (!window.PkskLicense) {
+      alert("Sistem pengesahan lesen sedang dimuatkan. Sila cuba sebentar lagi.");
+      return;
+    }
+
+    if (dom.btnLoginViewValidateLicense) {
+      dom.btnLoginViewValidateLicense.disabled = true;
+      dom.btnLoginViewValidateLicense.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Mengesahkan Lesen...</span>`;
+    }
+
+    const candidateName = state.candidate.name || 'Calon PKSK';
+    const result = await window.PkskLicense.activateLicenseOnline(rawKey, candidateName);
+
+    if (dom.btnLoginViewValidateLicense) {
+      dom.btnLoginViewValidateLicense.disabled = false;
+      dom.btnLoginViewValidateLicense.innerHTML = `<i class="fa-solid fa-arrow-right-to-bracket"></i> <span>Sahkan Lesen & Log Masuk</span>`;
+    }
+
+    if (result && result.success) {
+      updateLicenseBadgeUI();
+      alert(`Tahniah! Lesen PKSK (${result.session.license_key}) berjaya disahkan. Selamat datang ke Simulator PKSK 2026!`);
+      switchView('DASHBOARD');
+    } else {
+      alert(`Pengesahan Gagal: ${result?.message || 'Kunci lesen tidak sah atau had peranti telah dicapai.'}`);
+    }
+  }
+
+  async function handleLoginViewGoogleSignIn() {
+    if (!window.PkskLicense) {
+      alert("Modul autentikasi belum sedia. Sila muat semula.");
+      return;
+    }
+    const res = await window.PkskLicense.signInWithGoogle();
+    if (!res.success) {
+      if (res.needsConfig) {
+        openSupabaseConfigModal();
+      } else {
+        alert("Log Masuk Google: " + res.message);
+      }
+    }
+  }
+
+  /* =========================================================================
      12. EVENT LISTENERS INITIALIZATION
      ========================================================================= */
   function initEventListeners() {
     // Navigation Tabs
+    if (dom.navTabLogin) dom.navTabLogin.onclick = () => switchView('LOGIN');
     dom.navTabDashboard.onclick = () => switchView('DASHBOARD');
+
+    // Login View Actions
+    if (dom.btnLoginViewGoogle) dom.btnLoginViewGoogle.onclick = handleLoginViewGoogleSignIn;
+    if (dom.btnLoginViewValidateLicense) dom.btnLoginViewValidateLicense.onclick = handleLoginViewLicenseSubmit;
+    if (dom.btnLoginViewGuestEnter) dom.btnLoginViewGuestEnter.onclick = () => switchView('DASHBOARD');
+    if (dom.btnLoginOpenSupabaseConfig) {
+      dom.btnLoginOpenSupabaseConfig.onclick = (e) => {
+        e.preventDefault();
+        openSupabaseConfigModal();
+      };
+    }
+    if (dom.loginViewLicenseKey) {
+      dom.loginViewLicenseKey.addEventListener('input', (e) => {
+        let v = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        if (v.startsWith('PKSK')) {
+          let rest = v.substring(4);
+          let parts = ['PKSK'];
+          for (let i = 0; i < rest.length; i += 4) {
+            parts.push(rest.substring(i, i + 4));
+          }
+          e.target.value = parts.join('-').substring(0, 19);
+        } else {
+          e.target.value = v.substring(0, 19);
+        }
+      });
+      dom.loginViewLicenseKey.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') handleLoginViewLicenseSubmit();
+      });
+    }
     dom.navTabFullSim.onclick = () => { selectMode('FULL_SIMULATION'); switchView('INSTRUCTIONS'); };
     dom.navTabDiagnostic.onclick = () => { selectMode('QUICK_DIAGNOSTIC'); switchView('INSTRUCTIONS'); };
     dom.navTabDrill.onclick = () => { selectMode('DRILL_PRACTICE'); switchView('DASHBOARD'); };
@@ -2958,19 +3089,19 @@ Adakah anda ingin log keluar daripada sesi Google ini?`)) {
     }
   }
 
-  // Self Initialization on DOM Ready
+  // Self Initialization on DOM Ready - Direct to LOGIN View on loading
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       initEventListeners();
       updateLicenseBadgeUI();
       performAutoHardwareCheck();
-      switchView('DASHBOARD');
+      switchView('LOGIN');
     });
   } else {
     initEventListeners();
     updateLicenseBadgeUI();
     performAutoHardwareCheck();
-    switchView('DASHBOARD');
+    switchView('LOGIN');
   }
 
 })();

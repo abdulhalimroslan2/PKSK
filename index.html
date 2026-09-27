@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-  <title>Portal Rasmi PKSK | Kementerian Pendidikan Malaysia</title>
-  <meta name="description" content="Sistem Pentaksiran Kemasukan Sekolah Khusus (PKSK) Tingkatan 1 - Kementerian Pendidikan Malaysia">
+  <title>Portal Rasmi PKSK | Pentaksiran Kemasukan Sekolah Khusus</title>
+  <meta name="description" content="Sistem Pentaksiran Kemasukan Sekolah Khusus (PKSK) Tingkatan 1 - Portal Rasmi Pentaksiran">
   <!-- PWA & Mobile Web App Meta -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f2942">
@@ -29,7 +29,7 @@
   <header id="acc-page-wrap">
     <div id="topnav" style="background-color:#0d355c; width:100%; border-bottom:1px solid #0a2b4b;">
       <div class="portal-topnav-wrap">
-        <h2 class="tranz" style="font-family:'Manrope', sans-serif; font-size:14px; color:#ffffff; font-weight:700; margin:0;">Selamat Datang ke PORTAL KPM</h2>
+        <h2 class="tranz" style="font-family:'Manrope', sans-serif; font-size:14px; color:#ffffff; font-weight:700; margin:0;">Selamat Datang ke PORTAL RASMI PKSK 2026</h2>
         <div style="display:flex; align-items:center; gap:15px;">
           <!-- License Status Pill -->
           <div id="licenseStatusBadge" class="license-status-pill unregistered" style="cursor:pointer;" title="Klik untuk Pengaktifan atau Maklumat Lesen PKSK">
@@ -60,11 +60,11 @@
         
         <!-- Left: Logo & Title (Exactly like MOE portal) -->
         <a href="#" class="portal-brand-anchor">
-          <img src="assets/jata_negara_kpm.svg" alt="Logo KPM" class="portal-logo-jata">
+          <img src="assets/jata_negara_kpm.svg" alt="Logo Pentaksiran" class="portal-logo-jata">
           <img src="assets/pksk_icon_official.png" alt="PKSK AI Official Icon" class="portal-logo-pksk">
           <div class="portal-brand-text">
             <div class="portal-brand-tag">PORTAL RASMI</div>
-            <div class="portal-brand-name">Kementerian Pendidikan</div>
+            <div class="portal-brand-name">Portal Pentaksiran</div>
             <div class="portal-brand-badge">SISTEM PENTAKSIRAN KEMASUKAN SEKOLAH KHUSUS (PKSK)</div>
           </div>
         </a>
@@ -95,7 +95,11 @@
       <div style="max-width:1140px; margin:0 auto; padding:0 15px;">
         <ul id="main-nav" style="list-style:none; margin:0; padding:0; display:flex; width:100%; align-items:center;">
           <li style="flex:1; border-right:1px solid #1e3a5f; position:relative;">
-            <button id="navTabDashboard" class="nav-tab-btn active" style="width:100%; height:55px; background:transparent; border:none; color:#ffffff; font-family:'Manrope', sans-serif; font-size:13px; font-weight:700; text-transform:uppercase; cursor:pointer;">Utama</button>
+            <button id="navTabLogin" class="nav-tab-btn" style="width:100%; height:55px; background:transparent; border:none; color:#efefef; font-family:'Manrope', sans-serif; font-size:13px; font-weight:700; text-transform:uppercase; cursor:pointer;"><i class="fa-solid fa-lock" style="font-size:11px; margin-right:4px;"></i> Log Masuk</button>
+            <div class="active-indicator" style="position:absolute; bottom:0; left:0; width:100%; height:4px; background-color:transparent;"></div>
+          </li>
+          <li style="flex:1; border-right:1px solid #1e3a5f; position:relative;">
+            <button id="navTabDashboard" class="nav-tab-btn" style="width:100%; height:55px; background:transparent; border:none; color:#ffffff; font-family:'Manrope', sans-serif; font-size:13px; font-weight:700; text-transform:uppercase; cursor:pointer;">Utama</button>
             <div class="active-indicator" style="position:absolute; bottom:0; left:0; width:100%; height:4px;"></div>
           </li>
           <li style="flex:1; border-right:1px solid #1e3a5f; position:relative;">
@@ -124,6 +128,97 @@
   </header>
 
   <!-- =========================================================================
+       0. VIEW 0: DEDICATED MINIMALIST PURE-WHITE CORPORATE LOGIN VIEW
+       ========================================================================= -->
+  <main id="loginView" class="app-viewport login-page-viewport">
+    <div class="login-page-container">
+      <div class="corporate-login-card">
+        
+        <!-- Header Banner / Jata & Branding -->
+        <div class="corporate-login-header">
+          <div class="corporate-logo-wrap">
+            <img src="assets/jata_negara_kpm.svg" alt="Logo Pentaksiran" class="login-brand-logo">
+          </div>
+          <div>
+            <span class="corporate-badge-pill">
+              <i class="fa-solid fa-shield-halved"></i> PORTAL RASMI PKSK 2026
+            </span>
+          </div>
+          <h1 class="corporate-login-title">Log Masuk Calon & Pengguna</h1>
+          <p class="corporate-login-subtitle">
+            Sistem Pentaksiran Kemasukan Sekolah Khusus Tingkatan 1
+          </p>
+        </div>
+
+        <div class="corporate-login-body">
+          <!-- Status Banner if Already Logged In -->
+          <div id="loginStatusBanner" class="login-status-notice" style="display:none;"></div>
+
+          <!-- Section A: Google OAuth Direct Sign-In -->
+          <div class="login-action-section">
+            <label class="corporate-input-label">Pilihan 1: Log Masuk Pantas (Google / Gmail)</label>
+            <button id="btnLoginViewGoogle" class="btn-google-auth-corporate" type="button">
+              <svg width="22" height="22" viewBox="0 0 24 24" style="flex-shrink:0;">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+              </svg>
+              <span>Log Masuk dengan Google</span>
+            </button>
+            <p class="login-hint-text">
+              <i class="fa-solid fa-circle-check" style="color:#10b981;"></i> Pengesahan automatik melalui Supabase Auth & Cloud Sync.
+            </p>
+          </div>
+
+          <!-- Divider -->
+          <div class="corporate-divider">
+            <span>ATAU LOG MASUK DENGAN KUNCI LESEN</span>
+          </div>
+
+          <!-- Section B: License Key Input -->
+          <div class="login-action-section">
+            <label for="loginViewLicenseKey" class="corporate-input-label">Pilihan 2: Kunci Lesen PKSK Komersial</label>
+            <div class="license-input-wrapper">
+              <i class="fa-solid fa-key license-input-icon"></i>
+              <input type="text" id="loginViewLicenseKey" class="corporate-license-input" placeholder="PKSK-XXXX-XXXX-XXXX" maxlength="25" autocomplete="off" spellcheck="false">
+            </div>
+            <button id="btnLoginViewValidateLicense" class="btn-corporate-primary" type="button">
+              <i class="fa-solid fa-arrow-right-to-bracket"></i>
+              <span>Sahkan Lesen & Log Masuk</span>
+            </button>
+          </div>
+
+          <!-- Section C: Direct Entry / Guest / Bypass -->
+          <div class="login-guest-wrap">
+            <button id="btnLoginViewGuestEnter" class="btn-corporate-secondary" type="button">
+              <i class="fa-solid fa-door-open"></i>
+              <span>Masuk Sebagai Tetamu (Mod Latihan Terhad)</span>
+            </button>
+          </div>
+
+          <!-- Footer Information in Card -->
+          <div class="corporate-login-card-footer">
+            <div class="security-assurance">
+              <i class="fa-solid fa-lock"></i> Sambungan Disulitkan SSL / TLS 256-bit
+            </div>
+            <div class="support-links">
+              <a href="https://wa.me/60123456789?text=Hai,%20saya%20perlukan%20bantuan%20Kunci%20Lesen%20PKSK%20Simulator" target="_blank" class="login-help-link">
+                <i class="fa-brands fa-whatsapp" style="color:#25d366;"></i> Hubungi Khidmat Pelanggan
+              </a>
+              <span class="support-sep">•</span>
+              <a href="#" id="btnLoginOpenSupabaseConfig" class="login-help-link">
+                <i class="fa-solid fa-gear"></i> Konfigurasi DB
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- =========================================================================
        5. VIEW 1: CANDIDATE DASHBOARD & EXAM CONFIGURATION
        ========================================================================= -->
   <main id="dashboardView" class="app-viewport">
@@ -150,7 +245,7 @@
             <div id="cardModeFull" class="mode-card selected" onclick="selectMode('FULL_SIMULATION')">
               <div>
                 <div class="mode-header">
-                  <span class="mode-badge full">Format Penuh KPM</span>
+                  <span class="mode-badge full">Format Penuh PKSK</span>
                   <i class="fa-solid fa-circle-check" style="color:var(--kpm-blue); font-size:1.1rem;"></i>
                 </div>
                 <h3 class="mode-title">Simulasi Penuh PKSK</h3>
@@ -270,7 +365,7 @@
             </div>
             <div style="display:flex; justify-content:space-between; font-size:0.78rem;">
               <span>Format Skema:</span>
-              <strong style="color:var(--kpm-blue);">100% KPM Standard</strong>
+              <strong style="color:var(--kpm-blue);">100% Standard PKSK</strong>
             </div>
           </div>
         </div>
@@ -287,7 +382,7 @@
       <div class="kpm-card-header">
         <h2 class="kpm-card-title">
           <i class="fa-solid fa-triangle-exclamation" style="color:var(--kpm-gold);"></i>
-          Arahan Penting Peperiksaan PKSK KPM
+          Arahan Penting Peperiksaan PKSK
         </h2>
         <span style="font-size:0.8rem; font-weight:700; color:var(--text-muted);">Sila Baca dengan Teliti</span>
       </div>
@@ -669,7 +764,7 @@
       <div class="slip-header-brand">
         <img src="assets/jata_negara_kpm.svg" alt="Jata Negara" style="height:65px; margin-bottom:0.75rem;">
         <h2 style="font-family:var(--font-sans); color:var(--kpm-navy); font-size:1.28rem; font-weight:800;">
-          KEMENTERIAN PENDIDIKAN
+          PENTAKSIRAN KEMASUKAN SEKOLAH KHUSUS (PKSK)
         </h2>
         <h4 id="slipSubTitle" style="font-size:0.95rem; font-weight:700; color:var(--text-muted); margin-top:0.25rem;">
           SLIP KEPUTUSAN PENTAKSIRAN KEMASUKAN SEKOLAH KHUSUS (PKSK) TINGKATAN 1
@@ -749,7 +844,7 @@
             <i class="fa-solid fa-list-check" style="color:var(--kpm-gold);"></i> Semakan Skema & Analisis Jawapan PKSK
           </h2>
           <p style="margin:0; font-size:0.92rem; color:var(--text-muted);">
-            Semak setiap jawapan anda, kenal pasti kesilapan, dan pelajari skema penerangan konsep rasmi KPM.
+            Semak setiap jawapan anda, kenal pasti kesilapan, dan pelajari skema penerangan konsep rasmi.
           </p>
         </div>
         <div style="display:flex; gap:0.5rem;">
@@ -835,7 +930,7 @@
   <footer class="kpm-footer">
     <div class="footer-inner">
       <div class="footer-brand">
-        <h4>KEMENTERIAN PENDIDIKAN</h4>
+        <h4>PORTAL PKSK 2026</h4>
         <p>
           Blok E8, Kompleks E, Pusat Pentadbiran Kerajaan Persekutuan,<br>
           62604 Putrajaya, Malaysia.<br>
@@ -845,7 +940,7 @@
       <div class="footer-nav">
         <h5>Pautan Pantas</h5>
         <ul class="footer-links">
-          <li><a href="https://www.moe.gov.my" target="_blank">Portal Rasmi KPM</a></li>
+          <li><a href="#" target="_blank">Panduan Rasmi PKSK</a></li>
           <li><a href="https://sps1.moe.gov.my" target="_blank">Sistem Permohonan SBP</a></li>
           <li><a href="https://mrsm.mara.gov.my" target="_blank">Portal Rasmi MRSM</a></li>
           <li><a href="https://lp.moe.gov.my" target="_blank">Lembaga Peperiksaan Malaysia</a></li>
@@ -862,7 +957,7 @@
       </div>
     </div>
     <div class="footer-bottom-strip">
-      <span>Hak Cipta Terpelihara © 2026 Kementerian Pendidikan Malaysia. Paparan terbaik menggunakan pelayar Chrome, Firefox & Edge terkini.</span>
+      <span>Hak Cipta Terpelihara © 2026 Portal PKSK. Paparan terbaik menggunakan pelayar Chrome, Firefox & Edge terkini.</span>
       <span>© Hak Cipta Terpelihara 2026 @bHbr</span>
     </div>
   </footer>
@@ -896,7 +991,7 @@
           PENGAKTIFAN LESEN PKSK SIMULATOR
         </h3>
         <p style="margin:0; font-size:0.85rem; color:#cbd5e1;">
-          Sistem Pentaksiran Kemasukan Sekolah Khusus Tingkatan 1 (KPM)
+          Sistem Pentaksiran Kemasukan Sekolah Khusus Tingkatan 1
         </p>
       </div>
 
