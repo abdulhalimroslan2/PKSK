@@ -51,6 +51,20 @@
     ]
   },
   {
+    "id": "TOPIC_KOAKAD_UMUM",
+    "theme": "Ko-Akademik",
+    "title": "Faedah dan Kebaikan Menyertai Aktiviti Koakademik di Sekolah Secara Umum",
+    "prompt": "Aktiviti koakademik seperti pertandingan bahas, syarahan, pantun, syair, kuiz ilmu, pidato, dan bercerita memperkaya pengalaman pembelajaran murid di luar bilik darjah. Huraikan faedah menyertai aktiviti koakademik secara umum dalam melahirkan modal insan yang berilmu, berketerampilan, dan berkeyakinan tinggi. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Mengukuhkan pemahaman konsep akademik dan pembelajaran secara praktikal",
+      "Mengasah kemahiran komunikasi, pengucapan awam, dan keberanian berhujah",
+      "Memupuk daya pemikiran kritis, analitis, dan penyelesaian masalah spontan",
+      "Memperluas kosa kata, pembendaharaan kata indah, dan tatabahasa baku",
+      "Menyemai semangat kerjasama berpasukan dan persaingan ilmu yang sihat",
+      "Membina sahsiah holistik seimbang antara kecemerlangan akademik dan kepimpinan"
+    ]
+  },
+  {
     "id": "TOPIC_KOAKAD_1",
     "theme": "Ko-Akademik",
     "title": "Faedah Menyertai Pertandingan Debat dan Pidato dalam Membina Keyakinan Diri",
