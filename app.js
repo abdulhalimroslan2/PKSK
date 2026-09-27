@@ -1575,9 +1575,10 @@ Stimulus: "${topic.prompt}"`;
 
   // Vision OCR Models (Priority order: fastest & most accurate handwriting transcription)
   const OPENROUTER_OCR_MODELS = [
-    'stealth/space-bunny-alpha',
     'dots-studio/dots-3-note-preview:free',
-    'openrouter/free'
+    'openrouter/free',
+    'meta-llama/llama-3.2-11b-vision-instruct:free',
+    'stealth/space-bunny-alpha'
   ];
 
   // Smartest Reasoning Models for Official LPM Rubric Grading
@@ -1587,14 +1588,133 @@ Stimulus: "${topic.prompt}"`;
     'openrouter/free'
   ];
 
-  // Compress & resize image to max 1600px width/height and JPEG 0.85 for sub-second upload & processing
-  function compressImageForOcr(file) {
+  // Verify if a file is an image (including iPhone HEIC/HEIF)
+  function isSupportedImageFile(file) {
+    if (!file) return false;
+    if (file.type && file.type.startsWith("image/")) return true;
+    const ext = (file.name || "").split(".").pop().toLowerCase();
+    return ["heic", "heif", "jpg", "jpeg", "png", "webp", "bmp", "jfif"].includes(ext);
+  }
+
+  // Convert iPhone HEIC/HEIF to JPEG Blob if needed using heic2any
+  async function convertHeicToJpegIfNeeded(file) {
+    const ext = (file.name || "").split(".").pop().toLowerCase();
+    const isHeic = ext === "heic" || ext === "heif" || file.type === "image/heic" || file.type === "image/heif";
+    if (!isHeic) return file;
+
+    if (typeof heic2any !== "undefined") {
+      try {
+        if (dom.ocrStatusText) dom.ocrStatusText.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menukar format iPhone HEIC ke JPEG...';
+        const converted = await heic2any({
+          blob: file,
+          toType: "image/jpeg",
+          quality: 0.88
+        });
+        return Array.isArray(converted) ? converted[0] : converted;
+      } catch (e) {
+        console.warn("heic2any conversion error, continuing with original file:", e);
+      }
+    }
+    return file;
+  }
+
+  // Clean OCR extracted text from models (handles reasoning, code fences, preambles)
+  function cleanOcrText(msg) {
+    if (!msg) return "";
+    let text = msg.content || "";
+    if (text && text.trim().length > 20) {
+      return text
+        .replace(/```(?:markdown|text)?\n?/gi, "")
+        .replace(/```/g, "")
+        .replace(/^(Berikut adalah|Transkripsi|Teks tulisan tangan|Berikut ialah|Salinan teks|Catatan|Berikut transkripsi).*?:\s*\n*/i, "")
+        .replace(/^(Ini adalah|Teks yang diekstrak).*?:\s*\n*/i, "")
+        .replace(/\n*(Nota|Catatan tambahan|Perhatian|Harap maklum):[\s\S]*$/i, "")
+        .trim();
+    }
+
+    const r = msg.reasoning || (Array.isArray(msg.reasoning_details) && msg.reasoning_details[0]?.text) || "";
+    if (!r) return "";
+
+    const lines = [];
+    const lineMatches = r.match(/(?:Line\s*\d+|Baris\s*\d+|Point\s*\d+|Header|Top)[^:\n]*:[ \t]*["'\`]?([^"'\`\r\n]+)/gi);
+    if (lineMatches) {
+      for (const lm of lineMatches) {
+        const idx = lm.indexOf(":");
+        if (idx !== -1) {
+          let val = lm.slice(idx + 1).trim();
+          val = val.replace(/^["'\`]/, "").replace(/["'\`]$/, "").replace(/\.{3,}$/, "").trim();
+          if (val.length > 5 && !/^(looks like|starts with|partially|the text|let me|written)/i.test(val)) {
+            lines.push(val);
+          }
+        }
+      }
+    }
+
+    if (lines.length < 5) {
+      const quoteMatches = r.match(/[\`"']([A-Za-z][a-z0-9\s,.-]{15,})[\`"']/g);
+      if (quoteMatches) {
+        for (const qm of quoteMatches) {
+          const clean = qm.slice(1, -1).trim();
+          if (/^(Faedah|Asah|Latih|Tingkat|Susun|Bina|Melatih|Kebaikan|Memperkembang|Memperkukuh)/i.test(clean)) {
+            if (!lines.includes(clean)) lines.push(clean);
+          }
+        }
+      }
+    }
+
+      // Deduplicate and consolidate prefix lines
+  const rawLines = lines;
+  const consolidated = [];
+  const normalized = rawLines.map(l => l.replace(/\.{3,}$/, '').trim()).filter(Boolean);
+  for (let i = 0; i < normalized.length; i++) {
+    const line = normalized[i];
+    const isPrefix = normalized.some((other, j) => i !== j && other.toLowerCase().startsWith(line.toLowerCase()) && other.length > line.length);
+    if (!isPrefix && !consolidated.includes(line)) {
+      consolidated.push(line);
+    }
+  }
+
+  return consolidated.join('\n');
+  }
+
+  // Compress & normalize orientation (EXIF-aware via createImageBitmap)
+  async function compressImageForOcr(file) {
+    const preparedBlob = await convertHeicToJpegIfNeeded(file);
+
+    // Modern browsers: createImageBitmap handles EXIF orientation automatically (portrait phone photos stay upright)
+    if (typeof createImageBitmap !== "undefined") {
+      try {
+        const bitmap = await createImageBitmap(preparedBlob);
+        const maxDim = 1500;
+        let w = bitmap.width;
+        let h = bitmap.height;
+        if (w > maxDim || h > maxDim) {
+          if (w > h) {
+            h = Math.round((h * maxDim) / w);
+            w = maxDim;
+          } else {
+            w = Math.round((w * maxDim) / h);
+            h = maxDim;
+          }
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(bitmap, 0, 0, w, h);
+        return canvas.toDataURL("image/jpeg", 0.85);
+      } catch (err) {
+        console.warn("createImageBitmap failed, fallback to FileReader Image:", err);
+      }
+    }
+
+    // Fallback using HTML Image
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const img = new Image();
         img.onload = () => {
-          const maxDim = 1600;
+          const maxDim = 1500;
           let w = img.width;
           let h = img.height;
           if (w > maxDim || h > maxDim) {
@@ -1606,26 +1726,25 @@ Stimulus: "${topic.prompt}"`;
               h = maxDim;
             }
           }
-          const canvas = document.createElement('canvas');
+          const canvas = document.createElement("canvas");
           canvas.width = w;
           canvas.height = h;
-          const ctx = canvas.getContext('2d');
+          const ctx = canvas.getContext("2d");
           ctx.drawImage(img, 0, 0, w, h);
-          const compressed = canvas.toDataURL('image/jpeg', 0.85);
-          resolve(compressed);
+          resolve(canvas.toDataURL("image/jpeg", 0.85));
         };
-        img.onerror = () => reject(new Error('Gagal memproses fail imej.'));
+        img.onerror = () => reject(new Error("Gagal memproses fail imej. Pastikan fail adalah gambar yang sah."));
         img.src = e.target.result;
       };
-      reader.onerror = () => reject(new Error('Gagal membaca fail.'));
-      reader.readAsDataURL(file);
+      reader.onerror = () => reject(new Error("Gagal membaca fail gambar."));
+      reader.readAsDataURL(preparedBlob);
     });
   }
 
   // Handle image selected via Camera Snap or File Picker or Drag & Drop
   async function handleEssayImageFile(file) {
-    if (!file || !file.type.startsWith('image/')) {
-      alert('Sila muat naik fail gambar sahaja (JPG, PNG, atau WebP).');
+    if (!isSupportedImageFile(file)) {
+      alert("Sila muat naik fail gambar sahaja (JPG, PNG, WebP, atau iPhone HEIC).");
       return;
     }
 
@@ -1634,18 +1753,18 @@ Stimulus: "${topic.prompt}"`;
     // Show preview UI immediately
     if (dom.previewFileName) dom.previewFileName.textContent = file.name;
     if (dom.previewFileSize) dom.previewFileSize.textContent = `${Math.round(file.size / 1024)} KB`;
-    if (dom.dropzoneEmpty) dom.dropzoneEmpty.style.display = 'none';
-    if (dom.dropzonePreview) dom.dropzonePreview.style.display = 'flex';
-    if (dom.btnRetranscribe) dom.btnRetranscribe.style.display = 'none';
+    if (dom.dropzoneEmpty) dom.dropzoneEmpty.style.display = "none";
+    if (dom.dropzonePreview) dom.dropzonePreview.style.display = "flex";
+    if (dom.btnRetranscribe) dom.btnRetranscribe.style.display = "none";
 
-    if (dom.ocrStatusText) dom.ocrStatusText.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memampatkan & memproses imej...';
+    if (dom.ocrStatusText) dom.ocrStatusText.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses & menentukur format imej...';
     if (dom.ocrProgressBar) {
-      dom.ocrProgressBar.className = 'ocr-progress-bar-fill animating';
-      dom.ocrProgressBar.style.width = '30%';
+      dom.ocrProgressBar.className = "ocr-progress-bar-fill animating";
+      dom.ocrProgressBar.style.width = "30%";
     }
     if (dom.previewOcrBadge) {
       dom.previewOcrBadge.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengekstrak Tulisan...';
-      dom.previewOcrBadge.style.background = 'rgba(15, 23, 42, 0.85)';
+      dom.previewOcrBadge.style.background = "rgba(15, 23, 42, 0.85)";
     }
 
     try {
@@ -1656,13 +1775,13 @@ Stimulus: "${topic.prompt}"`;
       // Start Handwriting OCR
       await executeHandwritingOcr(compressedDataUrl);
     } catch (err) {
-      console.error('OCR Error:', err);
+      console.error("OCR Error:", err);
       if (dom.ocrStatusText) dom.ocrStatusText.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:#ef4444;"></i> Ralat: ${err.message}`;
       if (dom.previewOcrBadge) {
         dom.previewOcrBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color:#fca5a5;"></i> Gagal';
-        dom.previewOcrBadge.style.background = 'rgba(185, 28, 28, 0.9)';
+        dom.previewOcrBadge.style.background = "rgba(185, 28, 28, 0.9)";
       }
-      if (dom.btnRetranscribe) dom.btnRetranscribe.style.display = 'inline-block';
+      if (dom.btnRetranscribe) dom.btnRetranscribe.style.display = "inline-block";
     }
   }
 
@@ -1670,20 +1789,20 @@ Stimulus: "${topic.prompt}"`;
   async function executeHandwritingOcr(imageDataUrl) {
     if (!imageDataUrl) return;
 
-    if (dom.ocrStatusText) dom.ocrStatusText.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Mengekstrak teks tulisan tangan dengan OpenRouter Vision AI...';
+    if (dom.ocrStatusText) dom.ocrStatusText.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Mengekstrak teks tulisan tangan dengan OpenRouter Vision AI (anggaran 30-50 saat)...';
     if (dom.ocrProgressBar) {
-      dom.ocrProgressBar.className = 'ocr-progress-bar-fill animating';
-      dom.ocrProgressBar.style.width = '65%';
+      dom.ocrProgressBar.className = "ocr-progress-bar-fill animating";
+      dom.ocrProgressBar.style.width = "65%";
     }
 
-    let extractedText = '';
-    let modelUsed = '';
+    let extractedText = "";
+    let modelUsed = "";
 
     // 1. Try Vercel Serverless /api/transcribe first
     try {
-      const serverlessResp = await fetch('/api/transcribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const serverlessResp = await fetch("/api/transcribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ image: imageDataUrl })
       });
 
@@ -1691,66 +1810,57 @@ Stimulus: "${topic.prompt}"`;
         const json = await serverlessResp.json();
         if (json.success && json.transcribedText) {
           extractedText = json.transcribedText;
-          modelUsed = json.modelUsed || 'OpenRouter Vision';
+          modelUsed = json.modelUsed || "OpenRouter Vision";
         }
       }
     } catch (e) {
-      console.warn('/api/transcribe offline or failed, switching to direct client OpenRouter call:', e);
+      console.warn("/api/transcribe offline or failed, switching to direct client OpenRouter call:", e);
     }
 
     // 2. Direct client fallback across 8 keys and OCR models
     if (!extractedText) {
-      const promptText = `Transkripsikan semua perkataan bertulis tangan Bahasa Melayu yang terdapat pada gambar kertas karangan ini.
-Peraturan:
-1. Salin perkataan secara tepat mengikut ejaan asal murid.
-2. Kekalkan susunan perenggan karangan.
-3. Jangan tambah sebarang ulasan, jangan tambah pengenalan atau penutup.
-4. Pulangkan teks karangan sahaja.`;
+      const promptText = `Transkripsikan semua perkataan bertulis tangan Bahasa Melayu yang terdapat pada gambar kertas karangan ini secara tepat mengikut susunan perkataan asal murid. Pulangkan teks tulisan sahaja.`;
 
       for (let attempt = 0; attempt < OPENROUTER_KEYS_POOL.length; attempt++) {
         const key = getNextOrKey();
         for (const model of OPENROUTER_OCR_MODELS) {
           try {
             const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), 15000);
+            const timeout = setTimeout(() => controller.abort(), 65000);
 
-            const resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-              method: 'POST',
+            const resp = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+              method: "POST",
               headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${key}`,
-                'HTTP-Referer': 'https://pksk2026.vercel.app',
-                'X-Title': 'PKSK Simulator - Handwriting OCR'
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${key}`,
+                "HTTP-Referer": "https://pksk2026.vercel.app",
+                "X-Title": "PKSK Simulator - Handwriting OCR"
               },
               signal: controller.signal,
               body: JSON.stringify({
                 model: model,
+                reasoning: { effort: "low" },
                 messages: [
                   {
-                    role: 'user',
+                    role: "user",
                     content: [
-                      { type: 'text', text: promptText },
-                      { type: 'image_url', image_url: { url: imageDataUrl } }
+                      { type: "text", text: promptText },
+                      { type: "image_url", image_url: { url: imageDataUrl } }
                     ]
                   }
                 ],
                 temperature: 0.1,
-                max_tokens: 1500
+                max_tokens: 4500
               })
             });
             clearTimeout(timeout);
 
             if (resp.ok) {
               const data = await resp.json();
-              let text = data.choices?.[0]?.message?.content || '';
-              text = text
-                .replace(/^```(?:markdown|text)?\n/i, '')
-                .replace(/```$/i, '')
-                .replace(/^(Teks yang terdapat dalam gambar adalah:?|Berikut adalah teks karangan:?)\s*/i, '')
-                .trim();
+              const text = cleanOcrText(data.choices?.[0]?.message);
               if (text) {
                 extractedText = text;
-                modelUsed = `OpenRouter (${model.replace(':free', '')})`;
+                modelUsed = `OpenRouter (${model.replace(":free", "")})`;
                 break;
               }
             }

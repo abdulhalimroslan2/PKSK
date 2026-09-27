@@ -665,7 +665,7 @@
 
           <!-- DROPZONE / FILE PICKER -->
           <div id="essayDropzone" class="essay-upload-dropzone">
-            <input type="file" id="essayImageInput" accept="image/*" capture="environment" style="display:none;">
+            <input type="file" id="essayImageInput" accept="image/*,.heic,.heif,image/heic,image/heif" capture="environment" style="display:none;">
             
             <div class="dropzone-inner" id="dropzoneEmpty">
               <div class="dropzone-icon">
@@ -675,7 +675,7 @@
                 Klik untuk Tangkap Foto Kertas atau Pilih Fail Gambar
               </h4>
               <p style="font-size:0.85rem; color:var(--text-muted); margin:0 0 1.15rem;">
-                Menyokong kamera telefon pintar, tablet, atau seret & lepas fail (JPG, PNG, WebP).
+                Menyokong kamera telefon pintar, tablet, atau seret & lepas fail (JPG, PNG, WebP, iPhone HEIC).
               </p>
               <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
                 <button type="button" id="btnSnapPhoto" class="btn-kpm btn-kpm-primary" style="font-size:0.88rem; padding:0.6rem 1.35rem;">
@@ -1099,6 +1099,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="data/dataset.js?v=20260927_1200"></script>
   <script src="license.js?v=20260927_1200"></script>
+  <script src="assets/heic2any.min.js"></script>
   <script src="app.js?v=20260927_1200"></script>
   <!-- PWA Service Worker Registration -->
   <script>
