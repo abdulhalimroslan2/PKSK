@@ -721,7 +721,7 @@
     if (['EXAM', 'ESSAY', 'INSTRUCTIONS'].includes(viewName)) {
       if (window.PkskLicense && !window.PkskLicense.isAccessAllowed()) {
         openActivationModal(() => switchView(viewName), 'TRIAL_EXPIRED');
-        showActivationAlert('Tempoh percubaan 2 hari anda telah tamat. Sistem kini dikunci sehingga No. Kunci Lesen sah dimasukkan.', 'error');
+        showActivationAlert('Tempoh percubaan 2 jam anda telah tamat. Sistem kini dikunci sehingga No. Kunci Lesen sah dimasukkan.', 'error');
         if (state.currentView !== 'DASHBOARD' && state.currentView !== 'LOGIN') {
           switchView('DASHBOARD');
         }
@@ -1013,10 +1013,10 @@
      EXAM WORKFLOW & SUBMISSION
      ========================================================================= */
   function startExam() {
-    // Semakan Pengesahan Lesen & Had Percubaan 2 Hari
+    // Semakan Pengesahan Lesen & Had Percubaan 2 Jam
     if (window.PkskLicense && !window.PkskLicense.isAccessAllowed()) {
       openActivationModal(() => startExam(), 'TRIAL_EXPIRED');
-      showActivationAlert('Tempoh percubaan 2 hari anda telah tamat. Sila masukkan Kunci Lesen PKSK atau buat pembelian via Telegram @halimroslan.', 'error');
+      showActivationAlert('Tempoh percubaan 2 jam anda telah tamat. Sila masukkan Kunci Lesen PKSK atau buat pembelian via Telegram @halimroslan.', 'error');
       return;
     }
 
@@ -2700,24 +2700,19 @@ Wajib sediakan JSON SAHAJA mengikut skema:
   function updateLicenseBadgeUI() {
     if (!dom.licenseStatusBadge || !dom.licenseStatusText) return;
     const isAct = window.PkskLicense && window.PkskLicense.isActivated();
+    const googleUser = window.PkskLicense ? window.PkskLicense.getGoogleUser() : null;
+
+    if (googleUser) {
+      if (googleUser.full_name && dom.dispCandidateName) {
+        dom.dispCandidateName.textContent = googleUser.full_name.toUpperCase();
+      }
+      if (googleUser.avatar_url && dom.userAvatarContainer) {
+        dom.userAvatarContainer.innerHTML = `<img src="${googleUser.avatar_url}" alt="Google Avatar" class="user-avatar-img">`;
+      }
+    }
+
     if (isAct) {
       const session = window.PkskLicense.getLicenseSession();
-      if (session?.is_gmail_auth) {
-        dom.licenseStatusBadge.className = 'license-status-pill';
-        dom.licenseStatusBadge.style.background = '#e0f2fe';
-        dom.licenseStatusBadge.style.color = '#0369a1';
-        dom.licenseStatusBadge.style.borderColor = '#bae6fd';
-        dom.licenseStatusText.innerHTML = '<i class="fa-brands fa-google" style="color:#0284c7;"></i> Google ID Aktif';
-
-        if (session.activated_by_name && dom.dispCandidateName) {
-          dom.dispCandidateName.textContent = session.activated_by_name.toUpperCase();
-        }
-        if (session.avatar_url && dom.userAvatarContainer) {
-          dom.userAvatarContainer.innerHTML = `<img src="${session.avatar_url}" alt="Google Avatar" class="user-avatar-img">`;
-        }
-        return;
-      }
-
       if (session?.is_developer || session?.tier === 'DEVELOPER_SUPERADMIN') {
         dom.licenseStatusBadge.className = 'license-status-pill';
         dom.licenseStatusBadge.style.background = '#fef3c7';
@@ -2744,13 +2739,14 @@ Wajib sediakan JSON SAHAJA mengikut skema:
         dom.licenseStatusBadge.style.background = '#e0f2fe';
         dom.licenseStatusBadge.style.color = '#0369a1';
         dom.licenseStatusBadge.style.borderColor = '#7dd3fc';
-        dom.licenseStatusText.innerHTML = `<i class="fa-solid fa-clock"></i> Percubaan Percuma (${trial.remainingText})`;
+        const prefix = googleUser ? '<i class="fa-brands fa-google" style="color:#0284c7;"></i> Google ID • ' : '<i class="fa-solid fa-clock"></i> ';
+        dom.licenseStatusText.innerHTML = `${prefix}Percubaan (${trial.remainingText})`;
       } else {
         dom.licenseStatusBadge.className = 'license-status-pill unregistered expired';
         dom.licenseStatusBadge.style.background = '#fef2f2';
         dom.licenseStatusBadge.style.color = '#b91c1c';
         dom.licenseStatusBadge.style.borderColor = '#fca5a5';
-        dom.licenseStatusText.innerHTML = `<i class="fa-solid fa-lock"></i> Percubaan Tamat (Kunci Diperlukan)`;
+        dom.licenseStatusText.innerHTML = `<i class="fa-solid fa-lock"></i> Percubaan 2 Jam Tamat (Kunci Diperlukan)`;
       }
     }
   }
@@ -2762,6 +2758,10 @@ Wajib sediakan JSON SAHAJA mengikut skema:
     const isAct = window.PkskLicense && window.PkskLicense.isActivated();
     if (isAct) {
       banner.style.display = 'none';
+      if (dom.btnLaunchInstructions) {
+        dom.btnLaunchInstructions.classList.remove('btn-locked-trial');
+        dom.btnLaunchInstructions.innerHTML = '<span>Teruskan ke Panduan Peperiksaan</span> <i class="fa-solid fa-arrow-right"></i>';
+      }
       return;
     }
 
@@ -2779,13 +2779,21 @@ Wajib sediakan JSON SAHAJA mengikut skema:
     if (trial.isExpired) {
       banner.classList.add('expired');
       if (iconWrap) iconWrap.innerHTML = '<i class="fa-solid fa-lock"></i>';
-      if (titleEl) titleEl.textContent = 'Tempoh Percubaan 2 Hari Telah Tamat (Sistem Terkunci)';
+      if (titleEl) titleEl.textContent = 'Tempoh Percubaan 2 Jam Telah Tamat (Sistem Terkunci)';
       if (subEl) subEl.textContent = 'Akses simulasi peperiksaan & semakan AI telah dikunci. Sila masukkan No. Kunci Lesen sah atau hubungi Telegram @halimroslan untuk pembelian.';
+      if (dom.btnLaunchInstructions) {
+        dom.btnLaunchInstructions.classList.add('btn-locked-trial');
+        dom.btnLaunchInstructions.innerHTML = '<i class="fa-solid fa-lock"></i> <span>Akses Terkunci (Perlukan Kunci Lesen)</span>';
+      }
     } else {
       banner.classList.remove('expired');
       if (iconWrap) iconWrap.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i>';
-      if (titleEl) titleEl.textContent = `Mod Percubaan Percuma 2 Hari Aktif (${trial.remainingText})`;
+      if (titleEl) titleEl.textContent = `Mod Percubaan Percuma 2 Jam Aktif (${trial.remainingText})`;
       if (subEl) subEl.textContent = `Nikmati akses penuh ke semua soalan & semakan esei AI. Dapatkan Kunci Lesen 6 Bulan untuk akses tanpa had bila-bila masa.`;
+      if (dom.btnLaunchInstructions) {
+        dom.btnLaunchInstructions.classList.remove('btn-locked-trial');
+        dom.btnLaunchInstructions.innerHTML = '<span>Teruskan ke Panduan Peperiksaan</span> <i class="fa-solid fa-arrow-right"></i>';
+      }
     }
   }
 
@@ -3108,6 +3116,12 @@ Wajib sediakan JSON SAHAJA mengikut skema:
       };
     }
 
+    // PhysFlix Hero Primary Button (Log Masuk Calon -> Buka Card Form)
+    const btnHeroLogMasuk = document.getElementById('btnHeroLogMasuk');
+    if (btnHeroLogMasuk) {
+      btnHeroLogMasuk.onclick = () => setPhysflixLoginForm(true);
+    }
+
     // PhysFlix Hero Submit Button
     const btnHeroSubmit = document.getElementById('btnHeroSubmit');
     if (btnHeroSubmit) {
@@ -3233,7 +3247,7 @@ Wajib sediakan JSON SAHAJA mengikut skema:
           switchView('ESSAY'); 
           startEssaySessionTimers(true);
         }, 'TRIAL_EXPIRED');
-        showActivationAlert('Tempoh percubaan 2 hari anda telah tamat. Sila masukkan Kunci Lesen PKSK untuk membuka akses Artikulasi Penulisan.', 'error');
+        showActivationAlert('Tempoh percubaan 2 jam anda telah tamat. Sila masukkan Kunci Lesen PKSK untuk membuka akses Artikulasi Penulisan.', 'error');
         return;
       }
       state.mode = 'ESSAY_PRACTICE'; 
@@ -3276,7 +3290,7 @@ Wajib sediakan JSON SAHAJA mengikut skema:
     dom.btnLaunchInstructions.onclick = () => {
       if (window.PkskLicense && !window.PkskLicense.isAccessAllowed()) {
         openActivationModal(() => switchView('INSTRUCTIONS'), 'TRIAL_EXPIRED');
-        showActivationAlert('Tempoh percubaan 2 hari anda telah tamat. Sila masukkan Kunci Lesen PKSK.', 'error');
+        showActivationAlert('Tempoh percubaan 2 jam anda telah tamat. Sila masukkan Kunci Lesen PKSK atau buat pembelian via Telegram @halimroslan.', 'error');
         return;
       }
       switchView('INSTRUCTIONS');
@@ -3549,9 +3563,32 @@ Adakah anda ingin log keluar daripada sesi Google ini?`)) {
     if (window.PkskLicense && typeof window.PkskLicense.initAuthListener === 'function') {
       window.PkskLicense.initAuthListener((newSession) => {
         if (newSession) {
-          updateLicenseBadgeUI();
-          closeActivationModal();
           console.log('[PKSK App] Sesi Pengguna Google Aktif:', newSession.email);
+          const displayName = (newSession.full_name || newSession.email.split('@')[0]).toUpperCase();
+          state.candidate.name = displayName;
+          state.candidate.ic = newSession.email;
+          const cleanNum = Math.abs((newSession.email || 'USER').split('').reduce((acc, c) => (acc * 31 + c.charCodeAt(0)) | 0, 0)) % 9000 + 1000;
+          state.candidate.indexNumber = `PKSK-2026-${cleanNum}`;
+          state.candidate.indexNo = state.candidate.indexNumber;
+
+          if (dom.dispCandidateName) dom.dispCandidateName.textContent = state.candidate.name;
+          if (dom.dispCandidateIndex) dom.dispCandidateIndex.textContent = `AG: ${state.candidate.indexNumber}`;
+          if (newSession.avatar_url && dom.userAvatarContainer) {
+            dom.userAvatarContainer.innerHTML = `<img src="${newSession.avatar_url}" alt="Google Avatar" class="user-avatar-img">`;
+          }
+
+          updateLicenseBadgeUI();
+          renderDashboardTrialBanner();
+          closeActivationModal();
+
+          // Apabila berjaya log masuk melalui Google, terus paparkan UI untuk pilihan ujian (DASHBOARD)
+          switchView('DASHBOARD');
+
+          // Jika tempoh percubaan 2 jam telah tamat, terus kunci dan buka modal lesen
+          if (!window.PkskLicense.isAccessAllowed()) {
+            openActivationModal(() => switchView('DASHBOARD'), 'TRIAL_EXPIRED');
+            showActivationAlert('Tempoh percubaan 2 jam anda telah tamat. Sistem kini dikunci sehingga No. Kunci Lesen sah dimasukkan.', 'error');
+          }
         } else {
           updateLicenseBadgeUI();
         }
@@ -3667,23 +3704,79 @@ Adakah anda ingin log keluar daripada sesi Google ini?`)) {
     }
   }
 
-  // Self Initialization on DOM Ready - Direct to LOGIN View on loading
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      if (window.PkskLicense && window.PkskLicense.initTrial) window.PkskLicense.initTrial();
-      initEventListeners();
-      updateLicenseBadgeUI();
-      renderDashboardTrialBanner();
-      performAutoHardwareCheck();
-      switchView('LOGIN');
-    });
-  } else {
+  // Trial liveness watcher - semak auto-lock jika 2 jam tamat semasa calon menggunakan app
+  function initTrialLivenessWatcher() {
+    setInterval(() => {
+      if (!window.PkskLicense) return;
+      const isAct = window.PkskLicense.isActivated();
+      if (isAct) return;
+
+      const trial = window.PkskLicense.getTrialStatus();
+      if (trial && trial.isExpired) {
+        updateLicenseBadgeUI();
+        renderDashboardTrialBanner();
+
+        // Kunci serta-merta jika sedang dalam ujian atau arahan
+        if (['EXAM', 'ESSAY', 'INSTRUCTIONS'].includes(state.currentView)) {
+          if (state.timerInterval) clearInterval(state.timerInterval);
+          switchView('DASHBOARD');
+          openActivationModal(() => switchView('DASHBOARD'), 'TRIAL_EXPIRED');
+          showActivationAlert('Tempoh percubaan 2 jam anda telah tamat semasa sesi berlangsung. Sistem kini dikunci. Sila masukkan No. Kunci Lesen sah.', 'error');
+        } else if (state.currentView === 'DASHBOARD') {
+          if (dom.activationModal && dom.activationModal.classList.contains('hidden')) {
+            openActivationModal(() => switchView('DASHBOARD'), 'TRIAL_EXPIRED');
+          }
+        }
+      } else {
+        updateLicenseBadgeUI();
+        renderDashboardTrialBanner();
+      }
+    }, 15000);
+  }
+
+  function startApplication() {
     if (window.PkskLicense && window.PkskLicense.initTrial) window.PkskLicense.initTrial();
     initEventListeners();
     updateLicenseBadgeUI();
     renderDashboardTrialBanner();
     performAutoHardwareCheck();
-    switchView('LOGIN');
+
+    // Semak sama ada pengguna telah log masuk melalui Google sebelum ini
+    const googleUser = window.PkskLicense ? window.PkskLicense.getGoogleUser() : null;
+    if (googleUser && googleUser.email) {
+      const displayName = (googleUser.full_name || googleUser.email.split('@')[0]).toUpperCase();
+      state.candidate.name = displayName;
+      state.candidate.ic = googleUser.email;
+      const cleanNum = Math.abs((googleUser.email || 'USER').split('').reduce((acc, c) => (acc * 31 + c.charCodeAt(0)) | 0, 0)) % 9000 + 1000;
+      state.candidate.indexNumber = `PKSK-2026-${cleanNum}`;
+      state.candidate.indexNo = state.candidate.indexNumber;
+
+      if (dom.dispCandidateName) dom.dispCandidateName.textContent = state.candidate.name;
+      if (dom.dispCandidateIndex) dom.dispCandidateIndex.textContent = `AG: ${state.candidate.indexNumber}`;
+      if (googleUser.avatar_url && dom.userAvatarContainer) {
+        dom.userAvatarContainer.innerHTML = `<img src="${googleUser.avatar_url}" alt="Google Avatar" class="user-avatar-img">`;
+      }
+
+      // Terus paparkan UI untuk pilihan ujian (DASHBOARD)
+      switchView('DASHBOARD');
+
+      // Kunci jika tempoh percubaan 2 jam telah tamat
+      if (!window.PkskLicense.isAccessAllowed()) {
+        openActivationModal(() => switchView('DASHBOARD'), 'TRIAL_EXPIRED');
+        showActivationAlert('Tempoh percubaan 2 jam anda telah tamat. Sistem kini dikunci sehingga No. Kunci Lesen sah dimasukkan.', 'error');
+      }
+    } else {
+      switchView('LOGIN');
+    }
+
+    initTrialLivenessWatcher();
+  }
+
+  // Self Initialization on DOM Ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startApplication);
+  } else {
+    startApplication();
   }
 
 })();

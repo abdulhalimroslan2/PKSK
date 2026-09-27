@@ -3956,3 +3956,13 @@ body.in-login-mode {
     box-sizing: border-box;
   }
 }
+
+
+.btn-locked-trial {
+  background: #dc2626 !important;
+  color: #ffffff !important;
+  border-color: #b91c1c !important;
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.35) !important;
+  cursor: pointer;
+  animation: pulseLock 2s infinite ease-in-out;
+}
