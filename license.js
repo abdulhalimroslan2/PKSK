@@ -166,6 +166,11 @@
         
         const currentHwId = getDeviceHardwareFingerprint();
         // Semak padanan Hardware Fingerprint
+        // Developer bypass: sentiasa sah jika peranti developer
+        if (session.is_developer || session.tier === 'DEVELOPER_SUPERADMIN') {
+          return true;
+        }
+
         if (session.device_id !== currentHwId) return false;
 
         // Semak tempoh tamat sah (6 Bulan)
@@ -252,15 +257,41 @@
 
     // Validasi & Aktifkan Kunci Lesen melalui Supabase REST API (Had 2 Peranti)
     activateLicenseOnline: async function(rawKey, candidateName, candidateIc) {
+      const cleanInput = (rawKey || '').trim().toUpperCase();
+      const DEV_MASTER_KEYS = ['PKSK-DEV-MASTER-2026', 'PKSK-DEV-HALIM-ROSLAN', 'PKSK-DEV-UNLOCK', 'DEV-PKSK-2026', 'PKSK-CIKGU-HALIM'];
+
+      const deviceId = getDeviceHardwareFingerprint();
+      const now = new Date();
+
+      // Semakan PINTASAN PEMBANGUN (Developer Master Key Override)
+      if (DEV_MASTER_KEYS.includes(cleanInput) || cleanInput === 'DEV-UNLOCK' || cleanInput.startsWith('PKSK-DEV-')) {
+        const devSession = {
+          license_key: cleanInput,
+          status: 'ACTIVE_SESSION',
+          tier: 'DEVELOPER_SUPERADMIN',
+          device_id: deviceId,
+          max_devices: 999,
+          device_slot: 1,
+          activated_by_name: candidateName && candidateName !== 'Calon PKSK' ? candidateName : 'Cikgu Halim (Pembangun Sistem)',
+          activated_by_ic: candidateIc || 'DEV-SUPERADMIN',
+          activated_at: now.toISOString(),
+          expires_at: '2099-12-31T23:59:59.000Z',
+          validity_days: 99999,
+          is_developer: true
+        };
+        localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(devSession));
+        return {
+          success: true,
+          message: '👑 Selamat Datang Cikgu Halim! Akses Penuh Pembangun (Developer Lifetime VIP) telah diaktifkan.',
+          session: devSession
+        };
+      }
       const formattedKey = sanitizeAndFormatKey(rawKey);
       if (!formattedKey || formattedKey.length < 19) {
         return { success: false, message: 'Format Kunci Lesen tidak lengkap. Sila masukkan format PKSK-XXXX-XXXX-XXXX.' };
       }
 
-      const deviceId = getDeviceHardwareFingerprint();
       const config = getSupabaseConfig();
-
-      const now = new Date();
       // Tetapan Tempoh Sah: Tepat 6 Bulan (180 Hari) bermula tarikh pengaktifan
       const sixMonthsLater = new Date(now.getTime() + (180 * 24 * 60 * 60 * 1000));
       const expiresAtIso = sixMonthsLater.toISOString();

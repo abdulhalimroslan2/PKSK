@@ -64,5 +64,6 @@
 - [x] Penalaan lanjut prompt rubrik AI Bahagian C untuk memperincikan skor mengikut tatabahasa Melayu Baku & Tatabahasa Dewan DBP (Selesai 2026-09-27).
 - [x] Perluasan variasi tajuk esei Bahagian C (22 tajuk: Buli, Ko-Akademik, Kokurikulum, Teknologi AI, Sambutan Hari Kebangsaan, Hari Malaysia & Integrasi Wilayah) untuk umur 12-13 tahun (Selesai 2026-09-27).
 - [x] Pelaksanaan PWA Penuh & Ikon Rasmi Korporat Janaan ChatGPT (/chatgpt-page-generator) dengan latar belakang PNG telus (transparent), tipografi PKSK, dan simbol AI di hujung atas kanan (Selesai 2026-09-27).
+- [x] Mekanisme Kunci Induk Pembangun (Developer Master Key & Auto-Unlock URL): Kunci 'PKSK-DEV-MASTER-2026' dan parameter '?dev=unlock' untuk akses tanpa had seumur hidup tanpa tolak kuota Supabase (Selesai 2026-09-27).
 - [ ] Ujian keserasian paparan penuh untuk peranti telefon pintar skrin kecil (skrin < 380px).
 - [ ] Pengekalan pangkalan data Supabase melalui automasi heartbeat Supabaseauto.

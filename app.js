@@ -2076,6 +2076,14 @@ ${essay}
     const isAct = window.PkskLicense && window.PkskLicense.isActivated();
     if (isAct) {
       const session = window.PkskLicense.getLicenseSession();
+      if (session?.is_developer || session?.tier === 'DEVELOPER_SUPERADMIN') {
+        dom.licenseStatusBadge.className = 'license-status-pill';
+        dom.licenseStatusBadge.style.background = '#fef3c7';
+        dom.licenseStatusBadge.style.color = '#92400e';
+        dom.licenseStatusBadge.style.borderColor = '#fde68a';
+        dom.licenseStatusText.innerHTML = '<i class="fa-solid fa-crown" style="color:#d97706;"></i> Lesen Aktif (Developer VIP)';
+        return;
+      }
       let daysRemainingText = '6 Bulan';
       if (session?.expires_at) {
         const diffMs = new Date(session.expires_at).getTime() - Date.now();
@@ -2382,10 +2390,24 @@ ${essay}
     checkUrlLicenseParam();
   }
 
-  function checkUrlLicenseParam() {
+  async function checkUrlLicenseParam() {
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const urlKey = urlParams.get('key') || urlParams.get('license');
+      const devParam = urlParams.get('dev') || urlParams.get('admin');
+
+      // Auto-unlock Developer via URL parameter: ?dev=unlock atau ?key=PKSK-DEV-MASTER-2026
+      if (devParam === 'unlock' || devParam === 'halim' || devParam === 'master' || (urlKey && urlKey.toUpperCase().includes('DEV'))) {
+        const masterKey = urlKey ? urlKey.toUpperCase() : 'PKSK-DEV-MASTER-2026';
+        const res = await window.PkskLicense.activateLicenseOnline(masterKey, 'Cikgu Halim (Pembangun)', 'DEV-SUPERADMIN');
+        if (res && res.success) {
+          updateLicenseBadgeUI();
+          console.log('[PKSK DEV] Developer master access granted via URL parameter.');
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+        return;
+      }
+
       if (urlKey && window.PkskLicense && !window.PkskLicense.isActivated()) {
         openActivationModal();
         if (dom.inputLicenseKey) {
