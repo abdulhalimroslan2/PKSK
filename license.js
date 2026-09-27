@@ -13,7 +13,7 @@
 
   // Konfigurasi Asas Supabase Sasaran: lcfkvljmcamulshvyeqe
   const DEFAULT_SUPABASE_URL = 'https://lcfkvljmcamulshvyeqe.supabase.co';
-  const DEFAULT_SUPABASE_ANON_KEY = '';
+  const DEFAULT_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjZmt2bGptY2FtdWxzaHZ5ZXFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA0NTc3ODYsImV4cCI6MjEwNjAzMzc4Nn0.bDAu2Inge2D53_zDeaI37mpEfMNcQYJraXxoVfoc1pc';
 
   const STORAGE_KEY_SESSION = 'pksk_license_session';
   const STORAGE_KEY_DEVICE = 'pksk_device_id';
