@@ -15,18 +15,18 @@
   <link rel="icon" type="image/png" sizes="192x192" href="assets/pksk_icon_192.png">
   <link rel="icon" type="image/png" sizes="64x64" href="assets/pksk_icon_64.png">
   <link rel="icon" type="image/png" href="assets/kpm_favicon.png">
-  <link rel="stylesheet" href="styles.css?v=20260825_1145">
+  <link rel="stylesheet" href="styles.css?v=20260927_1805">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="in-login-mode">
 
     <!-- =========================================================================
        1. MOE EXACT DOM CLONE HEADER
        ========================================================================= -->
-  <header id="acc-page-wrap">
+  <header id="acc-page-wrap" style="display: none;">
     <div id="topnav" style="background-color:#0d355c; width:100%; border-bottom:1px solid #0a2b4b;">
       <div class="portal-topnav-wrap">
         <h2 class="tranz" style="font-family:'Manrope', sans-serif; font-size:14px; color:#ffffff; font-weight:700; margin:0;">Selamat Datang ke PORTAL RASMI PKSK 2026</h2>
@@ -78,6 +78,9 @@
               <span id="dispLiveTimer" style="font-family:'JetBrains Mono', 'Manrope', monospace; font-size:19px; font-weight:800; color:#1e40af; letter-spacing:1px;">90:00</span>
             </div>
           </div>
+          <button id="licenseStatusBadge" class="license-status-pill" type="button" title="Status Lesen & Tempoh Percubaan" style="cursor:pointer; display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:20px; font-size:12px; font-weight:700; border:1px solid #7dd3fc; background:#e0f2fe; color:#0369a1; transition:all 0.2s ease;">
+            <span id="licenseStatusText"><i class="fa-solid fa-clock"></i> Percubaan Percuma</span>
+          </button>
           <div id="userAvatarContainer" title="Akaun & Pengesahan PKSK" style="width:46px; height:46px; min-width:46px; border-radius:50%; background:#f0f9ff; border:2px solid #0284c7; display:flex; align-items:center; justify-content:center; color:#0369a1; font-size:20px; box-shadow:0 2px 4px rgba(0,0,0,0.06); overflow:hidden; cursor:pointer;">
             <i class="fa-solid fa-user" id="userAvatarDefaultIcon"></i>
           </div>
@@ -89,7 +92,7 @@
   </header>
 
   <!-- Navigation Menu (Persistent Sticky Header) -->
-  <nav id="navigation" class="kpm-nav-strip" style="background-color:#02264a; width:100%; border-bottom:3px solid #0d355c; position:-webkit-sticky; position:sticky; top:0; z-index:9999; box-shadow:0 4px 14px rgba(0,0,0,0.22); touch-action:pan-x;">
+  <nav id="navigation" class="kpm-nav-strip" style="display: none; background-color:#02264a; width:100%; border-bottom:3px solid #0d355c; position:-webkit-sticky; position:sticky; top:0; z-index:9999; box-shadow:0 4px 14px rgba(0,0,0,0.22); touch-action:pan-x;">
       <div style="max-width:1140px; margin:0 auto; padding:0 15px;">
         <ul id="main-nav" style="list-style:none; margin:0; padding:0; display:flex; width:100%; align-items:center;">
           <li style="flex:1; border-right:1px solid #1e3a5f; position:relative;">
@@ -128,174 +131,226 @@
   <!-- =========================================================================
        0. VIEW 0: SPLIT-SCREEN CORPORATE LOGIN VIEW (MATCHING GAMBAR 3)
        ========================================================================= -->
-  <main id="loginView" class="split-login-viewport">
-    <div class="split-login-container">
-      
-      <!-- LEFT PANEL: Corporate Blue Brand & Illustration -->
-      <div class="split-login-hero">
-        <div class="split-hero-content">
-          
-          <!-- Brand Header -->
-          <div class="split-brand-header">
-            <img src="assets/pksk_icon_official.png" alt="PKSK Icon" class="split-brand-logo">
-            <div class="split-brand-title-wrap">
-              <span class="split-brand-name">PKSK Simulator</span>
-              <span class="split-brand-badge">Portal Rasmi</span>
-            </div>
+  <main id="loginView" class="physflix-login-viewport">
+    <!-- Cinematic Ambient Background with Netflix/PhysFlix overlays -->
+    <div class="physflix-bg-layer">
+      <div class="physflix-bg-image" style="background-image: url('assets/physflix_hero_bg.jpg'), url('assets/login_bg_corporate.png');"></div>
+      <div class="physflix-bg-gradient-tb"></div>
+      <div class="physflix-bg-vignette"></div>
+      <div class="physflix-bg-gradient-bottom"></div>
+    </div>
+
+    <!-- Floating Top Header (Transparent, Logo Left, Globe + Toggle Right) -->
+    <header class="physflix-header">
+      <div class="physflix-header-container">
+        <div class="physflix-brand-wrap">
+          <img src="assets/pksk_icon_official.png" alt="PKSK Suites Pro" class="physflix-brand-logo">
+          <div class="physflix-brand-text">
+            <span class="physflix-brand-title">PKSK SUITES PRO</span>
+            <span class="physflix-brand-badge">PORTAL SIMULASI 2026</span>
           </div>
+        </div>
 
-          <!-- Hero Illustration matching Gambar 3 -->
-          <div class="split-hero-illustration">
-            <svg class="illustration-svg" viewBox="0 0 420 320" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <!-- Background glowing shapes & clouds -->
-              <ellipse cx="210" cy="180" rx="170" ry="110" fill="rgba(255, 255, 255, 0.12)" />
-              <rect x="50" y="140" width="320" height="40" rx="20" fill="rgba(255, 255, 255, 0.08)" />
-              <rect x="80" y="195" width="260" height="30" rx="15" fill="rgba(255, 255, 255, 0.08)" />
-              
-              <!-- Clipboard Main Body -->
-              <g filter="url(#dropShadow)">
-                <rect x="125" y="45" width="170" height="230" rx="22" fill="#ffffff" />
-                <rect x="125" y="45" width="170" height="230" rx="22" stroke="#e2e8f0" stroke-width="2" />
-                
-                <!-- Clipboard Header Clip -->
-                <rect x="175" y="32" width="70" height="26" rx="8" fill="#1e40af" />
-                <rect x="190" y="24" width="40" height="16" rx="6" fill="#02264a" />
-                <circle cx="210" cy="32" r="5" fill="#ffffff" />
-
-                <!-- Checklist Items inside Clipboard (exactly like Gambar 3) -->
-                <!-- Item 1: Check -->
-                <path d="M152 95L158 101L170 89" stroke="#22c55e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <rect x="180" y="91" width="85" height="8" rx="4" fill="#93c5fd" />
-                <rect x="180" y="103" width="55" height="5" rx="2.5" fill="#cbd5e1" />
-
-                <!-- Item 2: Cross/Review -->
-                <path d="M152 135L168 151M168 135L152 151" stroke="#3b82f6" stroke-width="3" stroke-linecap="round"/>
-                <rect x="180" y="137" width="92" height="8" rx="4" fill="#93c5fd" />
-                <rect x="180" y="149" width="60" height="5" rx="2.5" fill="#cbd5e1" />
-
-                <!-- Item 3: Check -->
-                <path d="M152 181L158 187L170 175" stroke="#22c55e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <rect x="180" y="177" width="78" height="8" rx="4" fill="#93c5fd" />
-                <rect x="180" y="189" width="45" height="5" rx="2.5" fill="#cbd5e1" />
-
-                <!-- Item 4: Check -->
-                <path d="M152 227L158 233L170 221" stroke="#22c55e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <rect x="180" y="223" width="88" height="8" rx="4" fill="#93c5fd" />
-              </g>
-
-              <!-- Stylized Pen on the left (matching Gambar 3) -->
-              <g transform="translate(100, 210) rotate(-35)">
-                <rect x="0" y="0" width="16" height="75" rx="6" fill="#1e40af" />
-                <rect x="0" y="15" width="16" height="35" fill="#3b82f6" />
-                <path d="M0 75L8 92L16 75Z" fill="#02264a" />
-                <path d="M6 86L8 92L10 86Z" fill="#ffffff" />
-                <rect x="4" y="-8" width="8" height="10" rx="3" fill="#cbd5e1" />
-              </g>
-
-              <!-- Floating Sparkle Stars / Dots -->
-              <circle cx="105" cy="85" r="4" fill="#60a5fa" />
-              <circle cx="320" cy="110" r="5" fill="#facc15" />
-              <path d="M310 170L313 177L320 180L313 183L310 190L307 183L300 180L307 177Z" fill="#fde047" opacity="0.9"/>
-              <path d="M85 120L87 124L91 126L87 128L85 132L83 128L79 126L83 124Z" fill="#ffffff" opacity="0.8"/>
-
-              <defs>
-                <filter id="dropShadow" x="110" y="20" width="200" height="270" filterUnits="userSpaceOnUse">
-                  <feDropShadow dx="0" dy="12" stdDeviation="15" flood-color="#021a36" flood-opacity="0.35"/>
-                </filter>
-              </defs>
-            </svg>
+        <div class="physflix-header-actions">
+          <div class="physflix-lang-pill" title="Bahasa Sistem">
+            <i class="fa-solid fa-globe"></i>
+            <span>Bahasa Melayu</span>
           </div>
-
-          <!-- Hero Text -->
-          <div class="split-hero-text">
-            <h2 class="split-hero-title">Selamat Datang!</h2>
-            <p class="split-hero-desc">
-              Portal simulasi dan persediaan pintar Pentaksiran Kemasukan Sekolah Khusus (PKSK) Tingkatan 1 sesi 2026/2027.
-            </p>
-            <div class="split-carousel-dots">
-              <span class="dot active"></span>
-              <span class="dot"></span>
-              <span class="dot"></span>
-            </div>
-          </div>
-
+          <button type="button" id="btnPhysflixHeaderToggle" class="physflix-btn-header-login">
+            <span>Log Masuk</span>
+          </button>
         </div>
       </div>
+    </header>
 
-      <!-- RIGHT PANEL: Clean White Login Form -->
-      <div class="split-login-form-panel">
-        <div class="split-form-inner">
-          
-          <div class="split-form-header">
-            <h1 class="split-login-heading">Log Masuk</h1>
-            <p class="split-login-subheading">
-              Belum mempunyai akaun? <a href="#" id="linkCreateAccount" class="split-link-highlight">Daftar calon baru</a>
-            </p>
-          </div>
+    <!-- Main Content Area: Toggles between Landing Hero and Card -->
+    <div class="physflix-main-content">
 
-          <!-- Status Banner if Already Logged In -->
-          <div id="loginStatusBanner" class="login-status-notice" style="display:none;"></div>
+      <!-- ================= STATE A: LANDING HERO (!showLoginForm) ================= -->
+      <section id="physflixHeroSection" class="physflix-hero-section">
+        <div class="physflix-hero-inner">
+          <span class="physflix-hero-pill-tag">
+            <i class="fa-solid fa-shield-halved"></i> Pentaksiran Kemasukan Sekolah Khusus 2026
+          </span>
 
-          <form id="formSplitLogin" onsubmit="event.preventDefault(); window.handleSplitLoginSubmit();">
-            
-            <!-- Field 1: No. Kad Pengenalan / MyKid Calon -->
-            <div class="split-field-wrap">
-              <label for="splitInputUsername" class="split-label">No. Kad Pengenalan / MyKid Calon</label>
-              <div class="split-input-box">
-                <input type="text" id="splitInputUsername" class="split-input" placeholder="cth: 130825-01-5678 (12 digit)" required autocomplete="username" maxlength="14" autofocus>
-                <i class="fa-regular fa-id-card split-icon"></i>
-              </div>
+          <h1 class="physflix-hero-title">
+            Simulasi Pentaksiran PKSK <br class="hidden-mobile">Tanpa Had.
+          </h1>
+
+          <p class="physflix-hero-subtitle">
+            Uji Minda. Latih Artikulasi AI. Skor Cemerlang PKSK 2026.
+          </p>
+
+          <p class="physflix-hero-prompt">
+            Bersedia untuk mulakan latihan? Masukkan No. Kad Pengenalan anda atau teruskan.
+          </p>
+
+          <!-- Direct IC input + CTA row (Netflix/PhysFlix Hero CTA pattern) -->
+          <form id="physflixHeroForm" class="physflix-hero-form" onsubmit="event.preventDefault();">
+            <div class="physflix-hero-input-wrap">
+              <i class="fa-regular fa-id-card physflix-hero-input-icon"></i>
+              <input 
+                type="text" 
+                id="heroInputIc" 
+                class="physflix-hero-input" 
+                placeholder="No. Kad Pengenalan (cth: 130825-01-5678)" 
+                maxlength="14" 
+                autocomplete="username"
+              >
             </div>
-
-            <!-- Options Row -->
-            <div class="split-options-row">
-              <label class="split-checkbox-label">
-                <input type="checkbox" id="splitChkRemember" checked>
-                <span>Ingat No. Pengenalan pada peranti ini</span>
-              </label>
-            </div>
-
-            <!-- Submit Button (Primary Royal Blue matching Gambar 3) -->
-            <button type="submit" id="btnSplitSignIn" class="btn-split-primary">
-              <span>Sign In / Masuk Sistem</span>
-              <i class="fa-solid fa-arrow-right"></i>
+            <button type="button" id="btnHeroSubmit" class="physflix-btn-hero-cta">
+              <span>Mula Sekarang</span>
+              <i class="fa-solid fa-chevron-right"></i>
             </button>
+          </form>
 
-            <!-- Divider -->
-            <div class="split-divider">
-              <span>ATAU</span>
-            </div>
-
-            <!-- Google OAuth Direct Button -->
-            <button type="button" id="btnLoginViewGoogle" class="btn-split-google">
-              <svg width="20" height="20" viewBox="0 0 24 24" style="flex-shrink:0;">
+          <div class="physflix-hero-alt-actions">
+            <!-- Google Login Direct Button -->
+            <button type="button" id="btnHeroGoogleSignIn" class="physflix-btn-hero-google">
+              <svg width="22" height="22" viewBox="0 0 24 24" class="physflix-google-icon">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
               </svg>
-              <span>Log Masuk dengan Google</span>
+              <span>Log Masuk melalui Google</span>
             </button>
 
-            <!-- Direct Guest Action -->
-            <div class="split-guest-footer">
-              <button type="button" id="btnLoginViewGuestEnter" class="btn-split-guest">
-                <i class="fa-solid fa-bolt"></i> Masuk Terus Sebagai Tetamu (Simulasi Percuma)
-              </button>
+            <!-- Guest Link -->
+            <button type="button" id="btnHeroGuestEnter" class="physflix-link-hero-guest">
+              <i class="fa-solid fa-bolt"></i> Masuk sebagai Calon Tetamu (Simulasi Percuma) &rarr;
+            </button>
+          </div>
+
+          <div class="physflix-hero-features-bar">
+            <div class="physflix-feature-badge">
+              <i class="fa-solid fa-brain"></i> Kecerdasan Insaniah (EQ/SQ/SSQ)
+            </div>
+            <div class="physflix-feature-badge">
+              <i class="fa-solid fa-calculator"></i> Kecerdasan Intelek (IQ)
+            </div>
+            <div class="physflix-feature-badge">
+              <i class="fa-solid fa-pen-nib"></i> AI Artikulasi Penulisan 2026
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= STATE B: SIGN-IN CARD OVERLAY (showLoginForm) ================= -->
+      <section id="physflixCardSection" class="physflix-card-section hidden">
+        <div class="physflix-card-box">
+          <div class="physflix-card-header">
+            <h2 class="physflix-card-title">Log Masuk</h2>
+            <p class="physflix-card-desc">Sila masukkan maklumat pengenalan calon untuk meneruskan sesi simulasi.</p>
+          </div>
+
+          <!-- Session Active Banner (if user already logged in) -->
+          <div id="loginStatusBanner" class="physflix-session-banner" style="display:none;"></div>
+
+          <form id="physflixCardForm" class="physflix-card-form" onsubmit="event.preventDefault();">
+            <!-- Netflix/PhysFlix Floating Label Input Group -->
+            <div class="physflix-floating-group">
+              <input 
+                type="text" 
+                id="physflixInputIc" 
+                class="physflix-floating-input" 
+                placeholder=" " 
+                maxlength="14" 
+                required 
+                autocomplete="username"
+              >
+              <label for="physflixInputIc" class="physflix-floating-label">No. Kad Pengenalan / MyKid Calon</label>
+              <i class="fa-regular fa-id-card physflix-input-floating-icon"></i>
             </div>
 
+            <!-- Options Row (Remember device) -->
+            <div class="physflix-card-options">
+              <label class="physflix-checkbox-wrap">
+                <input type="checkbox" id="physflixChkRemember" checked>
+                <span>Ingat No. Pengenalan pada peranti ini</span>
+              </label>
+            </div>
+
+            <!-- Submit Button (Primary) -->
+            <button type="submit" id="btnPhysflixCardSubmit" class="physflix-btn-card-submit">
+              <span>Log Masuk</span>
+            </button>
           </form>
 
+          <!-- Divider "ATAU" -->
+          <div class="physflix-card-divider">
+            <span>ATAU</span>
+          </div>
+
+          <!-- Google Login Button -->
+          <button type="button" id="btnPhysflixCardGoogle" class="physflix-btn-card-google">
+            <svg width="20" height="20" viewBox="0 0 24 24" class="physflix-google-icon">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            </svg>
+            <span>Teruskan dengan Google</span>
+          </button>
+
+          <!-- Guest Button -->
+          <button type="button" id="btnPhysflixCardGuest" class="physflix-btn-card-guest">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Masuk Percubaan 2 Hari (Calon Baharu)</span>
+          </button>
+
+          <!-- Telegram Purchase Button on Login Card -->
+          <div style="margin-top:1rem; text-align:center;">
+            <a href="https://t.me/halimroslan" target="_blank" rel="noopener noreferrer" style="display:flex; align-items:center; justify-content:center; gap:8px; color:#38bdf8; font-size:0.85rem; font-weight:700; text-decoration:none; padding:10px 14px; border-radius:8px; background:rgba(34,158,217,0.12); border:1px solid rgba(56,189,248,0.3); transition:all 0.2s ease;">
+              <i class="fa-brands fa-telegram" style="font-size:1.15rem; color:#229ED9;"></i> Beli Kunci Lesen (Telegram @halimroslan)
+            </a>
+          </div>
+
+          <!-- Back to Hero Link -->
+          <div class="physflix-card-back-wrap">
+            <button type="button" id="btnPhysflixBackToHero" class="physflix-link-back">
+              <i class="fa-solid fa-arrow-left"></i> Kembali ke Laman Utama
+            </button>
+          </div>
+
+          <!-- Bottom Security Note -->
+          <p class="physflix-card-security-note">
+            Halaman ini dilindungi oleh Pengesahan PKSK & Enjin Penilaian Artikulasi AI untuk integriti pentaksiran anda.
+          </p>
         </div>
-      </div>
+      </section>
 
     </div>
+
+    <!-- Bottom ambient gradient -->
+    <div class="physflix-bottom-ambient"></div>
   </main>
 
   <!-- =========================================================================
        5. VIEW 1: CANDIDATE DASHBOARD & EXAM CONFIGURATION
        ========================================================================= -->
-  <main id="dashboardView" class="app-viewport">
+  <main id="dashboardView" class="app-viewport hidden">
+    <!-- Trial / License Status Notification Banner -->
+    <div id="trialStatusBanner" class="trial-status-banner" style="display:none;">
+      <div class="trial-banner-left">
+        <div class="trial-banner-icon" id="trialBannerIcon">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+        </div>
+        <div class="trial-banner-text">
+          <div class="trial-banner-title" id="trialBannerTitle">Mod Percubaan 2 Hari Aktif</div>
+          <div class="trial-banner-desc" id="trialBannerSubtitle">Baki masa percubaan percuma: 48 Jam. Akses penuh simulasi dibuka.</div>
+        </div>
+      </div>
+      <div class="trial-banner-actions">
+        <a href="https://t.me/halimroslan" target="_blank" rel="noopener noreferrer" class="btn-trial-telegram" id="btnTrialBannerTelegram">
+          <i class="fa-brands fa-telegram"></i> Beli Kunci (@halimroslan)
+        </a>
+        <button type="button" id="btnTrialBannerEnterKey" class="btn-trial-enter-key">
+          <i class="fa-solid fa-key"></i> Masukkan No. Key
+        </button>
+      </div>
+    </div>
+
     <div class="dashboard-grid">
       
       <!-- Left Column: Mode Selection & Quick Start -->
@@ -1016,6 +1071,16 @@
       </div>
 
       <div class="activation-body">
+        <!-- Notis Kunci Tempoh Percubaan Tamat (Dipaparkan apabila trial tamat 48 jam) -->
+        <div id="trialLockNotice" class="trial-lock-card" style="display:none;">
+          <div class="trial-lock-badge">
+            <i class="fa-solid fa-lock"></i> TEMPOH PERCUBAAN 2 HARI TELAH TAMAT
+          </div>
+          <p class="trial-lock-msg">
+            Akses percubaan percuma anda telah luput. Sistem kini dikunci. Sila masukkan <strong>No. Kunci Lesen (16-digit)</strong> yang sah atau buat pembelian kunci lesen melalui Telegram di bawah.
+          </p>
+        </div>
+
         <!-- Pilihan 1: Log Masuk & Daftar Guna Gmail (Supabase Google OAuth) -->
         <button id="btnGoogleSignIn" class="btn-google-auth" type="button">
           <svg width="20" height="20" viewBox="0 0 24 24">
@@ -1055,11 +1120,17 @@
             <i class="fa-solid fa-lock-open"></i> Sahkan & Aktifkan Akses Sekarang
           </button>
           
-          <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; margin-top:0.5rem;">
-            <a href="https://wa.me/60123456789?text=Hai,%20saya%20berminat%20untuk%20membeli%20Kunci%20Lesen%20PKSK%20Simulator" target="_blank" class="btn-kpm btn-kpm-gold" style="flex:1; justify-content:center; font-size:0.82rem; padding:0.5rem; text-decoration:none;">
-              <i class="fa-brands fa-whatsapp"></i> Dapatkan Kunci Lesen
-            </a>
-            <button id="btnCloseActivationModal" class="btn-kpm btn-kpm-outline" style="font-size:0.82rem; padding:0.5rem 1rem;">
+          <!-- Butang Pembelian Kunci Lesen Terus ke Telegram @halimroslan -->
+          <a href="https://t.me/halimroslan" target="_blank" rel="noopener noreferrer" id="btnBuyLicenseTelegram" class="btn-telegram-buy">
+            <i class="fa-brands fa-telegram"></i>
+            <div class="btn-telegram-inner-text">
+              <span class="btn-telegram-main">Beli Kunci Lesen (Telegram @halimroslan)</span>
+              <span class="btn-telegram-sub">Hubungi Pembangun Langsung • Aktif Segera (6 Bulan Penuh)</span>
+            </div>
+          </a>
+
+          <div style="display:flex; justify-content:center; margin-top:0.25rem;">
+            <button id="btnCloseActivationModal" class="btn-kpm btn-kpm-outline" style="font-size:0.82rem; padding:0.5rem 1.5rem; width:100%;">
               Tutup
             </button>
           </div>
@@ -1135,5 +1206,7 @@
       });
     }
   </script>
+
+
 </body>
 </html>

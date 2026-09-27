@@ -19,6 +19,10 @@
   const STORAGE_KEY_DEVICE = 'pksk_device_id';
   const STORAGE_KEY_CONFIG_URL = 'pksk_supabase_url';
   const STORAGE_KEY_CONFIG_KEY = 'pksk_supabase_anon_key';
+  const STORAGE_KEY_TRIAL = 'pksk_trial_device_record';
+  const TRIAL_DURATION_MS = 2 * 24 * 60 * 60 * 1000; // 48 Jam (2 Hari Penuh)
+  const TELEGRAM_PURCHASE_URL = 'https://t.me/halimroslan';
+  const TELEGRAM_USERNAME = '@halimroslan';
 
   /* =========================================================================
      HARDWARE DEVICE FINGERPRINT ENGINE (CROSS-BROWSER & RE-FORMAT RESISTANT)
@@ -203,7 +207,7 @@
     };
   }
 
-  window.PkskLicense = {
+  const PkskLicense = {
     getDeviceId: getDeviceHardwareFingerprint,
     
     getConfig: getSupabaseConfig,
@@ -219,6 +223,120 @@
     isConfigured: function() {
       const config = getSupabaseConfig();
       return config.url && !config.url.includes('YOUR_PROJECT_ID') && config.anonKey && config.anonKey.length > 20;
+    },
+
+    TELEGRAM_URL: TELEGRAM_PURCHASE_URL,
+    TELEGRAM_USER: TELEGRAM_USERNAME,
+    TRIAL_DURATION_MS: TRIAL_DURATION_MS,
+
+    // Inisialisasi atau ambil rekod percubaan peranti (2 Hari = 48 Jam)
+    initTrial: function() {
+      try {
+        const deviceId = getDeviceHardwareFingerprint();
+        const raw = localStorage.getItem(STORAGE_KEY_TRIAL);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && parsed.start && parsed.sig) {
+            const expectedSig = murmurHash3(deviceId + '::' + parsed.start + '::PKSK_TRIAL_2026');
+            if (parsed.sig === expectedSig) {
+              return parsed;
+            }
+          }
+        }
+        // Cipta rekod percubaan baharu
+        const start = Date.now();
+        const sig = murmurHash3(deviceId + '::' + start + '::PKSK_TRIAL_2026');
+        const newRecord = {
+          device_id: deviceId,
+          start: start,
+          duration_ms: TRIAL_DURATION_MS,
+          sig: sig
+        };
+        localStorage.setItem(STORAGE_KEY_TRIAL, JSON.stringify(newRecord));
+        return newRecord;
+      } catch (err) {
+        console.warn('initTrial error:', err);
+        return { start: Date.now(), duration_ms: TRIAL_DURATION_MS };
+      }
+    },
+
+    // Semak status tempoh percubaan
+    getTrialStatus: function() {
+      // Jika telah diaktifkan dengan lesen sah / VIP, tempoh percubaan tidak lagi menyekat
+      if (this.isActivated()) {
+        return {
+          isActivated: true,
+          isTrial: false,
+          isExpired: false,
+          remainingMs: 0,
+          remainingHours: 0,
+          remainingDays: 0,
+          remainingText: 'Lesen Penuh Aktif',
+          progressPercent: 100
+        };
+      }
+
+      const trial = this.initTrial();
+      const now = Date.now();
+      const elapsed = Math.max(0, now - trial.start);
+      const remainingMs = Math.max(0, (trial.duration_ms || TRIAL_DURATION_MS) - elapsed);
+      const isExpired = remainingMs <= 0;
+      const remainingHours = Math.ceil(remainingMs / (1000 * 60 * 60));
+      const remainingDays = Math.ceil(remainingMs / (1000 * 60 * 60 * 24));
+
+      let remainingText = '';
+      if (isExpired) {
+        remainingText = 'Tamat';
+      } else if (remainingHours > 24) {
+        remainingText = 'Baki ' + remainingDays + ' Hari';
+      } else {
+        remainingText = 'Baki ' + remainingHours + ' Jam';
+      }
+
+      const duration = trial.duration_ms || TRIAL_DURATION_MS;
+      const progressPercent = Math.min(100, Math.max(0, Math.round((elapsed / duration) * 100)));
+
+      return {
+        isActivated: false,
+        isTrial: true,
+        isExpired: isExpired,
+        start: trial.start,
+        expiresAt: trial.start + duration,
+        remainingMs: remainingMs,
+        remainingHours: remainingHours,
+        remainingDays: remainingDays,
+        remainingText: remainingText,
+        progressPercent: progressPercent
+      };
+    },
+
+    // Semak sama ada pengguna dibenarkan mengakses ujian (Lesen Aktif ATAU Dalam Tempoh Percubaan 2 Hari)
+    isAccessAllowed: function() {
+      if (this.isActivated()) return true;
+      const trial = this.getTrialStatus();
+      return !trial.isExpired;
+    },
+
+    // Utiliti ujian pembangunan untuk menguji lock trial
+    mockExpireTrialForTesting: function() {
+      const deviceId = getDeviceHardwareFingerprint();
+      const start = Date.now() - (TRIAL_DURATION_MS + 60000);
+      const sig = murmurHash3(deviceId + '::' + start + '::PKSK_TRIAL_2026');
+      localStorage.setItem(STORAGE_KEY_TRIAL, JSON.stringify({
+        device_id: deviceId,
+        start: start,
+        duration_ms: TRIAL_DURATION_MS,
+        sig: sig
+      }));
+      console.log('⚠️ [DEV TEST] Tempoh percubaan kini ditetapkan sebagai TAMAT (Expired).');
+      return this.getTrialStatus();
+    },
+
+    resetTrialForTesting: function() {
+      localStorage.removeItem(STORAGE_KEY_TRIAL);
+      const res = this.initTrial();
+      console.log('✓ [DEV TEST] Tempoh percubaan diset semula ke 48 Jam penuh.');
+      return res;
     },
 
     // Periksa sama ada peranti ini telah mempunyai lesen yang sah & aktif

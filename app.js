@@ -383,15 +383,34 @@
     // Navigation Tabs
     navTabLogin: document.getElementById('navTabLogin'),
     navTabDashboard: document.getElementById('navTabDashboard'),
-    btnLoginViewGoogle: document.getElementById('btnLoginViewGoogle'),
+
+    // PhysFlix Dual-State Login View Elements
+    physflixHeroSection: document.getElementById('physflixHeroSection'),
+    physflixCardSection: document.getElementById('physflixCardSection'),
+    btnPhysflixHeaderToggle: document.getElementById('btnPhysflixHeaderToggle'),
+    heroInputIc: document.getElementById('heroInputIc'),
+    btnHeroSubmit: document.getElementById('btnHeroSubmit'),
+    btnHeroGoogleSignIn: document.getElementById('btnHeroGoogleSignIn'),
+    btnHeroGuestEnter: document.getElementById('btnHeroGuestEnter'),
+    physflixInputIc: document.getElementById('physflixInputIc'),
+    physflixChkRemember: document.getElementById('physflixChkRemember'),
+    btnPhysflixCardSubmit: document.getElementById('btnPhysflixCardSubmit'),
+    btnPhysflixCardGoogle: document.getElementById('btnPhysflixCardGoogle'),
+    btnPhysflixCardGuest: document.getElementById('btnPhysflixCardGuest'),
+    btnPhysflixBackToHero: document.getElementById('btnPhysflixBackToHero'),
+    formPhysflixHero: document.getElementById('physflixHeroForm'),
+    formPhysflixCard: document.getElementById('physflixCardForm'),
+
+    // Backward Compatible Aliases
+    btnLoginViewGoogle: document.getElementById('btnPhysflixCardGoogle') || document.getElementById('btnHeroGoogleSignIn') || document.getElementById('btnLoginViewGoogle'),
     loginViewLicenseKey: document.getElementById('loginViewLicenseKey'),
     btnLoginViewValidateLicense: document.getElementById('btnLoginViewValidateLicense'),
-    btnLoginViewGuestEnter: document.getElementById('btnLoginViewGuestEnter'),
-    splitInputUsername: document.getElementById('splitInputUsername'),
+    btnLoginViewGuestEnter: document.getElementById('btnPhysflixCardGuest') || document.getElementById('btnHeroGuestEnter') || document.getElementById('btnLoginViewGuestEnter'),
+    splitInputUsername: document.getElementById('physflixInputIc') || document.getElementById('heroInputIc') || document.getElementById('splitInputUsername'),
     splitInputPassword: document.getElementById('splitInputPassword'),
-    splitChkRemember: document.getElementById('splitChkRemember'),
-    btnSplitSignIn: document.getElementById('btnSplitSignIn'),
-    formSplitLogin: document.getElementById('formSplitLogin'),
+    splitChkRemember: document.getElementById('physflixChkRemember') || document.getElementById('splitChkRemember'),
+    btnSplitSignIn: document.getElementById('btnPhysflixCardSubmit') || document.getElementById('btnHeroSubmit') || document.getElementById('btnSplitSignIn'),
+    formSplitLogin: document.getElementById('physflixCardForm') || document.getElementById('formSplitLogin'),
     linkCreateAccount: document.getElementById('linkCreateAccount'),
     linkForgotPassword: document.getElementById('linkForgotPassword'),
     loginStatusBanner: document.getElementById('loginStatusBanner'),
@@ -543,6 +562,14 @@
     licenseStatusBadge: document.getElementById('licenseStatusBadge'),
     licenseStatusText: document.getElementById('licenseStatusText'),
     activationModal: document.getElementById('activationModal'),
+    trialLockNotice: document.getElementById('trialLockNotice'),
+    trialStatusBanner: document.getElementById('trialStatusBanner'),
+    trialBannerTitle: document.getElementById('trialBannerTitle'),
+    trialBannerSubtitle: document.getElementById('trialBannerSubtitle'),
+    trialBannerIcon: document.getElementById('trialBannerIcon'),
+    btnTrialBannerTelegram: document.getElementById('btnTrialBannerTelegram'),
+    btnTrialBannerEnterKey: document.getElementById('btnTrialBannerEnterKey'),
+    btnBuyLicenseTelegram: document.getElementById('btnBuyLicenseTelegram'),
     inputLicenseKey: document.getElementById('inputLicenseKey'),
     keyCharCount: document.getElementById('keyCharCount'),
     activationAlertBox: document.getElementById('activationAlertBox'),
@@ -690,9 +717,23 @@
       if (mainNav) mainNav.style.display = '';
     }
 
+    // Semakan Akses Tempoh Percubaan & Kunci Lesen
+    if (['EXAM', 'ESSAY', 'INSTRUCTIONS'].includes(viewName)) {
+      if (window.PkskLicense && !window.PkskLicense.isAccessAllowed()) {
+        openActivationModal(() => switchView(viewName), 'TRIAL_EXPIRED');
+        showActivationAlert('Tempoh percubaan 2 hari anda telah tamat. Sistem kini dikunci sehingga No. Kunci Lesen sah dimasukkan.', 'error');
+        if (state.currentView !== 'DASHBOARD' && state.currentView !== 'LOGIN') {
+          switchView('DASHBOARD');
+        }
+        return;
+      }
+    }
+
     if (viewName === 'DASHBOARD') {
       dom.dashboardView.classList.remove('hidden');
       dom.navTabDashboard.classList.add('active');
+      renderDashboardTrialBanner();
+      updateLicenseBadgeUI();
     } 
     else if (viewName === 'INSTRUCTIONS') {
       dom.instructionsView.classList.remove('hidden');
@@ -972,9 +1013,10 @@
      EXAM WORKFLOW & SUBMISSION
      ========================================================================= */
   function startExam() {
-    // Semakan Pengaktifan Lesen Komersial
-    if (window.PkskLicense && !window.PkskLicense.isActivated()) {
-      openActivationModal(() => startExam());
+    // Semakan Pengesahan Lesen & Had Percubaan 2 Hari
+    if (window.PkskLicense && !window.PkskLicense.isAccessAllowed()) {
+      openActivationModal(() => startExam(), 'TRIAL_EXPIRED');
+      showActivationAlert('Tempoh percubaan 2 hari anda telah tamat. Sila masukkan Kunci Lesen PKSK atau buat pembelian via Telegram @halimroslan.', 'error');
       return;
     }
 
@@ -2696,19 +2738,75 @@ Wajib sediakan JSON SAHAJA mengikut skema:
       dom.licenseStatusBadge.style.borderColor = '#a7f3d0';
       dom.licenseStatusText.innerHTML = `<i class="fa-solid fa-circle-check"></i> Lesen Aktif (${daysRemainingText})`;
     } else {
-      dom.licenseStatusBadge.className = 'license-status-pill unregistered';
-      dom.licenseStatusBadge.style.background = '#fffbeb';
-      dom.licenseStatusBadge.style.color = '#92400e';
-      dom.licenseStatusBadge.style.borderColor = '#fde68a';
-      dom.licenseStatusText.innerHTML = `<i class="fa-solid fa-key"></i> Kunci Lesen Diperlukan`;
+      const trial = window.PkskLicense ? window.PkskLicense.getTrialStatus() : null;
+      if (trial && !trial.isExpired) {
+        dom.licenseStatusBadge.className = 'license-status-pill trial-active';
+        dom.licenseStatusBadge.style.background = '#e0f2fe';
+        dom.licenseStatusBadge.style.color = '#0369a1';
+        dom.licenseStatusBadge.style.borderColor = '#7dd3fc';
+        dom.licenseStatusText.innerHTML = `<i class="fa-solid fa-clock"></i> Percubaan Percuma (${trial.remainingText})`;
+      } else {
+        dom.licenseStatusBadge.className = 'license-status-pill unregistered expired';
+        dom.licenseStatusBadge.style.background = '#fef2f2';
+        dom.licenseStatusBadge.style.color = '#b91c1c';
+        dom.licenseStatusBadge.style.borderColor = '#fca5a5';
+        dom.licenseStatusText.innerHTML = `<i class="fa-solid fa-lock"></i> Percubaan Tamat (Kunci Diperlukan)`;
+      }
     }
   }
 
-  function openActivationModal(onSuccessCallback) {
+  function renderDashboardTrialBanner() {
+    const banner = document.getElementById('trialStatusBanner');
+    if (!banner) return;
+
+    const isAct = window.PkskLicense && window.PkskLicense.isActivated();
+    if (isAct) {
+      banner.style.display = 'none';
+      return;
+    }
+
+    const trial = window.PkskLicense ? window.PkskLicense.getTrialStatus() : null;
+    if (!trial) {
+      banner.style.display = 'none';
+      return;
+    }
+
+    banner.style.display = 'flex';
+    const iconWrap = document.getElementById('trialBannerIcon');
+    const titleEl = document.getElementById('trialBannerTitle');
+    const subEl = document.getElementById('trialBannerSubtitle');
+
+    if (trial.isExpired) {
+      banner.classList.add('expired');
+      if (iconWrap) iconWrap.innerHTML = '<i class="fa-solid fa-lock"></i>';
+      if (titleEl) titleEl.textContent = 'Tempoh Percubaan 2 Hari Telah Tamat (Sistem Terkunci)';
+      if (subEl) subEl.textContent = 'Akses simulasi peperiksaan & semakan AI telah dikunci. Sila masukkan No. Kunci Lesen sah atau hubungi Telegram @halimroslan untuk pembelian.';
+    } else {
+      banner.classList.remove('expired');
+      if (iconWrap) iconWrap.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i>';
+      if (titleEl) titleEl.textContent = `Mod Percubaan Percuma 2 Hari Aktif (${trial.remainingText})`;
+      if (subEl) subEl.textContent = `Nikmati akses penuh ke semua soalan & semakan esei AI. Dapatkan Kunci Lesen 6 Bulan untuk akses tanpa had bila-bila masa.`;
+    }
+  }
+
+  function openActivationModal(onSuccessCallback, reason = 'NORMAL') {
     state.onActivationSuccessCallback = onSuccessCallback;
     if (dom.activationModal) {
       dom.activationModal.classList.remove('hidden');
       if (dom.activationAlertBox) dom.activationAlertBox.style.display = 'none';
+
+      const trialNotice = document.getElementById('trialLockNotice');
+      const trial = window.PkskLicense ? window.PkskLicense.getTrialStatus() : null;
+      const isTrialExpired = (reason === 'TRIAL_EXPIRED') || (trial && trial.isExpired && !window.PkskLicense.isActivated());
+
+      if (trialNotice) {
+        if (isTrialExpired) {
+          trialNotice.style.display = 'block';
+        } else {
+          trialNotice.style.display = 'none';
+        }
+      }
+
       if (dom.inputLicenseKey) {
         dom.inputLicenseKey.focus();
       }
@@ -2764,6 +2862,7 @@ Wajib sediakan JSON SAHAJA mengikut skema:
     if (result.success) {
       showActivationAlert(result.message, 'success');
       updateLicenseBadgeUI();
+      renderDashboardTrialBanner();
       setTimeout(() => {
         closeActivationModal();
         if (state.onActivationSuccessCallback) {
@@ -2849,13 +2948,77 @@ Wajib sediakan JSON SAHAJA mengikut skema:
     }
   }
 
-    function handleSplitLoginSubmit() {
-    const usernameInput = dom.splitInputUsername ? dom.splitInputUsername.value.trim() : '';
-    const rememberMe = dom.splitChkRemember ? dom.splitChkRemember.checked : true;
+  let isPhysflixLoginFormVisible = false;
+
+  function setPhysflixLoginForm(show) {
+    isPhysflixLoginFormVisible = !!show;
+    const heroSec = document.getElementById('physflixHeroSection');
+    const cardSec = document.getElementById('physflixCardSection');
+    const headerToggle = document.getElementById('btnPhysflixHeaderToggle');
+    const heroInput = document.getElementById('heroInputIc');
+    const cardInput = document.getElementById('physflixInputIc');
+
+    if (show) {
+      if (heroSec) heroSec.classList.add('hidden');
+      if (cardSec) {
+        cardSec.classList.remove('hidden');
+      }
+      if (headerToggle) {
+        headerToggle.innerHTML = '<span>Laman Utama</span>';
+        headerToggle.classList.add('physflix-btn-secondary');
+      }
+      if (heroInput && cardInput && heroInput.value.trim() && !cardInput.value.trim()) {
+        cardInput.value = heroInput.value.trim();
+      }
+      if (cardInput) {
+        setTimeout(() => cardInput.focus(), 80);
+      }
+    } else {
+      if (cardSec) cardSec.classList.add('hidden');
+      if (heroSec) {
+        heroSec.classList.remove('hidden');
+      }
+      if (headerToggle) {
+        headerToggle.innerHTML = '<span>Log Masuk</span>';
+        headerToggle.classList.remove('physflix-btn-secondary');
+      }
+      if (cardInput && heroInput && cardInput.value.trim() && !heroInput.value.trim()) {
+        heroInput.value = cardInput.value.trim();
+      }
+    }
+  }
+  window.setPhysflixLoginForm = setPhysflixLoginForm;
+
+  // Deep-link check for Card state (?login=card or #card)
+  if (window.location.search.includes('card') || window.location.hash === '#card') {
+    setTimeout(() => setPhysflixLoginForm(true), 150);
+  }
+
+  function handleSplitLoginSubmit(explicitIc) {
+    const cardInput = document.getElementById('physflixInputIc');
+    const heroInput = document.getElementById('heroInputIc');
+    const chkRemember = document.getElementById('physflixChkRemember') || dom.splitChkRemember;
+
+    let usernameInput = explicitIc;
+    if (!usernameInput && cardInput && cardInput.value.trim()) {
+      usernameInput = cardInput.value.trim();
+    }
+    if (!usernameInput && heroInput && heroInput.value.trim()) {
+      usernameInput = heroInput.value.trim();
+    }
+    if (!usernameInput && dom.splitInputUsername && dom.splitInputUsername.value.trim()) {
+      usernameInput = dom.splitInputUsername.value.trim();
+    }
+
+    const rememberMe = chkRemember ? chkRemember.checked : true;
 
     if (!usernameInput) {
+      if (!isPhysflixLoginFormVisible) {
+        setPhysflixLoginForm(true);
+        return;
+      }
       alert("Sila masukkan No. Kad Pengenalan / MyKid Calon.");
-      if (dom.splitInputUsername) dom.splitInputUsername.focus();
+      if (cardInput) cardInput.focus();
       return;
     }
 
@@ -2915,21 +3078,10 @@ Wajib sediakan JSON SAHAJA mengikut skema:
     if (dom.navTabLogin) dom.navTabLogin.onclick = () => switchView('LOGIN');
     dom.navTabDashboard.onclick = () => switchView('DASHBOARD');
 
-    // Split-Screen Login View Actions (No Password Required)
-    if (dom.btnSplitSignIn) {
-      dom.btnSplitSignIn.onclick = (e) => {
-        e.preventDefault();
-        handleSplitLoginSubmit();
-      };
-    }
-    if (dom.formSplitLogin) {
-      dom.formSplitLogin.onsubmit = (e) => {
-        e.preventDefault();
-        handleSplitLoginSubmit();
-      };
-    }
-    if (dom.splitInputUsername) {
-      dom.splitInputUsername.addEventListener('input', (e) => {
+    // Attach IC Masking Helper (XXXXXX-XX-XXXX)
+    const attachIcMask = (inputEl) => {
+      if (!inputEl) return;
+      inputEl.addEventListener('input', (e) => {
         let v = e.target.value.replace(/[^0-9]/g, '');
         if (v.length > 12) v = v.substring(0, 12);
         if (v.length > 8) {
@@ -2940,34 +3092,113 @@ Wajib sediakan JSON SAHAJA mengikut skema:
           e.target.value = v;
         }
       });
+    };
+
+    const heroInput = document.getElementById('heroInputIc');
+    const cardInput = document.getElementById('physflixInputIc');
+    attachIcMask(heroInput);
+    attachIcMask(cardInput);
+    attachIcMask(dom.splitInputUsername);
+
+    // PhysFlix Header Toggle (Log Masuk <-> Laman Utama)
+    const btnToggle = document.getElementById('btnPhysflixHeaderToggle');
+    if (btnToggle) {
+      btnToggle.onclick = () => {
+        setPhysflixLoginForm(!isPhysflixLoginFormVisible);
+      };
     }
-    if (dom.linkCreateAccount) {
-      dom.linkCreateAccount.onclick = (e) => {
+
+    // PhysFlix Hero Submit Button
+    const btnHeroSubmit = document.getElementById('btnHeroSubmit');
+    if (btnHeroSubmit) {
+      btnHeroSubmit.onclick = (e) => {
         e.preventDefault();
-        const newIc = prompt("Pendaftaran Calon PKSK: Sila masukkan No. Kad Pengenalan / MyKid Calon:", "");
-        if (newIc && dom.splitInputUsername) {
-          dom.splitInputUsername.value = newIc.trim();
-          handleSplitLoginSubmit();
+        const val = heroInput ? heroInput.value.trim() : '';
+        if (val) {
+          handleSplitLoginSubmit(val);
+        } else {
+          setPhysflixLoginForm(true);
         }
       };
     }
+
+    // PhysFlix Hero Form (Enter key submit)
+    const formHero = document.getElementById('physflixHeroForm');
+    if (formHero) {
+      formHero.onsubmit = (e) => {
+        e.preventDefault();
+        const val = heroInput ? heroInput.value.trim() : '';
+        if (val) {
+          handleSplitLoginSubmit(val);
+        } else {
+          setPhysflixLoginForm(true);
+        }
+      };
+    }
+
+    // PhysFlix Card Submit Button
+    const btnCardSubmit = document.getElementById('btnPhysflixCardSubmit');
+    if (btnCardSubmit) {
+      btnCardSubmit.onclick = (e) => {
+        e.preventDefault();
+        const val = cardInput ? cardInput.value.trim() : '';
+        handleSplitLoginSubmit(val);
+      };
+    }
+
+    // PhysFlix Card Form (Enter key submit)
+    const formCard = document.getElementById('physflixCardForm');
+    if (formCard) {
+      formCard.onsubmit = (e) => {
+        e.preventDefault();
+        const val = cardInput ? cardInput.value.trim() : '';
+        handleSplitLoginSubmit(val);
+      };
+    }
+
+    // PhysFlix Back to Hero Link
+    const btnBackToHero = document.getElementById('btnPhysflixBackToHero');
+    if (btnBackToHero) {
+      btnBackToHero.onclick = () => {
+        setPhysflixLoginForm(false);
+      };
+    }
+
+    // Google Sign-In Handlers
+    const btnHeroGoogle = document.getElementById('btnHeroGoogleSignIn');
+    if (btnHeroGoogle) btnHeroGoogle.onclick = handleLoginViewGoogleSignIn;
+    const btnCardGoogle = document.getElementById('btnPhysflixCardGoogle');
+    if (btnCardGoogle) btnCardGoogle.onclick = handleLoginViewGoogleSignIn;
     if (dom.btnLoginViewGoogle) dom.btnLoginViewGoogle.onclick = handleLoginViewGoogleSignIn;
-    if (dom.btnLoginViewValidateLicense) dom.btnLoginViewValidateLicense.onclick = handleLoginViewLicenseSubmit;
-    if (dom.btnLoginViewGuestEnter) dom.btnLoginViewGuestEnter.onclick = () => {
+
+    // Guest Enter Handlers
+    const guestHandler = () => {
       state.candidate.name = state.candidate.name || 'Calon Tetamu PKSK';
       state.candidate.ic = state.candidate.ic || '990101-14-1234';
       if (dom.dispCandidateName) dom.dispCandidateName.textContent = state.candidate.name;
       switchView('DASHBOARD');
     };
+    const btnHeroGuest = document.getElementById('btnHeroGuestEnter');
+    if (btnHeroGuest) btnHeroGuest.onclick = guestHandler;
+    const btnCardGuest = document.getElementById('btnPhysflixCardGuest');
+    if (btnCardGuest) btnCardGuest.onclick = guestHandler;
+    if (dom.btnLoginViewGuestEnter) dom.btnLoginViewGuestEnter.onclick = guestHandler;
+
+    if (dom.btnLoginViewValidateLicense) dom.btnLoginViewValidateLicense.onclick = handleLoginViewLicenseSubmit;
 
     // Auto-restore remembered credentials
     try {
       const savedUserStr = localStorage.getItem('pksk_saved_user');
       if (savedUserStr) {
         const savedUser = JSON.parse(savedUserStr);
-        if (dom.splitInputUsername && savedUser.username) dom.splitInputUsername.value = savedUser.username;
+        if (savedUser.username) {
+          if (cardInput) cardInput.value = savedUser.username;
+          if (heroInput) heroInput.value = savedUser.username;
+          if (dom.splitInputUsername) dom.splitInputUsername.value = savedUser.username;
+        }
       }
     } catch (e) {}
+
     if (dom.btnLoginOpenSupabaseConfig) {
       dom.btnLoginOpenSupabaseConfig.onclick = (e) => {
         e.preventDefault();
@@ -2996,12 +3227,13 @@ Wajib sediakan JSON SAHAJA mengikut skema:
     dom.navTabDiagnostic.onclick = () => { selectMode('QUICK_DIAGNOSTIC'); switchView('INSTRUCTIONS'); };
     dom.navTabDrill.onclick = () => { selectMode('DRILL_PRACTICE'); switchView('DASHBOARD'); };
     dom.navTabEssay.onclick = () => { 
-      if (window.PkskLicense && !window.PkskLicense.isActivated()) {
+      if (window.PkskLicense && !window.PkskLicense.isAccessAllowed()) {
         openActivationModal(() => { 
           state.mode = 'ESSAY_PRACTICE';
           switchView('ESSAY'); 
           startEssaySessionTimers(true);
-        });
+        }, 'TRIAL_EXPIRED');
+        showActivationAlert('Tempoh percubaan 2 hari anda telah tamat. Sila masukkan Kunci Lesen PKSK untuk membuka akses Artikulasi Penulisan.', 'error');
         return;
       }
       state.mode = 'ESSAY_PRACTICE'; 
@@ -3041,7 +3273,23 @@ Wajib sediakan JSON SAHAJA mengikut skema:
     }
 
     // Dashboard Buttons
-    dom.btnLaunchInstructions.onclick = () => switchView('INSTRUCTIONS');
+    dom.btnLaunchInstructions.onclick = () => {
+      if (window.PkskLicense && !window.PkskLicense.isAccessAllowed()) {
+        openActivationModal(() => switchView('INSTRUCTIONS'), 'TRIAL_EXPIRED');
+        showActivationAlert('Tempoh percubaan 2 hari anda telah tamat. Sila masukkan Kunci Lesen PKSK.', 'error');
+        return;
+      }
+      switchView('INSTRUCTIONS');
+    };
+
+    // Trial Banner Enter Key button
+    const btnTrialEnterKey = document.getElementById('btnTrialBannerEnterKey');
+    if (btnTrialEnterKey) {
+      btnTrialEnterKey.onclick = () => {
+        const trial = window.PkskLicense ? window.PkskLicense.getTrialStatus() : null;
+        openActivationModal(null, trial && trial.isExpired ? 'TRIAL_EXPIRED' : 'NORMAL');
+      };
+    }
     dom.selectDrillTopic.onchange = (e) => { state.drillTopic = e.target.value; };
 
     // Ox Alpha Test Event
@@ -3422,14 +3670,18 @@ Adakah anda ingin log keluar daripada sesi Google ini?`)) {
   // Self Initialization on DOM Ready - Direct to LOGIN View on loading
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
+      if (window.PkskLicense && window.PkskLicense.initTrial) window.PkskLicense.initTrial();
       initEventListeners();
       updateLicenseBadgeUI();
+      renderDashboardTrialBanner();
       performAutoHardwareCheck();
       switchView('LOGIN');
     });
   } else {
+    if (window.PkskLicense && window.PkskLicense.initTrial) window.PkskLicense.initTrial();
     initEventListeners();
     updateLicenseBadgeUI();
+    renderDashboardTrialBanner();
     performAutoHardwareCheck();
     switchView('LOGIN');
   }
