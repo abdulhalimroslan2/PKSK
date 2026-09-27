@@ -282,14 +282,17 @@ body {
 /* ==========================================================================
    3. CORPORATE NAVIGATION BAR
    ========================================================================== */
+#navigation,
 .kpm-nav-strip {
-  background: linear-gradient(180deg, var(--kpm-navy) 0%, #081a33 100%);
-  border-bottom: 3px solid var(--kpm-gold);
-  padding: 0 1.5rem;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: var(--shadow-md);
+  background-color: #02264a !important;
+  width: 100% !important;
+  border-bottom: 3px solid #0d355c !important;
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 9999 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22) !important;
+  touch-action: pan-x !important;
 }
 
 .nav-strip-inner {
@@ -1867,9 +1870,15 @@ body {
 /* Tablet & Mobile Nav Scroll (Swipe Navigation) */
 @media (max-width: 992px) {
   #navigation {
+    position: -webkit-sticky !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 9999 !important;
     overflow-x: auto !important;
     -webkit-overflow-scrolling: touch !important;
     scrollbar-width: none !important;
+    touch-action: pan-x !important;
+    overscroll-behavior-x: contain !important;
   }
   #navigation::-webkit-scrollbar {
     display: none !important;
