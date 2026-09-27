@@ -12,8 +12,165 @@
      ========================================================================= */
   const PKSK_ESSAY_TOPICS = [
   {
-    "id": "TOPIC_1",
-    "title": "Kepentingan Integriti dan Disiplin Kendiri dalam Membentuk Modal Insan Unggul",
+    "id": "TOPIC_BULI_1",
+    "theme": "Buli di Sekolah & Asrama",
+    "title": "Peranan Rakan Sebaya dalam Membanteras Gejala Buli di Sekolah dan Asrama",
+    "prompt": "Kejadian buli sering berlaku di luar pengawasan guru sama ada di dalam bilik darjah mahupun asrama. Huraikan peranan anda dan rakan sebaya dalam mencegah perbuatan buli dan membantu mangsa yang ditindas. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Berani menegur perbuatan buli secara berhemah",
+      "Segera laporkan insiden kepada guru atau warden",
+      "Beri sokongan emosi dan dampingi mangsa buli",
+      "Jangan jadi penonton yang menyokong pembuli",
+      "Sebarkan kempen sifar buli di kelas dan asrama"
+    ]
+  },
+  {
+    "id": "TOPIC_BULI_2",
+    "theme": "Buli di Sekolah & Asrama",
+    "title": "Kesan Buruk Perbuatan Buli Terhadap Murid dan Langkah Menanganinya",
+    "prompt": "Buli lisan, fizikal, dan pemencilan rakan boleh mendatangkan trauma yang mendalam kepada mangsa. Jelaskan kesan buruk perbuatan buli terhadap emosi serta pelajaran mangsa, berserta langkah berkesan bagi menghentikannya. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Mangsa mengalami tekanan emosi dan kemurungan",
+      "Prestasi akademik merosot akibat hilang tumpuan",
+      "Wujudkan saluran aduan rahsia dan sesi kaunseling",
+      "Tindakan disiplin tegas kepada murid yang membuli",
+      "Anjurkan program kesedaran empati dan kasih sayang"
+    ]
+  },
+  {
+    "id": "TOPIC_BULI_3",
+    "theme": "Buli di Sekolah & Asrama",
+    "title": "Memupuk Budaya Kasih Sayang demi Mewujudkan Sekolah yang Selamat Tanpa Buli",
+    "prompt": "Suasana sekolah yang harmoni bermula daripada amalan saling menghormati antara murid senior dengan murid baharu. Bincangkan amalan murni yang wajar disemai bagi menghapuskan budaya buli dalam kalangan warga sekolah. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Layan murid baharu seperti saudara kandung sendiri",
+      "Elakkan kata-kata ejekan atau panggilan mengaibkan",
+      "Amalkan budaya bersalaman dan bertanya khabar",
+      "Jayakan program mentor-mentee antara senior dan junior",
+      "Semaikan nilai hormat-menghormati tanpa mengira umur"
+    ]
+  },
+  {
+    "id": "TOPIC_KOAKAD_1",
+    "theme": "Ko-Akademik",
+    "title": "Faedah Menyertai Pertandingan Debat dan Pidato dalam Membina Keyakinan Diri",
+    "prompt": "Aktiviti pengucapan awam seperti bahas, pidato, dan syarahan melatih murid berkomunikasi dengan lancar dan berani. Jelaskan kebaikan menyertai aktiviti ko-akademik ini dalam membentuk personaliti murid cemerlang. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Asah keberanian berucap di hadapan khalayak ramai",
+      "Latih minda berfikir pantas, kritis dan bernas",
+      "Tingkatkan kelancaran tatabahasa dan sebutan Melayu baku",
+      "Susun hujah secara teratur berlandaskan fakta kukuh",
+      "Bina daya kepimpinan dan kematangan bersuara"
+    ]
+  },
+  {
+    "id": "TOPIC_KOAKAD_2",
+    "theme": "Ko-Akademik",
+    "title": "Kepentingan Menyertai Aktiviti Sastera Tradisional Seperti Pantun dan Syair di Sekolah",
+    "prompt": "Warisan puisi tradisional Melayu seperti pantun dan syair mengandungi nilai estetika serta ketinggian budi pekerti. Huraikan faedah yang diperoleh murid apabila aktif dalam pertandingan berbalas pantun atau mendeklamasikan syair. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Pupuk rasa cinta mendalam terhadap bahasa kebangsaan",
+      "Pelihara keindahan warisan sastera dan puisi Melayu",
+      "Luaskan kosa kata indah dan kiasan bahasa tinggi",
+      "Asah daya kreativiti mengarang rangkap secara spontan",
+      "Membina disiplin intonasi, jeda dan sebutan baku"
+    ]
+  },
+  {
+    "id": "TOPIC_KOAKAD_3",
+    "theme": "Ko-Akademik",
+    "title": "Kebaikan Menyertai Kuiz Akademik dan Sayembara Ilmu di Peringkat Sekolah",
+    "prompt": "Pertandingan kuiz sains, matematik, sejarah, dan bahasa sering diadakan di sekolah untuk menguji minda murid. Bincangkan bagaimana penyertaan dalam kuiz akademik mampu melonjakkan prestasi pembelajaran anda. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Kukuhkan kefahaman topik pelajaran secara menyeronokkan",
+      "Luaskan pengetahuan am melangkaui buku teks sekolah",
+      "Latih kepantasan berfikir dan membuat keputusan tepat",
+      "Pupuk semangat persaingan sihat antara rakan sebaya",
+      "Semai tabiat rajin membaca dan meneroka fakta baharu"
+    ]
+  },
+  {
+    "id": "TOPIC_KOKU_1",
+    "theme": "Kokurikulum & Badan Beruniform",
+    "title": "Faedah Latihan Kawad Kaki Pasukan Beruniform dalam Membentuk Disiplin Diri",
+    "prompt": "Aktiviti kawad kaki merupakan elemen penting dalam unit beruniform seperti Kadet Remaja Sekolah, Pengakap, dan Pandu Puteri. Huraikan bagaimana latihan kawad kaki berupaya melatih ketahanan fizikal dan disiplin diri murid. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Didik sikap patuh kepada arahan ketua platun",
+      "Latih ketepatan masa dan ketelitian kekemasan diri",
+      "Bina semangat kerjasama sepasukan demi keseragaman gerak",
+      "Tingkatkan ketahanan fizikal dan kesabaran di bawah panas",
+      "Semai semangat patriotik dan kecintaan kepada negara"
+    ]
+  },
+  {
+    "id": "TOPIC_KOKU_2",
+    "theme": "Kokurikulum & Badan Beruniform",
+    "title": "Pengalaman Berharga Menyertai Perkhemahan Unit Beruniform di Luar Bilik Darjah",
+    "prompt": "Aktiviti perkhemahan tahunan memberi peluang kepada murid untuk belajar hidup berdikari, menyelesaikan masalah, dan bekerjasama dalam pasukan. Ceritakan faedah dan kemahiran ikhtiar hidup yang diperoleh daripada aktiviti perkhemahan. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Latih diri berdikari tanpa bergantung pada ibu bapa",
+      "Kuasai kemahiran ikhtiar hidup seperti memasang khemah",
+      "Pupuk sifat tolong-menolong semasa memasak dan bertugas",
+      "Eratkan hubungan silaturahim antara ahli kumpulan",
+      "Uji keberanian dan ketahanan mental hadapi cabaran"
+    ]
+  },
+  {
+    "id": "TOPIC_KOKU_3",
+    "theme": "Kokurikulum & Sukan",
+    "title": "Kebaikan Penglibatan Aktif dalam Bidang Sukan untuk Kesihatan dan Perpaduan Murid",
+    "prompt": "Penglibatan aktif dalam aktiviti sukan seperti bola sepak, badminton, dan olahraga membawa impak positif kepada tubuh badan serta menyatukan murid. Bincangkan kebaikan menyertai aktiviti sukan di sekolah. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Cergaskan fizikal dan hindari masalah obesiti murid",
+      "Kurangkan tekanan belajar dan segarkan semula minda",
+      "Pupuk semangat kesukanan dan redha menerima kekalahan",
+      "Jalin perpaduan erat bersama rakan berbilang kaum",
+      "Buka peluang mengharumkan nama sekolah dan negeri"
+    ]
+  },
+  {
+    "id": "TOPIC_TEKNO_1",
+    "theme": "Teknologi & Media Digital",
+    "title": "Kebaikan dan Keburukan Penggunaan Kecerdasan Buatan (AI) dalam Pembelajaran Murid",
+    "prompt": "Kecerdasan Buatan (AI) kini semakin banyak digunakan oleh murid untuk mencari maklumat dan membuat kerja sekolah. Huraikan kebaikan dan keburukan penggunaan AI oleh murid sekolah, berserta cara menggunakannya secara bijak. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Kebaikan: Bertindak sebagai tutor peribadi membantu topik sukar",
+      "Kebaikan: Menjimatkan masa mencari idea dan rujukan tambahan",
+      "Keburukan: Menyebabkan murid malas berfikir dan hilang daya kritis",
+      "Keburukan: Risiko menyalin jawapan bulat-bulat tanpa pemahaman",
+      "Gunakan AI secara berhemah sebagai alat bantuan pembelajaran"
+    ]
+  },
+  {
+    "id": "TOPIC_TEKNO_2",
+    "theme": "Teknologi & Media Digital",
+    "title": "Kebaikan dan Keburukan Penggunaan Media Sosial dalam Kalangan Murid Remaja",
+    "prompt": "Platform media sosial seperti TikTok, Instagram, dan YouTube amat digemari oleh murid sekolah untuk berhibur dan berinteraksi. Bincangkan kebaikan dan keburukan penggunaan media sosial dalam kehidupan seharian anda. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Kebaikan: Berhubung dengan rakan dan berkongsi nota pelajaran",
+      "Kebaikan: Mengetahui perkembangan berita dan maklumat terkini",
+      "Keburukan: Pembaziran masa dan risiko ketagihan skrin gajet",
+      "Keburukan: Terdedah kepada gejala buli siber dan berita palsu",
+      "Urus waktu dengan berdisiplin dan tapis kandungan ditonton"
+    ]
+  },
+  {
+    "id": "TOPIC_TEKNO_3",
+    "theme": "Teknologi & Media Digital",
+    "title": "Langkah-Langkah Menggunakan Gajet dan Internet Secara Berhemah demi Masa Depan Murid",
+    "prompt": "Kemudahan telefon pintar dan internet boleh menjadi aset berguna atau punca kelalaian murid bergantung pada cara penggunaannya. Jelaskan cara-cara anda memanfaatkan internet dan peranti pintar secara positif demi kecemerlangan diri. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Tetapkan jadual harian penggunaan gajet secara tegas",
+      "Layari laman pembelajaran dan saluran video pendidikan",
+      "Pelihara adab kesopanan dan elakkan bahasa kasar di maya",
+      "Seimbangkan aktiviti fizikal luar dengan waktu skrin",
+      "Lindungi maklumat peribadi daripada disalah guna pihak luar"
+    ]
+  },
+  {
+    "id": "TOPIC_TERAS_1",
+    "theme": "Integriti & Kepimpinan",
+    "title": "Kepentingan Integriti dan Disiplin Kendiri dalam Membentuk Murid Cemerlang",
     "prompt": "Tulis sebuah karangan berpandu mengenai bagaimana nilai amanah, kejujuran, dan resiliensi mampu membentuk kepimpinan murid cemerlang di sekolah berasrama penuh. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
     "defaultIdeas": [
       "Amalkan sikap amanah dan jujur dalam akademik",
@@ -24,47 +181,38 @@
     ]
   },
   {
-    "id": "TOPIC_2",
-    "title": "Peranan Kecerdasan Buatan (AI) dan Teknologi Digital dalam Pendidikan Abad Ke-21",
-    "prompt": "Huraikan bagaimana teknologi digital dan kecerdasan buatan dapat dimanfaatkan oleh murid secara berhemah untuk meningkatkan pencapaian akademik serta inovasi sains. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
-    "defaultIdeas": [
-      "Manfaatkan AI sebagai tutor pembelajaran kendiri",
-      "Akses sumber rujukan dan nota ilmiah dengan pantas",
-      "Praktikkan etika digital tanpa melakukan plagiarisme",
-      "Asah pemikiran kritis dan jangan bergantung penuh pada AI",
-      "Hasilkan projek reka cipta dan inovasi sains"
-    ]
-  },
-  {
-    "id": "TOPIC_3",
+    "id": "TOPIC_TERAS_2",
+    "theme": "Kelestarian Alam Sekitar",
     "title": "Tanggungjawab Generasi Muda dalam Menangani Perubahan Iklim dan Kelestarian Alam",
     "prompt": "Bincangkan peranan murid dan institusi sekolah dalam memupuk amalan hijau, kitar semula, dan penjimatan tenaga demi memelihara bumi untuk masa hadapan. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
     "defaultIdeas": [
       "Amalkan kitar semula dan kurangkan penggunaan plastik",
       "Jimatkan penggunaan elektrik dan air di sekolah",
-      "Tanam pokok untuk menghijaukan persekitaran asrama",
-      "Sebar kesedaran pemanasan global di media sosial",
+      "Tanam pokok untuk menghijaukan persekitaran sekolah",
+      "Sebar kesedaran pemanasan global kepada rakan sebaya",
       "Sertai aktiviti gotong-royong membersihkan kawasan sekitar"
     ]
   },
   {
-    "id": "TOPIC_4",
-    "title": "Kepentingan Gaya Hidup Sihat dan Kesejahteraan Emosi Pelajar Asrama",
-    "prompt": "Jelaskan cara-cara mengekalkan kesihatan fizikal yang cergas dan menguruskan tekanan emosi secara positif dalam suasana pembelajaran yang kompetitif. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "id": "TOPIC_TERAS_3",
+    "theme": "Kesejahteraan Emosi & Sahsiah",
+    "title": "Kepentingan Gaya Hidup Sihat dan Pengurusan Emosi Murid di Asrama",
+    "prompt": "Jelaskan cara-cara mengekalkan kesihatan fizikal yang cergas dan menguruskan tekanan emosi secara positif dalam suasana pembelajaran sekolah berasrama. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
     "defaultIdeas": [
       "Amalkan pemakanan seimbang dan minum air secukupnya",
-      "Dapatkan tidur dan rehat yang berkualiti",
-      "Bersukan pada waktu petang untuk kekal cergas",
-      "Kongsi masalah emosi bersama rakan dan kaunselor",
+      "Dapatkan tidur dan rehat yang berkualiti setiap malam",
+      "Bersukan pada waktu petang untuk kekal aktif",
+      "Kongsi masalah emosi bersama rakan dan guru kaunseling",
       "Rancang jadual mengulang kaji tanpa tekanan melampau"
     ]
   },
   {
-    "id": "TOPIC_5",
+    "id": "TOPIC_TERAS_4",
+    "theme": "Perpaduan Nasional",
     "title": "Perpaduan Kaum sebagai Teras Keharmonian dan Kemakmuran Negara",
     "prompt": "Ulas bagaimana aktiviti kokurikulum, sukan, dan kemasyarakatan di sekolah berupaya merapatkan hubungan antara kaum serta menyemarakkan semangat cintakan tanah air. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
     "defaultIdeas": [
-      "Pupuk semangat perpaduan antara murid pelbagai kaum",
+      "Pupuk semangat muhibah antara murid pelbagai kaum",
       "Gunakan bahasa kebangsaan sebagai alat komunikasi utama",
       "Hormati kepelbagaian budaya, adat resam, dan perayaan",
       "Bekerjasama dalam pasukan tanpa mengira latar belakang",
@@ -72,32 +220,9 @@
     ]
   },
   {
-    "id": "TOPIC_6",
-    "title": "Etika Penggunaan Media Sosial dan Pencegahan Buli Siber dalam Kalangan Remaja",
-    "prompt": "Tulis pandangan anda mengenai adab berkomunikasi di alam maya dan langkah-langkah proaktif untuk membendung gejala buli siber dalam kalangan remaja. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
-    "defaultIdeas": [
-      "Berfikir secara matang sebelum memuat naik hantaran",
-      "Gunakan bahasa sopan dan elakkan kata-kata kesat",
-      "Sahkan kesahihan berita sebelum menyebarkan maklumat",
-      "Lindungi privasi dan keselamatan data peribadi",
-      "Laporkan segera sebarang insiden buli siber"
-    ]
-  },
-  {
-    "id": "TOPIC_7",
-    "title": "Semangat Kesukarelawanan dalam Mempupuk Sifat Empati dan Ihsan Murid",
-    "prompt": "Huraikan faedah melibatkan diri dalam khidmat masyarakat dan bantuan bencana kepada pembentukan sahsiah murid yang prihatin serta berjiwa besar. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
-    "defaultIdeas": [
-      "Sertai misi bantuan mangsa bencana alam",
-      "Santuni anak yatim dan warga emas di pusat kebajikan",
-      "Hulurkan bantuan tenaga kepada golongan memerlukan",
-      "Semai rasa empati dan syukur dalam sanubari",
-      "Ikhlas berbakti tanpa mengharapkan ganjaran kebendaan"
-    ]
-  },
-  {
-    "id": "TOPIC_8",
-    "title": "Amalan Menabung dan Pengurusan Kewangan Bijak Sejak di Bangku Sekolah",
+    "id": "TOPIC_TERAS_5",
+    "theme": "Kewangan Berhemat",
+    "title": "Amalan Menabung dan Pengurusan Wang Saku Bijak Sejak di Bangku Sekolah",
     "prompt": "Bincangkan kepentingan memupuk tabiat berjimat cermat, merancang perbelanjaan harian, dan menghargai titik peluh ibu bapa demi masa depan yang terjamin. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
     "defaultIdeas": [
       "Simpan sebahagian wang saku harian secara konsisten",
@@ -108,27 +233,68 @@
     ]
   },
   {
-    "id": "TOPIC_9",
-    "title": "Pemupukan Minat Terhadap Bidang Sains, Matematik dan Inovasi Robotik (STEM)",
-    "prompt": "Jelaskan bagaimana minat terhadap sains, reka cipta, dan pemikiran logik mampu melahirkan generasi inovator muda yang berdaya saing di peringkat antarabangsa. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
-    "defaultIdeas": [
-      "Sertai amali sains dan bengkel inovasi di sekolah",
-      "Pelajari asas pengekodan komputer dan robotik",
-      "Ambil bahagian dalam pertandingan reka cipta STEM",
-      "Aplikasikan teori sains untuk selesaikan masalah harian",
-      "Kikis tanggapan bahawa subjek STEM sukar dipelajari"
-    ]
-  },
-  {
-    "id": "TOPIC_10",
+    "id": "TOPIC_TERAS_6",
+    "theme": "Patriotisme & Jati Diri",
     "title": "Menghayati Sejarah Kemerdekaan dan Mempertahankan Kedaulatan Negara",
     "prompt": "Tulis refleksi anda mengenai kepentingan menghayati erti kemerdekaan, menghormati lambang kebesaran negara, dan mengekalkan jati diri warisan bangsa Malaysia. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
     "defaultIdeas": [
       "Hayati pengorbanan pejuang terdahulu membebaskan tanah air",
       "Hormati lagu Negaraku dan kibarkan Jalur Gemilang",
-      "Pertahankan maruah dan imej baik negara",
+      "Pertahankan maruah dan imej baik negara di mana-mana",
       "Ambil iktibar daripada peristiwa bersejarah negara",
-      "Bersatu hati mempertahankan kedaulatan negara"
+      "Bersatu hati mempertahankan keamanan dan kedaulatan tanah air"
+    ]
+  },
+  {
+    "id": "TOPIC_PADU_1",
+    "theme": "Perpaduan & Hari Kebangsaan",
+    "title": "Peranan Sambutan Bulan Kemerdekaan di Sekolah dalam Menyemarakkan Semangat Perpaduan Kaum",
+    "prompt": "Sambutan Bulan Kebangsaan pada setiap bulan Ogos dan September sering dimeriahkan dengan kibaran Jalur Gemilang, perarakan, dan pertandingan lagu patriotik di sekolah. Huraikan bagaimana aktiviti sambutan Hari Kebangsaan berupaya merapatkan hubungan antara murid pelbagai kaum serta menyemai rasa cinta akan tanah air. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Sertai perarakan dan nyanyian lagu patriotik bersama-sama",
+      "Kibarkan Jalur Gemilang dengan megah dan bangga",
+      "Hayati pengorbanan pejuang kemerdekaan pelbagai keturunan",
+      "Bekerjasama menghias kelas berunsurkan tema kemerdekaan",
+      "Pupuk rasa bangga menjadi warganegara Malaysia berdaulat"
+    ]
+  },
+  {
+    "id": "TOPIC_PADU_2",
+    "theme": "Perpaduan & Hari Malaysia",
+    "title": "Kepentingan Menghayati Erti Sambutan Hari Malaysia bagi Mengeratkan Silaturahim Semenanjung, Sabah dan Sarawak",
+    "prompt": "Sambutan Hari Malaysia pada 16 September memperingati penyatuan Semenanjung Tanah Melayu, Sabah, dan Sarawak membentuk Malaysia yang tercinta. Bincangkan bagaimana murid dapat menghayati keunikan kepelbagaian etnik, budaya, dan bahasa rakyat di ketiga-tiga wilayah ini demi memperkukuh integrasi nasional. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Pelajari keunikan budaya etnik Sabah dan Sarawak",
+      "Hormati adat resam dan perayaan rakan berlainan negeri",
+      "Eratkan persaudaraan merentas Semenanjung, Sabah dan Sarawak",
+      "Hayati sejarah penubuhan Persekutuan Malaysia 16 September",
+      "Kikis prejudis wilayah demi pembentukan Bangsa Malaysia utuh"
+    ]
+  },
+  {
+    "id": "TOPIC_PADU_3",
+    "theme": "Perpaduan & Integrasi Budaya",
+    "title": "Amalan Rumah Terbuka dan Sambutan Perayaan Pelbagai Kaum sebagai Wadah Perpaduan Murid",
+    "prompt": "Di Malaysia, perayaan seperti Hari Raya Aidilfitri, Tahun Baharu Cina, Deepavali, Pesta Kaamatan, dan Hari Gawai disambut bersama-sama dalam suasana harmoni. Jelaskan bagaimana amalan kunjung-mengunjungi dan sambutan perayaan di sekolah atau komuniti dapat mengukuhkan tali persahabatan antara murid berbilang bangsa. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Kunjung-mengunjungi rumah rakan semasa musim perayaan",
+      "Nikmati juadah tradisional kaum lain dengan penuh adab",
+      "Amalkan sikap saling memahami dan menghormati perbezaan",
+      "Sertai sambutan hari perayaan peringkat sekolah secara muhibah",
+      "Pupuk sikap toleransi dan tolak sentimen perkauman sempit"
+    ]
+  },
+  {
+    "id": "TOPIC_PADU_4",
+    "theme": "Perpaduan & Nilai Kemasyarakatan",
+    "title": "Semangat Gotong-Royong dan Kerjasama Pelbagai Kaum di Sekolah demi Kesejahteraan Bersama",
+    "prompt": "Pepatah Melayu ada menyatakan 'berat sama dipikul, ringan sama dijinjing'. Huraikan bagaimana aktiviti gotong-royong membersihkan sekolah dan kerjasama dalam tugasan berkumpulan mampu mengeratkan perpaduan serta memupuk sifat empati dalam kalangan murid 12-13 tahun. Panjang karangan hendaklah tidak kurang daripada 100 patah perkataan.",
+    "defaultIdeas": [
+      "Bekerjasama membersihkan kawasan sekolah tanpa memilih rakan",
+      "Kongsi tugasan kumpulan secara adil dan toleransi",
+      "Gunakan bahasa kebangsaan untuk berkomunikasi dengan mesra",
+      "Hulurkan bantuan kepada rakan yang menghadapi kesukaran",
+      "Hayati amalan berat sama dipikul ringan sama dijinjing"
     ]
   }
 ];
@@ -254,6 +420,7 @@
 
     // Essay View (Bahagian C)
     dispEssayTitle: document.getElementById('dispEssayTitle'),
+    dispEssayThemeBadge: document.getElementById('dispEssayThemeBadge'),
     dispEssayPrompt: document.getElementById('dispEssayPrompt'),
     btnShuffleEssayTopic: document.getElementById('btnShuffleEssayTopic'),
     inputEssayText: document.getElementById('inputEssayText'),
@@ -796,6 +963,14 @@
       dom.dispEssayPrompt.style.opacity = '0';
       setTimeout(() => {
         dom.dispEssayTitle.textContent = state.essayTopic.title;
+        if (dom.dispEssayThemeBadge) {
+          if (state.essayTopic.theme) {
+            dom.dispEssayThemeBadge.textContent = state.essayTopic.theme;
+            dom.dispEssayThemeBadge.style.display = 'inline-block';
+          } else {
+            dom.dispEssayThemeBadge.style.display = 'none';
+          }
+        }
         dom.dispEssayPrompt.innerHTML = `${state.essayTopic.prompt.replace(/tidak kurang daripada 100 patah perkataan/g, '<strong>tidak kurang daripada 100 patah perkataan</strong>')}`;
         dom.dispEssayTitle.style.opacity = '1';
         dom.dispEssayPrompt.style.opacity = '1';
@@ -1351,26 +1526,31 @@ Stimulus: "${topic.prompt}"`;
     }
 
     const systemInstruction = `Anda ialah Pemeriksa Kanan Rasmi Lembaga Peperiksaan Malaysia bagi Pentaksiran Kemasukan Sekolah Khusus (PKSK) Tingkatan 1 (Bahagian C: Artikulasi Penulisan - Wajaran 10 Markah).
-Nilai karangan calon dengan KRITIKAL, ADIL, TELITI dan PADAT mengikut 4 kriteria Rubrik Rasmi KPM:
+Sasaran Calon: Murid Tahun 6 (Umur 12-13 Tahun) yang memohon kemasukan ke Sekolah Berasrama Penuh (SBP) / Maktab Rendah Sains MARA (MRSM).
+Nilai karangan calon dengan KRITIKAL, ADIL, TELITI dan BERPANDUKAN standard bahasa Melayu Baku KPM & Tatabahasa Dewan DBP mengikut 4 kriteria Rubrik Rasmi LPM:
 1. Idea, Hujah & Kematangan Isi (Maksimum 3.0 markah)
-2. Bahasa, Ejaan, Tatabahasa & Kosa Kata (Maksimum 3.0 markah)
+   - Kebolehan membina dan menghuraikan idea berkaitan isu soalan (cth: buli, ko-akademik, kokurikulum, teknologi, atau perpaduan, Hari Kebangsaan & Hari Malaysia) secara logik, matang, dan bersesuaian dengan aras murid 12-13 tahun.
+2. Bahasa, Ejaan, Tatabahasa Melayu Baku & Kosa Kata (Maksimum 3.0 markah)
+   - Mematuhi hukum Tatabahasa Dewan DBP: ketepatan imbuhan awalan/akhiran/apitan (cth: memperoleh bukan memperolehi), ejaan perkataan baku, struktur frasa/ayat majmuk berwacana, tanda baca yang betul, serta pengelakan bahasa slanga, dialek rojak, atau singkatan media sosial.
 3. Struktur, Koheren & Format Karangan (Maksimum 2.0 markah)
+   - Perengganan yang seimbang dan kemas (Pendahuluan, Isi-isi penting, Penutup), disulami penanda wacana yang tepat dan bertaut lancar antara ayat.
 4. Nilai Murni, Pengajaran & Pemikiran Kritis KBAT (Maksimum 2.0 markah)
+   - Penerapan nilai murni kemanusiaan, empati, disiplin, jati diri, serta daya pemikiran kritis dalam mencadangkan solusi praktikal.
 
-ARAHAN KHAS: Beri ulasan padat, tajam dan berwibawa (1-2 ayat ringkas dan berimpak bagi setiap kriteria).
+ARAHAN KHAS: Beri ulasan padat, tajam dan berwibawa (1-2 ayat ringkas dan berimpak bagi setiap kriteria). Pada bahagian 'kelemahan_tatabahasa', nyatakan secara spesifik kesilapan ejaan, imbuhan atau hukum tatabahasa jika ada untuk bimbingan calon.
 PENTING: Pulangkan jawapan dalam format JSON SAHAJA tanpa sebarang teks penjelasan lain di luar JSON:
 {
   "skor_keseluruhan": 7.5,
   "band": "Band 4 (Kepujian)",
   "kriteria": {
-    "idea": { "skor": 2.3, "max": 3.0, "ulasan": "Idea relevan dengan tema namun hujah memerlukan kupasan lebih matang." },
-    "bahasa": { "skor": 2.2, "max": 3.0, "ulasan": "Tatabahasa baik dan ayat lancar, perbanyakkan kosa kata luas." },
-    "struktur": { "skor": 1.5, "max": 2.0, "ulasan": "Perenggan dan wacana tersusun dengan pendahuluan serta penutup." },
-    "nilai_kbat": { "skor": 1.5, "max": 2.0, "ulasan": "Penerapan nilai murni wujud dan bersesuaian dengan situasi harian." }
+    "idea": { "skor": 2.3, "max": 3.0, "ulasan": "Idea relevan dengan tema namun hujah memerlukan kupasan dan contoh konkrit." },
+    "bahasa": { "skor": 2.2, "max": 3.0, "ulasan": "Bahasa Melayu baku dikuasai dengan baik, perhatikan ketepatan imbuhan dan ejaan perkataan majmuk." },
+    "struktur": { "skor": 1.5, "max": 2.0, "ulasan": "Perenggan dan wacana tersusun dengan pendahuluan serta penutup yang seimbang." },
+    "nilai_kbat": { "skor": 1.5, "max": 2.0, "ulasan": "Penerapan nilai murni wujud dan bersesuaian dengan situasi harian murid." }
   },
   "kekuatan": ["Idea berkembang secara logik", "Kosa kata bersesuaian"],
-  "kelemahan_tatabahasa": ["Variasi struktur ayat boleh ditingkatkan"],
-  "cadangan_penambahbaikan": ["Selitkan peribahasa dan contoh konkrit"],
+  "kelemahan_tatabahasa": ["Variasi struktur ayat boleh ditingkatkan", "Semak ketepatan ejaan kata pinjaman"],
+  "cadangan_penambahbaikan": ["Selitkan peribahasa bersesuaian dan contoh situasi harian"],
   "rumusan_keseluruhan": "Karangan baik dan menepati format asas kemasukan SBP/MRSM."
 }`;
 
