@@ -3079,6 +3079,95 @@ Wajib sediakan JSON SAHAJA mengikut skema:
   }
 
   /* =========================================================================
+     USER PROFILE DROPDOWN & LOGOUT HANDLER
+     ========================================================================= */
+  function toggleUserDropdown() {
+    const dropdown = document.getElementById('userProfileDropdown');
+    if (!dropdown) return;
+    const isHidden = dropdown.style.display === 'none' || dropdown.classList.contains('hidden');
+    if (isHidden) {
+      openUserDropdown();
+    } else {
+      closeUserDropdown();
+    }
+  }
+
+  function openUserDropdown() {
+    const dropdown = document.getElementById('userProfileDropdown');
+    if (!dropdown) return;
+
+    const nameEl = document.getElementById('dropdownUserName');
+    const emailEl = document.getElementById('dropdownUserEmail');
+    const badgeEl = document.getElementById('dropdownUserBadge');
+    const avatarEl = document.getElementById('dropdownUserAvatar');
+
+    const googleUser = window.PkskLicense ? window.PkskLicense.getGoogleUser() : null;
+    const trial = window.PkskLicense ? window.PkskLicense.getTrialStatus() : null;
+    const isAct = window.PkskLicense && window.PkskLicense.isActivated();
+
+    const currentName = (googleUser?.full_name || state.candidate.name || 'CALON PKSK').toUpperCase();
+    const currentEmail = googleUser?.email || state.candidate.ic || 'calon@pksk.my';
+
+    if (nameEl) nameEl.textContent = currentName;
+    if (emailEl) emailEl.textContent = currentEmail;
+
+    if (avatarEl) {
+      if (googleUser?.avatar_url) {
+        avatarEl.innerHTML = `<img src="${googleUser.avatar_url}" alt="Google Avatar">`;
+      } else {
+        avatarEl.innerHTML = `<i class="fa-solid fa-user"></i>`;
+      }
+    }
+
+    if (badgeEl) {
+      if (isAct) {
+        badgeEl.innerHTML = `<i class="fa-solid fa-shield-halved" style="color:#10b981;"></i> Lesen Aktif (6 Bulan)`;
+        badgeEl.style.background = '#ecfdf5';
+        badgeEl.style.color = '#065f46';
+      } else if (trial && !trial.isExpired) {
+        badgeEl.innerHTML = `<i class="fa-solid fa-clock" style="color:#0284c7;"></i> Percubaan (${trial.remainingText})`;
+        badgeEl.style.background = '#e0f2fe';
+        badgeEl.style.color = '#0369a1';
+      } else {
+        badgeEl.innerHTML = `<i class="fa-solid fa-lock" style="color:#dc2626;"></i> Percubaan 2 Jam Tamat`;
+        badgeEl.style.background = '#fef2f2';
+        badgeEl.style.color = '#b91c1c';
+      }
+    }
+
+    dropdown.style.display = 'block';
+    dropdown.classList.remove('hidden');
+  }
+
+  function closeUserDropdown() {
+    const dropdown = document.getElementById('userProfileDropdown');
+    if (dropdown) {
+      dropdown.style.display = 'none';
+      dropdown.classList.add('hidden');
+    }
+  }
+
+  function handleSignOutClick() {
+    if (confirm('Adakah anda pasti ingin log keluar dari akaun ini?')) {
+      if (window.PkskLicense && typeof window.PkskLicense.signOutGoogle === 'function') {
+        window.PkskLicense.signOutGoogle();
+      }
+      localStorage.removeItem('pksk_google_user');
+      localStorage.removeItem('pksk_saved_user');
+      state.candidate.name = 'CALON PKSK';
+      state.candidate.ic = '';
+      if (dom.dispCandidateName) dom.dispCandidateName.textContent = 'CALON PKSK';
+      if (dom.userAvatarContainer) {
+        dom.userAvatarContainer.innerHTML = '<i class="fa-solid fa-user" id="userAvatarDefaultIcon"></i>';
+      }
+      closeUserDropdown();
+      updateLicenseBadgeUI();
+      switchView('LOGIN');
+      alert('Anda telah berjaya log keluar.');
+    }
+  }
+
+  /* =========================================================================
      12. EVENT LISTENERS INITIALIZATION
      ========================================================================= */
   function initEventListeners() {
@@ -3538,26 +3627,59 @@ Wajib sediakan JSON SAHAJA mengikut skema:
       };
     }
 
-    // User Avatar / Profile Click Handler
+    // User Avatar / Profile Click Handler (Buka Dropdown Menu Profil & Log Keluar)
     if (dom.userAvatarContainer) {
-      dom.userAvatarContainer.onclick = () => {
-        if (window.PkskLicense && window.PkskLicense.isActivated()) {
-          const sess = window.PkskLicense.getLicenseSession();
-          if (sess && sess.is_gmail_auth) {
-            if (confirm(`Akaun Semasa: ${sess.activated_by_name} (${sess.email})
+      dom.userAvatarContainer.onclick = (e) => {
+        e.stopPropagation();
+        toggleUserDropdown();
+      };
+    }
 
-Adakah anda ingin log keluar daripada sesi Google ini?`)) {
-              window.PkskLicense.signOutGoogle();
-              updateLicenseBadgeUI();
-              alert('Anda telah berjaya log keluar dari sesi Google.');
-              location.reload();
-            }
-            return;
-          }
-        }
+    // Link Hero -> Buka Kad Log Masuk IC manual
+    const linkSwitchToIc = document.getElementById('linkSwitchToIcLogin');
+    if (linkSwitchToIc) {
+      linkSwitchToIc.onclick = (e) => {
+        e.preventDefault();
+        setPhysflixLoginForm(true);
+      };
+    }
+
+    // Dropdown Items
+    const btnDropDash = document.getElementById('dropdownBtnDashboard');
+    if (btnDropDash) {
+      btnDropDash.onclick = () => {
+        closeUserDropdown();
+        switchView('DASHBOARD');
+      };
+    }
+
+    const btnDropLicense = document.getElementById('dropdownBtnLicense');
+    if (btnDropLicense) {
+      btnDropLicense.onclick = () => {
+        closeUserDropdown();
         openActivationModal();
       };
     }
+
+    const btnDropLogout = document.getElementById('dropdownBtnLogout');
+    if (btnDropLogout) {
+      btnDropLogout.onclick = handleSignOutClick;
+    }
+
+    // Tutup dropdown apabila klik di luar atau tekan Escape
+    document.addEventListener('click', (e) => {
+      const dropdown = document.getElementById('userProfileDropdown');
+      const avatar = document.getElementById('userAvatarContainer');
+      if (!dropdown || dropdown.style.display === 'none') return;
+      if (avatar && avatar.contains(e.target)) return;
+      if (!dropdown.contains(e.target)) {
+        closeUserDropdown();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeUserDropdown();
+    });
 
     // Aktifkan Langganan Perubahan Status Auth Supabase
     if (window.PkskLicense && typeof window.PkskLicense.initAuthListener === 'function') {

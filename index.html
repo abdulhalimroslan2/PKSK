@@ -81,8 +81,51 @@
           <button id="licenseStatusBadge" class="license-status-pill" type="button" title="Status Lesen & Tempoh Percubaan" style="cursor:pointer; display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:20px; font-size:12px; font-weight:700; border:1px solid #7dd3fc; background:#e0f2fe; color:#0369a1; transition:all 0.2s ease;">
             <span id="licenseStatusText"><i class="fa-solid fa-clock"></i> Percubaan Percuma</span>
           </button>
-          <div id="userAvatarContainer" title="Akaun & Pengesahan PKSK" style="width:46px; height:46px; min-width:46px; border-radius:50%; background:#f0f9ff; border:2px solid #0284c7; display:flex; align-items:center; justify-content:center; color:#0369a1; font-size:20px; box-shadow:0 2px 4px rgba(0,0,0,0.06); overflow:hidden; cursor:pointer;">
-            <i class="fa-solid fa-user" id="userAvatarDefaultIcon"></i>
+          <!-- User Avatar with Interactive Dropdown Menu -->
+          <div class="user-avatar-dropdown-wrap" id="userAvatarDropdownWrap" style="position:relative;">
+            <div id="userAvatarContainer" title="Akaun Calon & Tetapan (Klik untuk Menu Log Keluar)" style="width:46px; height:46px; min-width:46px; border-radius:50%; background:#f0f9ff; border:2px solid #0284c7; display:flex; align-items:center; justify-content:center; color:#0369a1; font-size:20px; box-shadow:0 2px 4px rgba(0,0,0,0.06); overflow:hidden; cursor:pointer;">
+              <i class="fa-solid fa-user" id="userAvatarDefaultIcon"></i>
+            </div>
+
+            <!-- Dropdown Menu Profil & Log Keluar -->
+            <div id="userProfileDropdown" class="user-profile-dropdown" style="display:none;">
+              <div class="user-dropdown-header">
+                <div class="user-dropdown-avatar" id="dropdownUserAvatar">
+                  <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="user-dropdown-meta">
+                  <div class="user-dropdown-name" id="dropdownUserName">CALON PKSK</div>
+                  <div class="user-dropdown-email" id="dropdownUserEmail">calon@gmail.com</div>
+                  <div class="user-dropdown-badge" id="dropdownUserBadge">
+                    <i class="fa-solid fa-clock"></i> Percubaan 2 Jam
+                  </div>
+                </div>
+              </div>
+
+              <div class="user-dropdown-menu">
+                <button type="button" class="user-dropdown-item" id="dropdownBtnDashboard">
+                  <i class="fa-solid fa-list-check" style="color:#0284c7;"></i>
+                  <span>Pilihan Mod Pentaksiran</span>
+                </button>
+                <button type="button" class="user-dropdown-item" id="dropdownBtnLicense">
+                  <i class="fa-solid fa-key" style="color:#d97706;"></i>
+                  <span>Status Lesen / Masukkan Key</span>
+                </button>
+                <a href="https://t.me/halimroslan" target="_blank" rel="noopener noreferrer" class="user-dropdown-item">
+                  <i class="fa-brands fa-telegram" style="color:#229ED9;"></i>
+                  <span>Hubungi Telegram @halimroslan</span>
+                </a>
+              </div>
+
+              <div class="user-dropdown-divider"></div>
+
+              <div class="user-dropdown-footer">
+                <button type="button" class="user-dropdown-item user-dropdown-logout" id="dropdownBtnLogout">
+                  <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                  <span>Log Keluar (Sign Out)</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -156,9 +199,7 @@
             <i class="fa-solid fa-globe"></i>
             <span>Bahasa Melayu</span>
           </div>
-          <button type="button" id="btnPhysflixHeaderToggle" class="physflix-btn-header-login">
-            <span>Log Masuk</span>
-          </button>
+
         </div>
       </div>
     </header>
@@ -182,14 +223,8 @@
           </p>
 
           <div class="physflix-hero-alt-actions" style="margin-top:2rem;">
-            <!-- Primary CTA Button: Log Masuk Calon -->
-            <button type="button" id="btnHeroLogMasuk" class="physflix-btn-hero-cta" style="width:100%; height:52px; font-size:1.05rem; justify-content:center; border-radius:10px;">
-              <span>Log Masuk Calon</span>
-              <i class="fa-solid fa-arrow-right"></i>
-            </button>
-
-            <!-- Google Login Direct Button -->
-            <button type="button" id="btnHeroGoogleSignIn" class="physflix-btn-hero-google">
+            <!-- Google Login Direct Button (Primary Call To Action) -->
+            <button type="button" id="btnHeroGoogleSignIn" class="physflix-btn-hero-google" style="width:100%; height:54px; font-size:1.08rem; justify-content:center; border-radius:12px; box-shadow:0 6px 20px rgba(66, 133, 244, 0.35);">
               <svg width="22" height="22" viewBox="0 0 24 24" class="physflix-google-icon">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -198,6 +233,13 @@
               </svg>
               <span>Log Masuk melalui Google</span>
             </button>
+
+            <!-- Subtle Link for Manual IC Login if preferred -->
+            <div style="margin-top:1.15rem; text-align:center;">
+              <a href="#" id="linkSwitchToIcLogin" class="physflix-link-ic-login">
+                Log masuk menggunakan No. Kad Pengenalan / MyKid
+              </a>
+            </div>
           </div>
 
           <div class="physflix-hero-features-bar">
@@ -308,28 +350,27 @@
        5. VIEW 1: CANDIDATE DASHBOARD & EXAM CONFIGURATION
        ========================================================================= -->
   <main id="dashboardView" class="app-viewport hidden">
-    <!-- Trial / License Status Notification Banner -->
-    <div id="trialStatusBanner" class="trial-status-banner" style="display:none;">
-      <div class="trial-banner-left">
-        <div class="trial-banner-icon" id="trialBannerIcon">
-          <i class="fa-solid fa-clock-rotate-left"></i>
-        </div>
-        <div class="trial-banner-text">
-          <div class="trial-banner-title" id="trialBannerTitle">Mod Percubaan 2 Jam Aktif</div>
-          <div class="trial-banner-desc" id="trialBannerSubtitle">Baki masa percubaan percuma: 2 Jam (120 Minit). Akses penuh simulasi dibuka.</div>
-        </div>
-      </div>
-      <div class="trial-banner-actions">
-        <a href="https://t.me/halimroslan" target="_blank" rel="noopener noreferrer" class="btn-trial-telegram" id="btnTrialBannerTelegram">
-          <i class="fa-brands fa-telegram"></i> Beli Kunci (@halimroslan)
-        </a>
-        <button type="button" id="btnTrialBannerEnterKey" class="btn-trial-enter-key">
-          <i class="fa-solid fa-key"></i> Masukkan No. Key
-        </button>
-      </div>
-    </div>
-
     <div class="dashboard-grid">
+      <!-- Trial / License Status Notification Banner (Placed inside dashboard-grid for exact margin alignment) -->
+      <div id="trialStatusBanner" class="trial-status-banner" style="display:none;">
+        <div class="trial-banner-left">
+          <div class="trial-banner-icon" id="trialBannerIcon">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+          </div>
+          <div class="trial-banner-text">
+            <div class="trial-banner-title" id="trialBannerTitle">Mod Percubaan 2 Jam Aktif</div>
+            <div class="trial-banner-desc" id="trialBannerSubtitle">Baki masa percubaan percuma: 2 Jam (120 Minit). Akses penuh simulasi dibuka.</div>
+          </div>
+        </div>
+        <div class="trial-banner-actions">
+          <a href="https://t.me/halimroslan" target="_blank" rel="noopener noreferrer" class="btn-trial-telegram" id="btnTrialBannerTelegram">
+            <i class="fa-brands fa-telegram"></i> Beli Kunci (@halimroslan)
+          </a>
+          <button type="button" id="btnTrialBannerEnterKey" class="btn-trial-enter-key">
+            <i class="fa-solid fa-key"></i> Masukkan No. Key
+          </button>
+        </div>
+      </div>
       
       <!-- Left Column: Mode Selection & Quick Start -->
       <section class="kpm-card">
