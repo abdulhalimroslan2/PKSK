@@ -328,6 +328,7 @@
     // Essay Articulation (Bahagian C) - Rawak Automatik & Pemasa 10 Minit
     essayText: '',
     essayTopic: PKSK_ESSAY_TOPICS[Math.floor(Math.random() * PKSK_ESSAY_TOPICS.length)],
+    essayActiveTheme: 'ALL',
     currentEssayIdeas: null,
     hasInitialEssayTopicSelected: true,
     aiIdeaTimerSecondsLeft: 600, // 10 minit (600 saat)
@@ -419,6 +420,11 @@
     btnSubmitExamTrigger: document.getElementById('btnSubmitExamTrigger'),
 
     // Essay View (Bahagian C)
+    essayTopicSelectorCard: document.getElementById('essayTopicSelectorCard'),
+    essayThemePillsContainer: document.getElementById('essayThemePillsContainer'),
+    selectEssayTopic: document.getElementById('selectEssayTopic'),
+    dispTotalTopicsBadge: document.getElementById('dispTotalTopicsBadge'),
+    dispTopicNumberIndicator: document.getElementById('dispTopicNumberIndicator'),
     dispEssayTitle: document.getElementById('dispEssayTitle'),
     dispEssayThemeBadge: document.getElementById('dispEssayThemeBadge'),
     dispEssayPrompt: document.getElementById('dispEssayPrompt'),
@@ -948,15 +954,187 @@
   }
 
   /* =========================================================================
+     PKSK ESSAY THEME GROUPS & TOPIC SELECTION CONTROLLER (BAHAGIAN C)
+     ========================================================================= */
+  const PKSK_THEME_GROUPS = [
+    {
+      id: 'ALL',
+      label: 'Semua Tema',
+      icon: 'fa-solid fa-layer-group',
+      match: () => true
+    },
+    {
+      id: 'BULI',
+      label: 'Buli di Sekolah',
+      icon: 'fa-solid fa-shield-halved',
+      match: (t) => t.theme && t.theme.includes('Buli')
+    },
+    {
+      id: 'KOAKAD',
+      label: 'Ko-Akademik',
+      icon: 'fa-solid fa-microphone-lines',
+      match: (t) => t.theme && t.theme.includes('Ko-Akademik')
+    },
+    {
+      id: 'KOKU',
+      label: 'Kokurikulum & Sukan',
+      icon: 'fa-solid fa-medal',
+      match: (t) => t.theme && t.theme.includes('Kokurikulum')
+    },
+    {
+      id: 'TEKNO',
+      label: 'Teknologi & AI',
+      icon: 'fa-solid fa-robot',
+      match: (t) => t.theme && (t.theme.includes('Teknologi') || t.theme.includes('Digital'))
+    },
+    {
+      id: 'PERPADUAN',
+      label: 'Perpaduan & Kebangsaan',
+      icon: 'fa-solid fa-flag',
+      match: (t) => t.theme && (t.theme.includes('Perpaduan') || t.theme.includes('Patriotisme') || t.theme.includes('Kebangsaan') || t.theme.includes('Malaysia'))
+    },
+    {
+      id: 'SAHSIAH',
+      label: 'Sahsiah & Integriti',
+      icon: 'fa-solid fa-star',
+      match: (t) => t.theme && (t.theme.includes('Integriti') || t.theme.includes('Sahsiah') || t.theme.includes('Alam Sekitar') || t.theme.includes('Kewangan'))
+    }
+  ];
+
+  function renderEssayThemePills() {
+    if (!dom.essayThemePillsContainer) return;
+    dom.essayThemePillsContainer.innerHTML = '';
+
+    PKSK_THEME_GROUPS.forEach(group => {
+      const count = PKSK_ESSAY_TOPICS.filter(group.match).length;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      const isActive = (state.essayActiveTheme || 'ALL') === group.id;
+      btn.className = `theme-pill-btn ${isActive ? 'active' : ''}`;
+      btn.setAttribute('data-theme-id', group.id);
+      btn.innerHTML = `<i class="${group.icon}"></i> ${group.label} <span class="pill-count">${count}</span>`;
+
+      btn.onclick = () => {
+        if (state.essayActiveTheme === group.id) return;
+        state.essayActiveTheme = group.id;
+
+        // Kemas kini gaya butang tema aktif
+        const allPills = dom.essayThemePillsContainer.querySelectorAll('.theme-pill-btn');
+        allPills.forEach(p => p.classList.toggle('active', p.getAttribute('data-theme-id') === group.id));
+
+        // Tapis tajuk dan pilih tajuk pertama jika tajuk semasa di luar tema ini
+        const groupTopics = PKSK_ESSAY_TOPICS.filter(group.match);
+        const matchesCurrent = state.essayTopic && group.match(state.essayTopic);
+
+        if (!matchesCurrent && groupTopics.length > 0) {
+          state.essayTopic = groupTopics[0];
+          state.aiEssayAssessment = null;
+          renderEssayTopicAndIdeas(false);
+          resetAiIdeaTimer();
+          startAiIdeaTimer();
+        } else {
+          populateEssayTopicDropdown();
+          updateTopicIndicator();
+        }
+      };
+
+      dom.essayThemePillsContainer.appendChild(btn);
+    });
+
+    if (dom.dispTotalTopicsBadge) {
+      dom.dispTotalTopicsBadge.textContent = `${PKSK_ESSAY_TOPICS.length} Tajuk Tersedia`;
+    }
+  }
+
+  function populateEssayTopicDropdown() {
+    if (!dom.selectEssayTopic) return;
+    dom.selectEssayTopic.innerHTML = '';
+
+    const currentTheme = state.essayActiveTheme || 'ALL';
+
+    if (currentTheme === 'ALL') {
+      // Susun mengikut kategori tema khusus
+      const specificGroups = PKSK_THEME_GROUPS.slice(1);
+      specificGroups.forEach(group => {
+        const groupTopics = PKSK_ESSAY_TOPICS.filter(group.match);
+        if (groupTopics.length === 0) return;
+
+        const optGroup = document.createElement('optgroup');
+        optGroup.label = `━━ ${group.label} (${groupTopics.length} Tajuk) ━━`;
+
+        groupTopics.forEach(topic => {
+          const opt = document.createElement('option');
+          opt.value = topic.id;
+          opt.textContent = `${topic.title}`;
+          if (state.essayTopic && state.essayTopic.id === topic.id) {
+            opt.selected = true;
+          }
+          optGroup.appendChild(opt);
+        });
+
+        dom.selectEssayTopic.appendChild(optGroup);
+      });
+    } else {
+      const activeGroup = PKSK_THEME_GROUPS.find(g => g.id === currentTheme) || PKSK_THEME_GROUPS[0];
+      const groupTopics = PKSK_ESSAY_TOPICS.filter(activeGroup.match);
+
+      groupTopics.forEach((topic, idx) => {
+        const opt = document.createElement('option');
+        opt.value = topic.id;
+        opt.textContent = `${idx + 1}. [${topic.theme}] ${topic.title}`;
+        if (state.essayTopic && state.essayTopic.id === topic.id) {
+          opt.selected = true;
+        }
+        dom.selectEssayTopic.appendChild(opt);
+      });
+    }
+
+    if (state.essayTopic) {
+      dom.selectEssayTopic.value = state.essayTopic.id;
+    }
+  }
+
+  function updateTopicIndicator() {
+    if (!dom.dispTopicNumberIndicator || !state.essayTopic) return;
+    const currentTheme = state.essayActiveTheme || 'ALL';
+    const activeGroup = PKSK_THEME_GROUPS.find(g => g.id === currentTheme) || PKSK_THEME_GROUPS[0];
+    const groupTopics = PKSK_ESSAY_TOPICS.filter(activeGroup.match);
+    const indexInGroup = groupTopics.findIndex(t => t.id === state.essayTopic.id);
+
+    if (indexInGroup !== -1) {
+      dom.dispTopicNumberIndicator.innerHTML = `<i class="fa-solid fa-bookmark"></i> Tajuk ${indexInGroup + 1} daripada ${groupTopics.length} (${activeGroup.label})`;
+    } else {
+      const overallIndex = PKSK_ESSAY_TOPICS.findIndex(t => t.id === state.essayTopic.id);
+      dom.dispTopicNumberIndicator.innerHTML = `<i class="fa-solid fa-bookmark"></i> Tajuk ${overallIndex + 1} daripada ${PKSK_ESSAY_TOPICS.length}`;
+    }
+  }
+
+  /* =========================================================================
      PKSK ESSAY ENGINE & AI IDEA STARTER (BAHAGIAN C - 6 HINGGA 10 AYAT)
      ========================================================================= */
   function renderEssayTopicAndIdeas(forceNewTopic = false) {
+    const currentTheme = state.essayActiveTheme || 'ALL';
+    const activeGroup = PKSK_THEME_GROUPS.find(g => g.id === currentTheme) || PKSK_THEME_GROUPS[0];
+    const groupTopics = PKSK_ESSAY_TOPICS.filter(activeGroup.match);
+
     if (forceNewTopic || !state.essayTopic) {
       const currentTitle = state.essayTopic ? state.essayTopic.title : '';
-      const available = PKSK_ESSAY_TOPICS.filter(t => t.title !== currentTitle);
-      state.essayTopic = available[Math.floor(Math.random() * available.length)] || PKSK_ESSAY_TOPICS[0];
+      const pool = groupTopics.length > 0 ? groupTopics : PKSK_ESSAY_TOPICS;
+      const available = pool.filter(t => t.title !== currentTitle);
+      state.essayTopic = available[Math.floor(Math.random() * available.length)] || pool[0] || PKSK_ESSAY_TOPICS[0];
       state.aiEssayAssessment = null; // Reset assessment bagi tajuk baharu
     }
+
+    // Auto-sync tema aktif jika tajuk terpilih tidak sepadan dengan penapis tema semasa
+    if (state.essayTopic && currentTheme !== 'ALL' && !activeGroup.match(state.essayTopic)) {
+      const matchingGroup = PKSK_THEME_GROUPS.slice(1).find(g => g.match(state.essayTopic));
+      if (matchingGroup) state.essayActiveTheme = matchingGroup.id;
+    }
+
+    // Kemas kini UI Kad Pilihan Tema dan Dropdown Tajuk
+    renderEssayThemePills();
+    populateEssayTopicDropdown();
+    updateTopicIndicator();
 
     if (dom.dispEssayTitle && dom.dispEssayPrompt) {
       dom.dispEssayTitle.style.opacity = '0';
@@ -2266,6 +2444,31 @@ ${essay}
     // Essay View Handlers
     dom.inputEssayText.oninput = updateEssayWordCount;
     if (dom.btnShuffleEssayTopic) dom.btnShuffleEssayTopic.onclick = shuffleEssayTopic;
+
+    // Dropdown Pilihan Tajuk Esei
+    if (dom.selectEssayTopic) {
+      dom.selectEssayTopic.onchange = function(e) {
+        const selectedId = e.target.value;
+        const targetTopic = PKSK_ESSAY_TOPICS.find(t => t.id === selectedId);
+        if (targetTopic) {
+          state.essayTopic = targetTopic;
+          state.aiEssayAssessment = null;
+
+          const currentTheme = state.essayActiveTheme || 'ALL';
+          const activeGroup = PKSK_THEME_GROUPS.find(g => g.id === currentTheme) || PKSK_THEME_GROUPS[0];
+          if (currentTheme !== 'ALL' && !activeGroup.match(targetTopic)) {
+            const matchingGroup = PKSK_THEME_GROUPS.slice(1).find(g => g.match(targetTopic));
+            if (matchingGroup) {
+              state.essayActiveTheme = matchingGroup.id;
+            }
+          }
+
+          renderEssayTopicAndIdeas(false);
+          resetAiIdeaTimer();
+          startAiIdeaTimer();
+        }
+      };
+    }
     if (dom.btnRegenerateAiIdeas) {
       dom.btnRegenerateAiIdeas.onclick = () => {
         resetAiIdeaTimer();

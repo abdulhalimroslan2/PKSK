@@ -54,5 +54,6 @@ gantt
 - [x] Penambahan 22 variasi tajuk esei Bahagian C merangkumi Buli di Sekolah, Ko-Akademik, Kokurikulum, Teknologi AI/Media Sosial, Sambutan Hari Kebangsaan & Hari Malaysia (sesuai calon 12-13 tahun).
 - [x] PWA Penuh & Ikon Rasmi Korporat Janaan ChatGPT (DALL-E) dengan latar belakang PNG telus, perkataan PKSK, dan simbol AI di bucu atas kanan (manifest.json, sw.js, ikon 192/512/64px).
 - [x] Sistem Pintasan & Kunci Induk Pembangun (Developer Master Key 'PKSK-DEV-MASTER-2026' & '?dev=unlock' untuk akses penuh tanpa kuota).
+- [x] Kad Kawalan Pilihan Tema & Dropdown Tajuk Esei Bahagian C (penapis pil tema interaktif, dropdown pilihan tajuk khusus mengikut kategori, dan penyegerakan automatik dengan paparan stimulus serta cadangan isi AI).
 - [ ] Penambahbaikan susun atur kad cadangan esei bagi peranti skrin kecil (< 380px).
 - [ ] Integrasi pemantauan status pangkalan data Supabase melalui pelayan Supabaseauto.
