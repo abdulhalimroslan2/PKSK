@@ -31,10 +31,7 @@
       <div class="portal-topnav-wrap">
         <h2 class="tranz" style="font-family:'Manrope', sans-serif; font-size:14px; color:#ffffff; font-weight:700; margin:0;">Selamat Datang ke PORTAL RASMI PKSK 2026</h2>
         <div style="display:flex; align-items:center; gap:15px;">
-          <!-- License Status Pill -->
-          <div id="licenseStatusBadge" class="license-status-pill unregistered" style="cursor:pointer;" title="Klik untuk Pengaktifan atau Maklumat Lesen PKSK">
-            <i class="fa-solid fa-key"></i> <span id="licenseStatusText">Belum Diaktifkan</span>
-          </div>
+
 
           <form class="searchform" style="display:flex; align-items:center; background:#ffffff; border-radius:3px; padding:2px 5px;">
             <input type="text" placeholder="Carian..." style="border:none; outline:none; padding:4px 8px; font-size:13px; color:#333; width:130px; background:transparent;">
@@ -241,21 +238,12 @@
 
           <form id="formSplitLogin" onsubmit="event.preventDefault(); window.handleSplitLoginSubmit();">
             
-            <!-- Field 1: Username / ID / Email -->
+            <!-- Field 1: No. Kad Pengenalan / MyKid Calon -->
             <div class="split-field-wrap">
-              <label for="splitInputUsername" class="split-label">ID Calon / No. Kad Pengenalan / Emel</label>
+              <label for="splitInputUsername" class="split-label">No. Kad Pengenalan / MyKid Calon</label>
               <div class="split-input-box">
-                <input type="text" id="splitInputUsername" class="split-input" placeholder="cth: 120101-01-1234 atau email@contoh.com" required autocomplete="username">
-                <i class="fa-regular fa-user split-icon"></i>
-              </div>
-            </div>
-
-            <!-- Field 2: Password / Nama Calon -->
-            <div class="split-field-wrap">
-              <label for="splitInputPassword" class="split-label">Nama Penuh Calon / Kata Laluan</label>
-              <div class="split-input-box">
-                <input type="password" id="splitInputPassword" class="split-input" placeholder="Masukkan nama calon atau kata laluan" required autocomplete="current-password">
-                <i class="fa-solid fa-lock split-icon"></i>
+                <input type="text" id="splitInputUsername" class="split-input" placeholder="cth: 130825-01-5678 (12 digit)" required autocomplete="username" maxlength="14" autofocus>
+                <i class="fa-regular fa-id-card split-icon"></i>
               </div>
             </div>
 
@@ -263,9 +251,8 @@
             <div class="split-options-row">
               <label class="split-checkbox-label">
                 <input type="checkbox" id="splitChkRemember" checked>
-                <span>Ingat maklumat saya</span>
+                <span>Ingat No. Pengenalan pada peranti ini</span>
               </label>
-              <a href="#" id="linkForgotPassword" class="split-link-subtle">Lupa kata laluan?</a>
             </div>
 
             <!-- Submit Button (Primary Royal Blue matching Gambar 3) -->
@@ -402,61 +389,7 @@
         </div>
       </section>
 
-      <!-- Right Column: Candidate Profile & System Integrity -->
-      <aside class="kpm-card">
-        <div class="kpm-card-header">
-          <h3 class="kpm-card-title" style="font-size:0.95rem;">
-            <i class="fa-solid fa-address-card" style="color:var(--kpm-gold);"></i>
-            Maklumat Pendaftaran Calon
-          </h3>
-        </div>
-        <div class="kpm-card-body">
-          <div class="kpm-form-group">
-            <label class="kpm-form-label">Nama Penuh Calon:</label>
-            <input type="text" id="inputCandidateName" class="kpm-input" value="" placeholder="cth: MUHAMMAD AMIR BIN ZULKIFLI">
-          </div>
-
-          <div class="kpm-form-group">
-            <label class="kpm-form-label">No. Kad Pengenalan / MyKid:</label>
-            <input type="text" id="inputCandidateIc" class="kpm-input" value="" placeholder="cth: 130825-01-5678">
-          </div>
-
-          <div class="kpm-form-group">
-            <label class="kpm-form-label">Angka Giliran Peperiksaan:</label>
-            <input type="text" id="inputCandidateIndex" class="kpm-input" value="" placeholder="cth: SBP-2026-8892">
-          </div>
-
-          <div class="kpm-form-group">
-            <label class="kpm-form-label">Pilihan Institusi Sasaran:</label>
-            <select id="selectTargetSchool" class="kpm-select">
-              <option value="SBP">Sekolah Berasrama Penuh (SBP)</option>
-              <option value="MRSM">Maktab Rendah Sains MARA (MRSM)</option>
-              <option value="SMKA">Sekolah Menengah Kebangsaan Agama (SMKA)</option>
-              <option value="KV">Kolej Vokasional (KV / TVET)</option>
-              <option value="MTD">Maktab Tentera Diraja (MTD)</option>
-            </select>
-          </div>
-
-          <!-- Quick Stats Chip -->
-          <div style="background-color:var(--bg-surface-subtle); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:0.9rem; margin-top:1.25rem;">
-            <div style="font-size:0.75rem; font-weight:700; color:var(--kpm-navy); margin-bottom:0.5rem; text-transform:uppercase;">
-              Statistik Bank Soalan Sistem
-            </div>
-            <div style="display:flex; justify-content:space-between; font-size:0.78rem; margin-bottom:0.25rem;">
-              <span>Jumlah Soalan Aktif:</span>
-              <strong style="color:var(--kpm-navy);">510 Soalan</strong>
-            </div>
-            <div style="display:flex; justify-content:space-between; font-size:0.78rem; margin-bottom:0.25rem;">
-              <span>Rajah WebP Resolusi Tinggi:</span>
-              <strong style="color:var(--kpm-emerald);">46 Rajah</strong>
-            </div>
-            <div style="display:flex; justify-content:space-between; font-size:0.78rem;">
-              <span>Format Skema:</span>
-              <strong style="color:var(--kpm-blue);">100% Standard PKSK</strong>
-            </div>
-          </div>
-        </div>
-      </aside>
+      
 
     </div>
   </main>

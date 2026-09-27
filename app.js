@@ -979,13 +979,22 @@
     }
 
     // Sync candidate metadata
-    state.candidate.name = dom.inputCandidateName.value.trim() || 'CALON PKSK';
-    state.candidate.ic = dom.inputCandidateIc.value.trim() || '-';
-    state.candidate.indexNo = dom.inputCandidateIndex.value.trim() || '-';
-    state.candidate.targetSchool = dom.selectTargetSchool.value || 'SBP';
+    if (dom.inputCandidateName && dom.inputCandidateName.value.trim()) {
+      state.candidate.name = dom.inputCandidateName.value.trim();
+    }
+    if (dom.inputCandidateIc && dom.inputCandidateIc.value.trim()) {
+      state.candidate.ic = dom.inputCandidateIc.value.trim();
+    }
+    if (dom.inputCandidateIndex && dom.inputCandidateIndex.value.trim()) {
+      state.candidate.indexNo = dom.inputCandidateIndex.value.trim();
+    }
+    if (dom.selectTargetSchool) {
+      state.candidate.targetSchool = dom.selectTargetSchool.value || 'SBP';
+    }
 
-    dom.dispCandidateName.textContent = state.candidate.name;
-    dom.dispCandidateIndex.textContent = state.candidate.indexNo !== '-' ? `AG: ${state.candidate.indexNo}` : '';
+    if (dom.dispCandidateName) dom.dispCandidateName.textContent = state.candidate.name || 'CALON PKSK';
+    const activeIndex = state.candidate.indexNo || state.candidate.indexNumber || '';
+    if (dom.dispCandidateIndex) dom.dispCandidateIndex.textContent = (activeIndex && activeIndex !== '-') ? `AG: ${activeIndex}` : '';
 
     // Generate questions
     state.sessionQuestions = generatePkskSession();
@@ -2842,28 +2851,26 @@ Wajib sediakan JSON SAHAJA mengikut skema:
 
     function handleSplitLoginSubmit() {
     const usernameInput = dom.splitInputUsername ? dom.splitInputUsername.value.trim() : '';
-    const passwordInput = dom.splitInputPassword ? dom.splitInputPassword.value.trim() : '';
     const rememberMe = dom.splitChkRemember ? dom.splitChkRemember.checked : true;
 
     if (!usernameInput) {
-      alert("Sila masukkan ID Calon, No. Kad Pengenalan atau Emel anda.");
+      alert("Sila masukkan No. Kad Pengenalan / MyKid Calon.");
       if (dom.splitInputUsername) dom.splitInputUsername.focus();
       return;
     }
 
     // Set candidate data in global state
+    const cleanNum = usernameInput.replace(/[^0-9]/g, '');
     state.candidate.ic = usernameInput;
-    state.candidate.name = passwordInput || usernameInput;
-    if (state.candidate.ic && !state.candidate.indexNumber) {
-      const cleanNum = usernameInput.replace(/[^0-9]/g, '');
-      state.candidate.indexNumber = 'PKSK-2026-' + (cleanNum.slice(-4) || '8899');
+    if (!state.candidate.name || state.candidate.name === 'CALON PKSK') {
+      state.candidate.name = `CALON PKSK (${usernameInput})`;
     }
+    state.candidate.indexNumber = 'PKSK-2026-' + (cleanNum.slice(-4) || '8892');
+    state.candidate.indexNo = state.candidate.indexNumber;
 
-    // Synchronize UI inputs and displays
+    // Synchronize UI displays
     if (dom.dispCandidateName) dom.dispCandidateName.textContent = state.candidate.name;
-    if (dom.dispCandidateIndex) dom.dispCandidateIndex.textContent = state.candidate.indexNumber;
-    if (dom.inputCandidateName) dom.inputCandidateName.value = state.candidate.name;
-    if (dom.inputCandidateIc) dom.inputCandidateIc.value = state.candidate.ic;
+    if (dom.dispCandidateIndex) dom.dispCandidateIndex.textContent = `AG: ${state.candidate.indexNumber}`;
 
     // Remember login credentials
     if (rememberMe) {
@@ -2908,7 +2915,7 @@ Wajib sediakan JSON SAHAJA mengikut skema:
     if (dom.navTabLogin) dom.navTabLogin.onclick = () => switchView('LOGIN');
     dom.navTabDashboard.onclick = () => switchView('DASHBOARD');
 
-    // Split-Screen Login View Actions (Gambar 3)
+    // Split-Screen Login View Actions (No Password Required)
     if (dom.btnSplitSignIn) {
       dom.btnSplitSignIn.onclick = (e) => {
         e.preventDefault();
@@ -2921,22 +2928,27 @@ Wajib sediakan JSON SAHAJA mengikut skema:
         handleSplitLoginSubmit();
       };
     }
+    if (dom.splitInputUsername) {
+      dom.splitInputUsername.addEventListener('input', (e) => {
+        let v = e.target.value.replace(/[^0-9]/g, '');
+        if (v.length > 12) v = v.substring(0, 12);
+        if (v.length > 8) {
+          e.target.value = `${v.substring(0,6)}-${v.substring(6,8)}-${v.substring(8)}`;
+        } else if (v.length > 6) {
+          e.target.value = `${v.substring(0,6)}-${v.substring(6)}`;
+        } else {
+          e.target.value = v;
+        }
+      });
+    }
     if (dom.linkCreateAccount) {
       dom.linkCreateAccount.onclick = (e) => {
         e.preventDefault();
-        const newName = prompt("Pendaftaran Calon PKSK Baharu: Sila masukkan Nama Penuh Calon:", "");
-        if (newName && newName.trim()) {
-          const newIc = prompt("Sila masukkan No. Kad Pengenalan Calon:", "");
-          if (dom.splitInputUsername && newIc) dom.splitInputUsername.value = newIc.trim();
-          if (dom.splitInputPassword) dom.splitInputPassword.value = newName.trim();
-          alert("Pendaftaran berjaya! Sila tekan butang Sign In / Masuk Sistem untuk masuk.");
+        const newIc = prompt("Pendaftaran Calon PKSK: Sila masukkan No. Kad Pengenalan / MyKid Calon:", "");
+        if (newIc && dom.splitInputUsername) {
+          dom.splitInputUsername.value = newIc.trim();
+          handleSplitLoginSubmit();
         }
-      };
-    }
-    if (dom.linkForgotPassword) {
-      dom.linkForgotPassword.onclick = (e) => {
-        e.preventDefault();
-        alert("Bantuan Kata Laluan PKSK: Untuk calon PKSK, kata laluan lalai adalah Nama Penuh atau No. Kad Pengenalan anda. Sila hubungi guru penyelaras jika anda terlupa maklumat pendaftaran.");
       };
     }
     if (dom.btnLoginViewGoogle) dom.btnLoginViewGoogle.onclick = handleLoginViewGoogleSignIn;
@@ -2954,7 +2966,6 @@ Wajib sediakan JSON SAHAJA mengikut skema:
       if (savedUserStr) {
         const savedUser = JSON.parse(savedUserStr);
         if (dom.splitInputUsername && savedUser.username) dom.splitInputUsername.value = savedUser.username;
-        if (dom.splitInputPassword && savedUser.name) dom.splitInputPassword.value = savedUser.name;
       }
     } catch (e) {}
     if (dom.btnLoginOpenSupabaseConfig) {
@@ -2999,29 +3010,35 @@ Wajib sediakan JSON SAHAJA mengikut skema:
     };
     dom.navTabSlip.onclick = () => switchView('RESULTS');
 
-    // Candidate Profile Live Inputs
-    dom.inputCandidateName.oninput = (e) => {
-      const val = e.target.value.trim();
-      state.candidate.name = val;
-      dom.dispCandidateName.textContent = val || 'CALON PKSK';
-    };
+    // Candidate Profile Live Inputs (Guarded)
+    if (dom.inputCandidateName) {
+      dom.inputCandidateName.oninput = (e) => {
+        const val = e.target.value.trim();
+        state.candidate.name = val;
+        dom.dispCandidateName.textContent = val || 'CALON PKSK';
+      };
+    }
 
-    dom.inputCandidateIndex.oninput = (e) => {
-      const val = e.target.value.trim();
-      state.candidate.indexNo = val;
-      const divider = document.getElementById('dispCandidateDivider');
-      if (val) {
-        dom.dispCandidateIndex.textContent = `AG: ${val}`;
-        if (divider) divider.style.display = 'inline';
-      } else {
-        dom.dispCandidateIndex.textContent = '';
-        if (divider) divider.style.display = 'none';
-      }
-    };
+    if (dom.inputCandidateIndex) {
+      dom.inputCandidateIndex.oninput = (e) => {
+        const val = e.target.value.trim();
+        state.candidate.indexNo = val;
+        const divider = document.getElementById('dispCandidateDivider');
+        if (val) {
+          dom.dispCandidateIndex.textContent = `AG: ${val}`;
+          if (divider) divider.style.display = 'inline';
+        } else {
+          dom.dispCandidateIndex.textContent = '';
+          if (divider) divider.style.display = 'none';
+        }
+      };
+    }
 
-    dom.inputCandidateIc.oninput = (e) => {
-      state.candidate.ic = e.target.value.trim();
-    };
+    if (dom.inputCandidateIc) {
+      dom.inputCandidateIc.oninput = (e) => {
+        state.candidate.ic = e.target.value.trim();
+      };
+    }
 
     // Dashboard Buttons
     dom.btnLaunchInstructions.onclick = () => switchView('INSTRUCTIONS');
