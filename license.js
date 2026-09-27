@@ -2,16 +2,18 @@
  * ============================================================================
  * SISTEM LESEN & PENGAKTIFAN SUPABASE (PKSK COMMERCIAL ENGINE)
  * ============================================================================
- * Menguruskan validasi dalam talian, sekuriti peranti, dan sesi pengaktifan
- * bagi 500 Kunci Lesen Komersial PKSK.
+ * Menguruskan validasi dalam talian, sekuriti peranti, sesi pengaktifan
+ * bagi 500 Kunci Lesen Komersial PKSK & Google/Gmail OAuth Supabase.
+ * Projek Supabase: lcfkvljmcamulshvyeqe (https://lcfkvljmcamulshvyeqe.supabase.co)
+ * Mematuhi skill: /firebase-to-supabase-migration (Zero-Data-Loss Standards)
  */
 
 (function(window) {
   'use strict';
 
-  // Konfigurasi Asas Supabase (Boleh dikemaskini oleh Pengurus/Developer)
-  const DEFAULT_SUPABASE_URL = 'https://rvslrscgbhgdcktdtfrl.supabase.co';
-  const DEFAULT_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2c2xyc2NnYmhnZGNrdGR0ZnJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc2MzM3MDQsImV4cCI6MjEwMzIwOTcwNH0.B5PRH8Mp7NgKDO9NnyS0akFcBuWz-e5xjKjEFjUD-1Y';
+  // Konfigurasi Asas Supabase Sasaran: lcfkvljmcamulshvyeqe
+  const DEFAULT_SUPABASE_URL = 'https://lcfkvljmcamulshvyeqe.supabase.co';
+  const DEFAULT_SUPABASE_ANON_KEY = '';
 
   const STORAGE_KEY_SESSION = 'pksk_license_session';
   const STORAGE_KEY_DEVICE = 'pksk_device_id';
@@ -81,11 +83,6 @@
   }
 
   // Generate Stable, Cross-Browser & Cross-Profile Hardware Fingerprint (HWFP-XXXXXXXX-YYYYYYYY)
-  // Uses ONLY 4 hardware signals that are GUARANTEED identical across Chrome/Safari/Firefox/Edge/all profiles:
-  //   1. OS category (MACOS / WINDOWS / IOS / ANDROID)
-  //   2. CPU logical cores (navigator.hardwareConcurrency)
-  //   3. Screen native resolution (width x height — no colorDepth, no devicePixelRatio)
-  //   4. IANA timezone (Intl.DateTimeFormat)
   function getDeviceHardwareFingerprint() {
     if (window._pksk_hwfp_cached) return window._pksk_hwfp_cached;
 
@@ -110,8 +107,17 @@
     return hwFingerprintId;
   }
 
+  // Konfigurasi Supabase dengan perlindungan auto-migrasi dari projek lama
   function getSupabaseConfig() {
-    const url = localStorage.getItem(STORAGE_KEY_CONFIG_URL) || DEFAULT_SUPABASE_URL;
+    let url = localStorage.getItem(STORAGE_KEY_CONFIG_URL);
+    // Migrasi automatik jika URL lama dikesan (rvslrscgbhgdcktdtfrl -> lcfkvljmcamulshvyeqe)
+    if (!url || url.includes('rvslrscgbhgdcktdtfrl')) {
+      url = DEFAULT_SUPABASE_URL;
+      localStorage.setItem(STORAGE_KEY_CONFIG_URL, DEFAULT_SUPABASE_URL);
+      if (localStorage.getItem(STORAGE_KEY_CONFIG_KEY)?.includes('rvslrscgbhgdcktdtfrl')) {
+        localStorage.removeItem(STORAGE_KEY_CONFIG_KEY);
+      }
+    }
     const anonKey = localStorage.getItem(STORAGE_KEY_CONFIG_KEY) || DEFAULT_SUPABASE_ANON_KEY;
     return { url, anonKey };
   }
@@ -141,19 +147,78 @@
     return String(raw).split(',').map(s => s.trim()).filter(Boolean);
   }
 
+  /* =========================================================================
+     SUPABASE JS CLIENT INITIALIZER & AUTH BRIDGE
+     ========================================================================= */
+  let _supabaseClientInstance = null;
+
+  function getSupabaseClient() {
+    const config = getSupabaseConfig();
+    if (!config.url || !config.anonKey) return null;
+    if (!window.supabase || typeof window.supabase.createClient !== 'function') return null;
+
+    if (!_supabaseClientInstance || _supabaseClientInstance._url !== config.url) {
+      try {
+        _supabaseClientInstance = window.supabase.createClient(config.url, config.anonKey, {
+          auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true
+          }
+        });
+        _supabaseClientInstance._url = config.url;
+      } catch (e) {
+        console.warn('[PKSK Supabase] Gagal menginisialisasi supabase-js client:', e);
+        return null;
+      }
+    }
+    return _supabaseClientInstance;
+  }
+
+  /* =========================================================================
+     FASA 3: SANITIZER & NORMALIZER PATTERN (ZERO DATA LOSS)
+     ========================================================================= */
+  function sanitizeUserForSupabase(authUser) {
+    if (!authUser) return null;
+    const nowIso = new Date().toISOString();
+    const fullName = (
+      authUser.user_metadata?.full_name || 
+      authUser.user_metadata?.name || 
+      authUser.email?.split('@')[0] || 
+      'Calon PKSK'
+    ).trim();
+
+    const avatarUrl = authUser.user_metadata?.avatar_url || authUser.user_metadata?.picture || '';
+    const email = (authUser.email || '').trim().toLowerCase();
+
+    return {
+      auth_id: authUser.id,
+      email: email,
+      full_name: fullName,
+      avatar_url: avatarUrl,
+      provider: authUser.app_metadata?.provider || 'google',
+      role: 'student',
+      status: 'ACTIVE',
+      last_sign_in_at: nowIso
+    };
+  }
+
   window.PkskLicense = {
     getDeviceId: getDeviceHardwareFingerprint,
     
     getConfig: getSupabaseConfig,
 
+    getSupabaseClient: getSupabaseClient,
+
     setSupabaseConfig: function(url, anonKey) {
       if (url) localStorage.setItem(STORAGE_KEY_CONFIG_URL, url.trim().replace(/\/$/, ''));
       if (anonKey) localStorage.setItem(STORAGE_KEY_CONFIG_KEY, anonKey.trim());
+      _supabaseClientInstance = null; // Reset instance to reload config
     },
 
     isConfigured: function() {
       const config = getSupabaseConfig();
-      return config.url && !config.url.includes('YOUR_PROJECT_ID') && config.anonKey && !config.anonKey.includes('YOUR_SUPABASE_ANON_KEY');
+      return config.url && !config.url.includes('YOUR_PROJECT_ID') && config.anonKey && config.anonKey.length > 20;
     },
 
     // Periksa sama ada peranti ini telah mempunyai lesen yang sah & aktif
@@ -162,18 +227,27 @@
         const raw = localStorage.getItem(STORAGE_KEY_SESSION);
         if (!raw) return false;
         const session = JSON.parse(raw);
-        if (!session || !session.license_key || session.status !== 'ACTIVE_SESSION') return false;
+        if (!session || !session.status || session.status !== 'ACTIVE_SESSION') return false;
         
-        const currentHwId = getDeviceHardwareFingerprint();
-        // Semak padanan Hardware Fingerprint
         // Developer bypass: sentiasa sah jika peranti developer
         if (session.is_developer || session.tier === 'DEVELOPER_SUPERADMIN') {
           return true;
         }
 
+        // Pengesahan Log Masuk Gmail: Sah jika ada auth_id atau is_gmail_auth
+        if (session.is_gmail_auth && session.email) {
+          if (session.expires_at && new Date(session.expires_at).getTime() < Date.now()) {
+            console.warn('⚠️ Tempoh sah sesi Gmail telah tamat.');
+            localStorage.removeItem(STORAGE_KEY_SESSION);
+            return false;
+          }
+          return true;
+        }
+
+        const currentHwId = getDeviceHardwareFingerprint();
         if (session.device_id !== currentHwId) return false;
 
-        // Semak tempoh tamat sah (6 Bulan)
+        // Semak tempoh tamat sah lesen kunci biasa (6 Bulan)
         if (session.expires_at && new Date(session.expires_at).getTime() < Date.now()) {
           console.warn('⚠️ Tempoh sah lesen 6 bulan telah tamat.');
           localStorage.removeItem(STORAGE_KEY_SESSION);
@@ -184,6 +258,157 @@
       } catch (e) {
         return false;
       }
+    },
+
+    // Ambil maklumat sesi aktif semasa
+    getLicenseSession: function() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY_SESSION);
+        if (!raw) return null;
+        const session = JSON.parse(raw);
+        if (session && session.expires_at && new Date(session.expires_at).getTime() < Date.now()) {
+          localStorage.removeItem(STORAGE_KEY_SESSION);
+          return null;
+        }
+        return session;
+      } catch (e) {
+        return null;
+      }
+    },
+
+    /* =========================================================================
+       GOOGLE / GMAIL OAUTH AUTHENTICATION (SUPABASE AUTH)
+       ========================================================================= */
+    signInWithGoogle: async function() {
+      const config = getSupabaseConfig();
+      if (!config.anonKey || config.anonKey.length < 20) {
+        return {
+          success: false,
+          needsConfig: true,
+          message: 'Sila masukkan Anon Public Key untuk projek Supabase lcfkvljmcamulshvyeqe di tetapan sebelum log masuk Google.'
+        };
+      }
+
+      const client = getSupabaseClient();
+      if (!client) {
+        return {
+          success: false,
+          message: 'Pustaka Supabase JS belum sedia atau pelayan tidak dapat dicapai. Sila semak sambungan internet.'
+        };
+      }
+
+      try {
+        const redirectUrl = window.location.origin + window.location.pathname;
+        const { data, error } = await client.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: redirectUrl,
+            queryParams: {
+              access_type: 'offline',
+              prompt: 'consent'
+            }
+          }
+        });
+
+        if (error) throw error;
+        return { success: true, data };
+      } catch (err) {
+        console.error('[PKSK Google OAuth Error]:', err);
+        return { success: false, message: err.message || 'Ralat memulakan log masuk Google.' };
+      }
+    },
+
+    // Proses sesi pengguna selepas berjaya log masuk Google (Upsert ke pksk_users)
+    handleGoogleUserSession: async function(authUser) {
+      if (!authUser) return null;
+
+      const deviceId = getDeviceHardwareFingerprint();
+      const now = new Date();
+      // Akses 1 Tahun untuk pengguna berdaftar Google Auth
+      const oneYearLater = new Date(now.getTime() + (365 * 24 * 60 * 60 * 1000)).toISOString();
+
+      const sanitizedProfile = sanitizeUserForSupabase(authUser);
+
+      // Safe Upsert ke jadual public.pksk_users
+      const client = getSupabaseClient();
+      if (client && sanitizedProfile) {
+        try {
+          const { error: upsertErr } = await client
+            .from('pksk_users')
+            .upsert(sanitizedProfile, { onConflict: 'email' });
+          if (upsertErr) {
+            console.warn('[PKSK Supabase] Amaran upsert pksk_users (abaikan jika RLS membaca):', upsertErr.message);
+          } else {
+            console.log('✓ Profil pengguna berjaya disimpan ke pksk_users Supabase:', sanitizedProfile.email);
+          }
+        } catch (dbErr) {
+          console.warn('[PKSK Supabase DB Notice]:', dbErr);
+        }
+      }
+
+      const activeSession = {
+        license_key: 'GMAIL-' + authUser.id.substring(0, 8).toUpperCase(),
+        status: 'ACTIVE_SESSION',
+        tier: 'GMAIL_AUTHENTICATED',
+        auth_id: authUser.id,
+        email: sanitizedProfile.email,
+        device_id: deviceId,
+        max_devices: 5,
+        device_slot: 1,
+        activated_by_name: sanitizedProfile.full_name,
+        avatar_url: sanitizedProfile.avatar_url,
+        is_gmail_auth: true,
+        provider: 'google',
+        activated_at: now.toISOString(),
+        expires_at: oneYearLater,
+        validity_days: 365
+      };
+
+      localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(activeSession));
+      return activeSession;
+    },
+
+    // Dengarkan perubahan status pengesahan Supabase (OAuth Callback / Refresh)
+    initAuthListener: function(onUserSessionChange) {
+      const client = getSupabaseClient();
+      if (!client) return;
+
+      // 1. Semak sesi sedia ada terlebih dahulu
+      client.auth.getSession().then(async ({ data: { session } }) => {
+        if (session && session.user) {
+          const activeSess = await this.handleGoogleUserSession(session.user);
+          if (onUserSessionChange) onUserSessionChange(activeSess);
+        }
+      }).catch(err => {
+        console.warn('[PKSK Auth] Semakan sesi awal:', err);
+      });
+
+      // 2. Langganan peristiwa perubahan status Auth
+      client.auth.onAuthStateChange(async (event, session) => {
+        console.log('[PKSK Supabase Auth Event]:', event);
+        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
+          if (session && session.user) {
+            const activeSess = await this.handleGoogleUserSession(session.user);
+            if (onUserSessionChange) onUserSessionChange(activeSess);
+          }
+        } else if (event === 'SIGNED_OUT') {
+          this.deactivateLocal();
+          if (onUserSessionChange) onUserSessionChange(null);
+        }
+      });
+    },
+
+    // Log keluar Google Auth
+    signOutGoogle: async function() {
+      const client = getSupabaseClient();
+      if (client) {
+        try {
+          await client.auth.signOut();
+        } catch (e) {
+          console.warn('[PKSK Supabase] SignOut error:', e);
+        }
+      }
+      this.deactivateLocal();
     },
 
     // Auto-restore sesi lesen dari Supabase jika peranti ini (Hardware Fingerprint) telah didaftarkan sebelum ini
@@ -237,21 +462,6 @@
       } catch (err) {
         console.warn('Auto restore hardware license error:', err);
         return { restored: false, error: err.message };
-      }
-    },
-
-    getLicenseSession: function() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY_SESSION);
-        if (!raw) return null;
-        const session = JSON.parse(raw);
-        if (session && session.expires_at && new Date(session.expires_at).getTime() < Date.now()) {
-          localStorage.removeItem(STORAGE_KEY_SESSION);
-          return null;
-        }
-        return session;
-      } catch (e) {
-        return null;
       }
     },
 

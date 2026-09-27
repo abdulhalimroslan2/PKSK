@@ -15,7 +15,7 @@
 - **Output & Penerbitan Akhir:**
   - Laman Web Live Vercel: [https://pksk2026.vercel.app](https://pksk2026.vercel.app)
   - Repositori GitHub: [abdulhalimroslan2/PKSK](https://github.com/abdulhalimroslan2/PKSK.git) (Branch: `main`)
-  - Pangkalan Data Lesen: Supabase PostgreSQL (`rvslrscgbhgdcktdtfrl.supabase.co`) — Jadual `pksk_licenses`
+  - Pangkalan Data & Auth: Supabase PostgreSQL & Google OAuth (`lcfkvljmcamulshvyeqe.supabase.co`) — Jadual `pksk_users` & `pksk_licenses`
 
 ---
 

@@ -495,6 +495,9 @@
     keyCharCount: document.getElementById('keyCharCount'),
     activationAlertBox: document.getElementById('activationAlertBox'),
     btnActivateLicense: document.getElementById('btnActivateLicense'),
+    btnGoogleSignIn: document.getElementById('btnGoogleSignIn'),
+    userAvatarContainer: document.getElementById('userAvatarContainer'),
+    userAvatarDefaultIcon: document.getElementById('userAvatarDefaultIcon'),
     btnCloseActivationModal: document.getElementById('btnCloseActivationModal'),
 
     // Supabase Settings Modal
@@ -2257,6 +2260,22 @@ ${essay}
     const isAct = window.PkskLicense && window.PkskLicense.isActivated();
     if (isAct) {
       const session = window.PkskLicense.getLicenseSession();
+      if (session?.is_gmail_auth) {
+        dom.licenseStatusBadge.className = 'license-status-pill';
+        dom.licenseStatusBadge.style.background = '#e0f2fe';
+        dom.licenseStatusBadge.style.color = '#0369a1';
+        dom.licenseStatusBadge.style.borderColor = '#bae6fd';
+        dom.licenseStatusText.innerHTML = '<i class="fa-brands fa-google" style="color:#0284c7;"></i> Google ID Aktif';
+
+        if (session.activated_by_name && dom.dispCandidateName) {
+          dom.dispCandidateName.textContent = session.activated_by_name.toUpperCase();
+        }
+        if (session.avatar_url && dom.userAvatarContainer) {
+          dom.userAvatarContainer.innerHTML = `<img src="${session.avatar_url}" alt="Google Avatar" class="user-avatar-img">`;
+        }
+        return;
+      }
+
       if (session?.is_developer || session?.tier === 'DEVELOPER_SUPERADMIN') {
         dom.licenseStatusBadge.className = 'license-status-pill';
         dom.licenseStatusBadge.style.background = '#fef3c7';
@@ -2305,7 +2324,12 @@ ${essay}
   function showActivationAlert(message, type = 'error') {
     if (!dom.activationAlertBox) return;
     dom.activationAlertBox.style.display = 'block';
-    if (type === 'success') {
+    if (type === 'info') {
+      dom.activationAlertBox.style.background = '#f0f9ff';
+      dom.activationAlertBox.style.border = '1px solid #7dd3fc';
+      dom.activationAlertBox.style.color = '#0369a1';
+      dom.activationAlertBox.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> ${message}`;
+    } else if (type === 'success') {
       dom.activationAlertBox.style.background = '#f0fdf4';
       dom.activationAlertBox.style.border = '1px solid #86efac';
       dom.activationAlertBox.style.color = '#15803d';
@@ -2539,6 +2563,61 @@ ${essay}
     }
     if (dom.btnActivateLicense) {
       dom.btnActivateLicense.onclick = handleActivateLicenseClick;
+    }
+
+    // Google / Gmail OAuth Sign-In (Supabase Auth)
+    if (dom.btnGoogleSignIn) {
+      dom.btnGoogleSignIn.onclick = async () => {
+        showActivationAlert('Sedang memulakan sambungan Google OAuth...', 'info');
+        const res = await window.PkskLicense.signInWithGoogle();
+        if (!res.success) {
+          if (res.needsConfig) {
+            showActivationAlert(res.message, 'error');
+            setTimeout(() => {
+              const conf = window.PkskLicense.getConfig();
+              if (dom.inputSupabaseUrl) dom.inputSupabaseUrl.value = conf.url || '';
+              if (dom.inputSupabaseAnonKey) dom.inputSupabaseAnonKey.value = conf.anonKey || '';
+              if (dom.supabaseConfigModal) dom.supabaseConfigModal.classList.remove('hidden');
+            }, 1800);
+          } else {
+            showActivationAlert(res.message, 'error');
+          }
+        }
+      };
+    }
+
+    // User Avatar / Profile Click Handler
+    if (dom.userAvatarContainer) {
+      dom.userAvatarContainer.onclick = () => {
+        if (window.PkskLicense && window.PkskLicense.isActivated()) {
+          const sess = window.PkskLicense.getLicenseSession();
+          if (sess && sess.is_gmail_auth) {
+            if (confirm(`Akaun Semasa: ${sess.activated_by_name} (${sess.email})
+
+Adakah anda ingin log keluar daripada sesi Google ini?`)) {
+              window.PkskLicense.signOutGoogle();
+              updateLicenseBadgeUI();
+              alert('Anda telah berjaya log keluar dari sesi Google.');
+              location.reload();
+            }
+            return;
+          }
+        }
+        openActivationModal();
+      };
+    }
+
+    // Aktifkan Langganan Perubahan Status Auth Supabase
+    if (window.PkskLicense && typeof window.PkskLicense.initAuthListener === 'function') {
+      window.PkskLicense.initAuthListener((newSession) => {
+        if (newSession) {
+          updateLicenseBadgeUI();
+          closeActivationModal();
+          console.log('[PKSK App] Sesi Pengguna Google Aktif:', newSession.email);
+        } else {
+          updateLicenseBadgeUI();
+        }
+      });
     }
 
     if (dom.inputLicenseKey) {
