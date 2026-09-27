@@ -20,7 +20,7 @@
   const STORAGE_KEY_CONFIG_URL = 'pksk_supabase_url';
   const STORAGE_KEY_CONFIG_KEY = 'pksk_supabase_anon_key';
   const STORAGE_KEY_TRIAL = 'pksk_trial_device_record';
-  const TRIAL_DURATION_MS = 2 * 60 * 60 * 1000; // 2 Jam (120 Minit Penuh)
+  const TRIAL_DURATION_MS = 2 * 24 * 60 * 60 * 1000; // 2 Hari (48 Jam Penuh)
   const TELEGRAM_PURCHASE_URL = 'https://t.me/halimroslan';
   const TELEGRAM_USERNAME = '@halimroslan';
 
@@ -229,7 +229,7 @@
     TELEGRAM_USER: TELEGRAM_USERNAME,
     TRIAL_DURATION_MS: TRIAL_DURATION_MS,
 
-    // Inisialisasi atau ambil rekod percubaan peranti (2 Jam = 120 Minit)
+    // Inisialisasi atau ambil rekod percubaan peranti (2 Hari = 48 Jam)
     initTrial: function() {
       try {
         const deviceId = getDeviceHardwareFingerprint();
@@ -239,6 +239,10 @@
           if (parsed && parsed.start && parsed.sig) {
             const expectedSig = murmurHash3(deviceId + '::' + parsed.start + '::PKSK_TRIAL_2026');
             if (parsed.sig === expectedSig) {
+              if (parsed.duration_ms !== TRIAL_DURATION_MS) {
+                parsed.duration_ms = TRIAL_DURATION_MS;
+                localStorage.setItem(STORAGE_KEY_TRIAL, JSON.stringify(parsed));
+              }
               return parsed;
             }
           }
@@ -260,7 +264,7 @@
       }
     },
 
-    // Semak status tempoh percubaan (2 Jam)
+    // Semak status tempoh percubaan (2 Hari)
     getTrialStatus: function() {
       // Jika telah diaktifkan dengan lesen sah / VIP, tempoh percubaan tidak lagi menyekat
       if (this.isActivated()) {
@@ -282,14 +286,18 @@
       const remainingMs = Math.max(0, (trial.duration_ms || TRIAL_DURATION_MS) - elapsed);
       const isExpired = remainingMs <= 0;
       const totalMinutes = Math.ceil(remainingMs / (1000 * 60));
-      const hours = Math.floor(remainingMs / (1000 * 60 * 60));
+      const totalHours = Math.floor(remainingMs / (1000 * 60 * 60));
+      const days = Math.floor(remainingMs / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((remainingMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
 
       let remainingText = '';
       if (isExpired) {
         remainingText = 'Tamat';
-      } else if (hours >= 1) {
-        remainingText = minutes > 0 ? ('Baki ' + hours + ' Jam ' + minutes + ' Minit') : ('Baki ' + hours + ' Jam');
+      } else if (days >= 1) {
+        remainingText = hours > 0 ? ('Baki ' + days + ' Hari ' + hours + ' Jam') : ('Baki ' + days + ' Hari');
+      } else if (totalHours >= 1) {
+        remainingText = minutes > 0 ? ('Baki ' + totalHours + ' Jam ' + minutes + ' Minit') : ('Baki ' + totalHours + ' Jam');
       } else {
         remainingText = 'Baki ' + Math.max(1, totalMinutes) + ' Minit';
       }
@@ -320,7 +328,7 @@
       }
     },
 
-    // Semak sama ada pengguna dibenarkan mengakses ujian (Lesen Aktif ATAU Dalam Tempoh Percubaan 2 Jam)
+    // Semak sama ada pengguna dibenarkan mengakses ujian (Lesen Aktif ATAU Dalam Tempoh Percubaan 2 Hari)
     isAccessAllowed: function() {
       if (this.isActivated()) return true;
       const trial = this.getTrialStatus();
@@ -345,7 +353,7 @@
     resetTrialForTesting: function() {
       localStorage.removeItem(STORAGE_KEY_TRIAL);
       const res = this.initTrial();
-      console.log('✓ [DEV TEST] Tempoh percubaan diset semula ke 2 Jam penuh.');
+      console.log('✓ [DEV TEST] Tempoh percubaan diset semula ke 2 Hari penuh.');
       return res;
     },
 
@@ -375,7 +383,7 @@
           return true;
         }
 
-        // Pengesahan Log Masuk Gmail: Pengguna Google adalah Calon Percubaan 2 Jam
+        // Pengesahan Log Masuk Gmail: Pengguna Google adalah Calon Percubaan 2 Hari
         // kecuali mereka telah mengaktifkan Kunci Lesen PKSK sah (bermula dengan PKSK-)
         if (session.is_gmail_auth && !session.license_key?.startsWith('PKSK-')) {
           // Google user without license key follows the 2-hour trial
@@ -495,7 +503,7 @@
 
       localStorage.setItem('pksk_google_user', JSON.stringify(googleProfile));
 
-      // Pengguna Google yang belum mempunyai kunci lesen sah tertakluk kepada Tempoh Percubaan 2 Jam
+      // Pengguna Google yang belum mempunyai kunci lesen sah tertakluk kepada Tempoh Percubaan 2 Hari
       this.initTrial();
 
       return googleProfile;

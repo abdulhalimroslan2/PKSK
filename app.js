@@ -721,7 +721,7 @@
     if (['EXAM', 'ESSAY', 'INSTRUCTIONS'].includes(viewName)) {
       if (window.PkskLicense && !window.PkskLicense.isAccessAllowed()) {
         openActivationModal(() => switchView(viewName), 'TRIAL_EXPIRED');
-        showActivationAlert('Tempoh percubaan 2 jam anda telah tamat. Sistem kini dikunci sehingga No. Kunci Lesen sah dimasukkan.', 'error');
+        showActivationAlert('Tempoh percubaan 2 hari anda telah tamat. Sistem kini dikunci sehingga No. Kunci Lesen sah dimasukkan.', 'error');
         if (state.currentView !== 'DASHBOARD' && state.currentView !== 'LOGIN') {
           switchView('DASHBOARD');
         }
@@ -1013,10 +1013,10 @@
      EXAM WORKFLOW & SUBMISSION
      ========================================================================= */
   function startExam() {
-    // Semakan Pengesahan Lesen & Had Percubaan 2 Jam
+    // Semakan Pengesahan Lesen & Had Percubaan 2 Hari
     if (window.PkskLicense && !window.PkskLicense.isAccessAllowed()) {
       openActivationModal(() => startExam(), 'TRIAL_EXPIRED');
-      showActivationAlert('Tempoh percubaan 2 jam anda telah tamat. Sila masukkan Kunci Lesen PKSK atau buat pembelian via Telegram @halimroslan.', 'error');
+      showActivationAlert('Tempoh percubaan 2 hari anda telah tamat. Sila masukkan Kunci Lesen PKSK atau buat pembelian via Telegram @halimroslan.', 'error');
       return;
     }
 
@@ -2746,7 +2746,7 @@ Wajib sediakan JSON SAHAJA mengikut skema:
         dom.licenseStatusBadge.style.background = '#fef2f2';
         dom.licenseStatusBadge.style.color = '#b91c1c';
         dom.licenseStatusBadge.style.borderColor = '#fca5a5';
-        dom.licenseStatusText.innerHTML = `<i class="fa-solid fa-lock"></i> Percubaan 2 Jam Tamat (Kunci Diperlukan)`;
+        dom.licenseStatusText.innerHTML = `<i class="fa-solid fa-lock"></i> Percubaan 2 Hari Tamat (Kunci Diperlukan)`;
       }
     }
   }
@@ -2779,7 +2779,7 @@ Wajib sediakan JSON SAHAJA mengikut skema:
     if (trial.isExpired) {
       banner.classList.add('expired');
       if (iconWrap) iconWrap.innerHTML = '<i class="fa-solid fa-lock"></i>';
-      if (titleEl) titleEl.textContent = 'Tempoh Percubaan 2 Jam Telah Tamat (Sistem Terkunci)';
+      if (titleEl) titleEl.textContent = 'Tempoh Percubaan 2 Hari Telah Tamat (Sistem Terkunci)';
       if (subEl) subEl.textContent = 'Akses simulasi peperiksaan & semakan AI telah dikunci. Sila masukkan No. Kunci Lesen sah atau hubungi Telegram @halimroslan untuk pembelian.';
       if (dom.btnLaunchInstructions) {
         dom.btnLaunchInstructions.classList.add('btn-locked-trial');
@@ -2788,7 +2788,7 @@ Wajib sediakan JSON SAHAJA mengikut skema:
     } else {
       banner.classList.remove('expired');
       if (iconWrap) iconWrap.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i>';
-      if (titleEl) titleEl.textContent = `Mod Percubaan Percuma 2 Jam Aktif (${trial.remainingText})`;
+      if (titleEl) titleEl.textContent = `Mod Percubaan Percuma 2 Hari Aktif (${trial.remainingText})`;
       if (subEl) subEl.textContent = `Nikmati akses penuh ke semua soalan & semakan esei AI. Dapatkan Kunci Lesen 6 Bulan untuk akses tanpa had bila-bila masa.`;
       if (dom.btnLaunchInstructions) {
         dom.btnLaunchInstructions.classList.remove('btn-locked-trial');
@@ -3129,7 +3129,7 @@ Wajib sediakan JSON SAHAJA mengikut skema:
         badgeEl.style.background = '#e0f2fe';
         badgeEl.style.color = '#0369a1';
       } else {
-        badgeEl.innerHTML = `<i class="fa-solid fa-lock" style="color:#dc2626;"></i> Percubaan 2 Jam Tamat`;
+        badgeEl.innerHTML = `<i class="fa-solid fa-lock" style="color:#dc2626;"></i> Percubaan 2 Hari Tamat`;
         badgeEl.style.background = '#fef2f2';
         badgeEl.style.color = '#b91c1c';
       }
@@ -3336,7 +3336,7 @@ Wajib sediakan JSON SAHAJA mengikut skema:
           switchView('ESSAY'); 
           startEssaySessionTimers(true);
         }, 'TRIAL_EXPIRED');
-        showActivationAlert('Tempoh percubaan 2 jam anda telah tamat. Sila masukkan Kunci Lesen PKSK untuk membuka akses Artikulasi Penulisan.', 'error');
+        showActivationAlert('Tempoh percubaan 2 hari anda telah tamat. Sila masukkan Kunci Lesen PKSK untuk membuka akses Artikulasi Penulisan.', 'error');
         return;
       }
       state.mode = 'ESSAY_PRACTICE'; 
@@ -3379,7 +3379,7 @@ Wajib sediakan JSON SAHAJA mengikut skema:
     dom.btnLaunchInstructions.onclick = () => {
       if (window.PkskLicense && !window.PkskLicense.isAccessAllowed()) {
         openActivationModal(() => switchView('INSTRUCTIONS'), 'TRIAL_EXPIRED');
-        showActivationAlert('Tempoh percubaan 2 jam anda telah tamat. Sila masukkan Kunci Lesen PKSK atau buat pembelian via Telegram @halimroslan.', 'error');
+        showActivationAlert('Tempoh percubaan 2 hari anda telah tamat. Sila masukkan Kunci Lesen PKSK atau buat pembelian via Telegram @halimroslan.', 'error');
         return;
       }
       switchView('INSTRUCTIONS');
@@ -3706,10 +3706,10 @@ Wajib sediakan JSON SAHAJA mengikut skema:
           // Apabila berjaya log masuk melalui Google, terus paparkan UI untuk pilihan ujian (DASHBOARD)
           switchView('DASHBOARD');
 
-          // Jika tempoh percubaan 2 jam telah tamat, terus kunci dan buka modal lesen
+          // Jika tempoh percubaan 2 hari telah tamat, terus kunci dan buka modal lesen
           if (!window.PkskLicense.isAccessAllowed()) {
             openActivationModal(() => switchView('DASHBOARD'), 'TRIAL_EXPIRED');
-            showActivationAlert('Tempoh percubaan 2 jam anda telah tamat. Sistem kini dikunci sehingga No. Kunci Lesen sah dimasukkan.', 'error');
+            showActivationAlert('Tempoh percubaan 2 hari anda telah tamat. Sistem kini dikunci sehingga No. Kunci Lesen sah dimasukkan.', 'error');
           }
         } else {
           updateLicenseBadgeUI();
@@ -3826,7 +3826,7 @@ Wajib sediakan JSON SAHAJA mengikut skema:
     }
   }
 
-  // Trial liveness watcher - semak auto-lock jika 2 jam tamat semasa calon menggunakan app
+  // Trial liveness watcher - semak auto-lock jika 2 hari tamat semasa calon menggunakan app
   function initTrialLivenessWatcher() {
     setInterval(() => {
       if (!window.PkskLicense) return;
@@ -3843,7 +3843,7 @@ Wajib sediakan JSON SAHAJA mengikut skema:
           if (state.timerInterval) clearInterval(state.timerInterval);
           switchView('DASHBOARD');
           openActivationModal(() => switchView('DASHBOARD'), 'TRIAL_EXPIRED');
-          showActivationAlert('Tempoh percubaan 2 jam anda telah tamat semasa sesi berlangsung. Sistem kini dikunci. Sila masukkan No. Kunci Lesen sah.', 'error');
+          showActivationAlert('Tempoh percubaan 2 hari anda telah tamat semasa sesi berlangsung. Sistem kini dikunci. Sila masukkan No. Kunci Lesen sah.', 'error');
         } else if (state.currentView === 'DASHBOARD') {
           if (dom.activationModal && dom.activationModal.classList.contains('hidden')) {
             openActivationModal(() => switchView('DASHBOARD'), 'TRIAL_EXPIRED');
@@ -3882,10 +3882,10 @@ Wajib sediakan JSON SAHAJA mengikut skema:
       // Terus paparkan UI untuk pilihan ujian (DASHBOARD)
       switchView('DASHBOARD');
 
-      // Kunci jika tempoh percubaan 2 jam telah tamat
+      // Kunci jika tempoh percubaan 2 hari telah tamat
       if (!window.PkskLicense.isAccessAllowed()) {
         openActivationModal(() => switchView('DASHBOARD'), 'TRIAL_EXPIRED');
-        showActivationAlert('Tempoh percubaan 2 jam anda telah tamat. Sistem kini dikunci sehingga No. Kunci Lesen sah dimasukkan.', 'error');
+        showActivationAlert('Tempoh percubaan 2 hari anda telah tamat. Sistem kini dikunci sehingga No. Kunci Lesen sah dimasukkan.', 'error');
       }
     } else {
       switchView('LOGIN');

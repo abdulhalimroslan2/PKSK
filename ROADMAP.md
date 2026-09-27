@@ -1,6 +1,6 @@
 # 🗺️ ROADMAP: Sistem Simulator PKSK Online & Penilai AI Artikulasi Penulisan
 
-> **Status Semasa:** FASA 6 SELESAI (Google OAuth Physflix UX, Percubaan 2 Jam & Paywall Kunci Lesen Siap Sepenuhnya)  
+> **Status Semasa:** FASA 6 SELESAI (Google OAuth Physflix UX, Percubaan 2 Hari & Paywall Kunci Lesen Siap Sepenuhnya)  
 > **Sasaran Utama:** PKSK Sesi Kemasukan 2026 / 2027
 
 ---
@@ -19,7 +19,7 @@ gantt
     Pemasa Berkembar 45m & 10m Serentak   :done, f4, 2026-09-12, 2026-09-12
     Bank Soalan KBAT 2026 & Ujian Skrin   :done, f5, 2026-09-25, 2026-09-27
     section Fasa 6: Google Auth & Trial Paywall
-    Google Auth Physflix UX & Trial 2 Jam :done, f6, 2026-09-27, 2026-09-27
+    Google Auth Physflix UX & Trial 2 Hari :done, f6, 2026-09-27, 2026-09-27
     section Fasa 7: Peningkatan Bank Soalan
     Bank Soalan Lanjutan KBAT Math & Sci  :active, f7, 2026-09-28, 2026-10-10
 ```
@@ -55,11 +55,11 @@ gantt
   - Kad Kawalan Pilihan Tema & Dropdown Tajuk Esei Bahagian C.
   - Pengoptimuman UI & UX Responsif Penuh untuk Semua Telefon Pintar & Tablet.
 
-- [x] **Fasa 6: Google OAuth Physflix UX & Percubaan Percuma 2 Jam**
+- [x] **Fasa 6: Google OAuth Physflix UX & Percubaan Percuma 2 Hari**
   - Integrasi penuh Google OAuth Supabase dengan Hero sinematik ala Physflix.
   - Pengalihan automatik (*auto-redirect*) terus ke Dashboard sejurus log masuk.
   - Menu Dropdown Profil Avatar interaktif berserta butang Log Keluar.
-  - Penguatkuasaan Tempoh Percubaan 2 Jam (`TRIAL_DURATION_MS = 2 Jam`) dan auto-lock sistem.
+  - Penguatkuasaan Tempoh Percubaan 2 Hari (`TRIAL_DURATION_MS = 2 Hari`) dan auto-lock sistem.
   - Notis tamat tempoh, medan Kunci Lesen 16-digit, dan butang pembelian terus Telegram `@halimroslan`.
   - Penyesuaian margin simetri banner 1080px sejajar dengan kad ujian.
   - Pembersihan UI: Penyingkiran tab lewah, butang bertindih, dan modal lesen yang fokus.
