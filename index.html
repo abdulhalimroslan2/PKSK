@@ -2,7 +2,7 @@
 <html lang="ms">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>Portal Rasmi PKSK | Kementerian Pendidikan Malaysia</title>
   <meta name="description" content="Sistem Pentaksiran Kemasukan Sekolah Khusus (PKSK) Tingkatan 1 - Kementerian Pendidikan Malaysia">
   <!-- PWA & Mobile Web App Meta -->
@@ -28,7 +28,7 @@
        ========================================================================= -->
   <header id="acc-page-wrap">
     <div id="topnav" style="background-color:#0d355c; width:100%; border-bottom:1px solid #0a2b4b;">
-      <div style="max-width:1140px; margin:0 auto; padding:0 15px; display:flex; justify-content:space-between; align-items:center; height:45px;">
+      <div class="portal-topnav-wrap">
         <h2 class="tranz" style="font-family:'Manrope', sans-serif; font-size:14px; color:#ffffff; font-weight:700; margin:0;">Selamat Datang ke PORTAL KPM</h2>
         <div style="display:flex; align-items:center; gap:15px;">
           <!-- License Status Pill -->
@@ -56,21 +56,21 @@
     </div>
 
     <div id="mainhead" style="background-color:#ffffff; width:100%;">
-      <div style="max-width:1140px; margin:0 auto; padding:20px 15px; display:flex; justify-content:space-between; align-items:center;">
+      <div class="portal-mainhead-wrap">
         
         <!-- Left: Logo & Title (Exactly like MOE portal) -->
-        <a href="#" style="display:flex; align-items:center; text-decoration:none; gap:15px;">
-          <img src="assets/jata_negara_kpm.svg" alt="Logo KPM" style="height:88px; width:auto;">
-          <img src="assets/pksk_icon_official.png" alt="PKSK AI Official Icon" style="height:74px; width:auto; border-radius:14px; filter:drop-shadow(0 3px 6px rgba(0,0,0,0.12));">
-          <div style="display:flex; flex-direction:column; justify-content:center;">
-            <div style="font-family:'Manrope', sans-serif; font-size:13px; font-weight:700; color:#333333; letter-spacing:0.5px; margin-bottom:2px;">PORTAL RASMI</div>
-            <div style="font-family:'Manrope', sans-serif; font-size:27px; font-weight:800; color:#444444; line-height:1; text-transform:uppercase;">Kementerian Pendidikan</div>
-            <div style="font-family:'Manrope', sans-serif; font-size:12px; font-weight:700; color:#666666; margin-top:5px; background:#f1f5f9; padding:3px 8px; border-radius:4px; display:inline-block; width:fit-content;">SISTEM PENTAKSIRAN KEMASUKAN SEKOLAH KHUSUS (PKSK)</div>
+        <a href="#" class="portal-brand-anchor">
+          <img src="assets/jata_negara_kpm.svg" alt="Logo KPM" class="portal-logo-jata">
+          <img src="assets/pksk_icon_official.png" alt="PKSK AI Official Icon" class="portal-logo-pksk">
+          <div class="portal-brand-text">
+            <div class="portal-brand-tag">PORTAL RASMI</div>
+            <div class="portal-brand-name">Kementerian Pendidikan</div>
+            <div class="portal-brand-badge">SISTEM PENTAKSIRAN KEMASUKAN SEKOLAH KHUSUS (PKSK)</div>
           </div>
         </a>
 
         <!-- Right: Candidate Info & User Icon -->
-        <div style="display:flex; align-items:center; gap:16px; text-align:right;">
+        <div class="portal-user-meta">
           <div style="display:flex; flex-direction:column; align-items:flex-end; justify-content:center; gap:2px;">
             <div style="display:flex; align-items:center; gap:8px;">
               <span id="dispCandidateName" style="font-family:'Manrope', sans-serif; font-size:14px; font-weight:800; color:#0d355c; text-transform:uppercase;">CALON PKSK</span>
@@ -367,15 +367,15 @@
 
         <!-- Question Footer Navigation -->
         <div class="q-action-footer">
-          <div style="display:flex; gap:0.5rem;">
+          <div class="q-action-footer-left">
             <button id="btnPrevQuestion" class="btn-kpm btn-kpm-outline">
-              <i class="fa-solid fa-chevron-left"></i> Soalan Sebelumnya
+              <i class="fa-solid fa-chevron-left"></i> <span>Soalan Sebelumnya</span>
             </button>
             <button id="btnFlagReview" class="btn-kpm btn-kpm-outline">
               <i class="fa-solid fa-flag"></i> <span id="btnFlagLabel">Tanda Semakan</span>
             </button>
           </div>
-          <button id="btnNextQuestion" class="btn-kpm btn-kpm-primary" style="padding:0.65rem 1.5rem;">
+          <button id="btnNextQuestion" class="btn-kpm btn-kpm-primary">
             <span>Soalan Seterusnya</span>
             <i class="fa-solid fa-chevron-right"></i>
           </button>
@@ -559,7 +559,7 @@
           <textarea id="inputEssayText" class="essay-textarea" placeholder="Tuliskan karangan anda di sini..."></textarea>
         </div>
 
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.5rem; border-top:1px solid var(--border-subtle); padding-top:1.25rem;">
+        <div class="essay-action-footer" style="display:flex; justify-content:space-between; align-items:center; margin-top:1.5rem; border-top:1px solid var(--border-subtle); padding-top:1.25rem;">
           <button id="btnEssayBackToMcq" class="btn-kpm btn-kpm-outline">
             <i class="fa-solid fa-arrow-left"></i> Semak Bahagian A & B
           </button>
@@ -591,7 +591,7 @@
 
       <!-- Candidate Metadata Table -->
       <div style="background-color:var(--bg-surface-subtle); border:1.5px solid var(--border-subtle); border-radius:var(--radius-md); padding:1.1rem; margin-bottom:1.5rem; font-size:0.92rem;">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+        <div class="slip-candidate-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
           <div><span>Nama Calon:</span> <strong id="slipDispName">-</strong></div>
           <div><span>No. Kad Pengenalan:</span> <strong id="slipDispIc">-</strong></div>
           <div><span>Angka Giliran:</span> <strong id="slipDispIndex">-</strong></div>

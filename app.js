@@ -799,6 +799,9 @@
         state.currentIndex = idx;
         renderQuestion();
         renderPalette();
+        if (window.innerWidth < 1024 && dom.examWorkspaceView) {
+          dom.examWorkspaceView.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       };
 
       dom.paletteGridMatrix.appendChild(btn);
@@ -2415,6 +2418,9 @@ ${essay}
         state.currentIndex--;
         renderQuestion();
         renderPalette();
+        if (window.innerWidth < 768 && dom.dispQuestionNumberLabel) {
+          dom.dispQuestionNumberLabel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       }
     };
 
@@ -2423,6 +2429,9 @@ ${essay}
         state.currentIndex++;
         renderQuestion();
         renderPalette();
+        if (window.innerWidth < 768 && dom.dispQuestionNumberLabel) {
+          dom.dispQuestionNumberLabel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       } else {
         openSubmitModal();
       }

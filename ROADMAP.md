@@ -55,5 +55,5 @@ gantt
 - [x] PWA Penuh & Ikon Rasmi Korporat Janaan ChatGPT (DALL-E) dengan latar belakang PNG telus, perkataan PKSK, dan simbol AI di bucu atas kanan (manifest.json, sw.js, ikon 192/512/64px).
 - [x] Sistem Pintasan & Kunci Induk Pembangun (Developer Master Key 'PKSK-DEV-MASTER-2026' & '?dev=unlock' untuk akses penuh tanpa kuota).
 - [x] Kad Kawalan Pilihan Tema & Dropdown Tajuk Esei Bahagian C (penapis pil tema interaktif, dropdown pilihan tajuk khusus mengikut kategori, dan penyegerakan automatik dengan paparan stimulus serta cadangan isi AI).
-- [ ] Penambahbaikan susun atur kad cadangan esei bagi peranti skrin kecil (< 380px).
+- [x] Pengoptimuman UI & UX Responsif Penuh untuk Semua Telefon Pintar & Tablet (Portrait & Landscape: Safe-area insets, navigasi leret/swipe, skala logo adaptif, pelarasan mod lanskap skrin terhad, palet soalan mesra sentuhan, dan pencegahan auto-zoom Safari).
 - [ ] Integrasi pemantauan status pangkalan data Supabase melalui pelayan Supabaseauto.

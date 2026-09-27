@@ -26,7 +26,7 @@
 | **Fasa 2** | Integrasi Lesen Peranti Supabase Cloud | ✅ Selesai | Sistem lesen berpusat dengan pengesahan perkakasan & kuota |
 | **Fasa 3** | Penilai AI Artikulasi Penulisan (Ox Alpha + Gemini) | ✅ Selesai | Rubrik 4 kriteria LPM, pemilihan tajuk rawak, cadangan 4-6 frasa isi padat |
 | **Fasa 4** | Pemasa Berkembar & Perlindungan Anti-Salin Esei | ✅ Selesai | 45 minit masa menjawab + 10 minit auto-hide cadangan idea berjalan serentak |
-| **Fasa 5** | Bank Soalan KBAT 2026 & Penalaan Rubrik Melayu Baku | 🚀 Aktif | 22 Variasi tajuk esei, Kad Pilihan Tema & Dropdown Tajuk Esei Bahagian C, Dev Master Key & PWA Ikon Rasmi siap |
+| **Fasa 5** | Bank Soalan KBAT 2026 & Penalaan Rubrik Melayu Baku | 🚀 Aktif | 22 Variasi tajuk esei, Kad Pilihan Tema & Dropdown Tajuk, Pengoptimuman Penuh Telefon & Tablet (Portrait/Landscape), Dev Master Key & PWA Ikon Rasmi siap |
 
 ---
 
