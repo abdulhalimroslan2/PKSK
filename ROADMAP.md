@@ -1,6 +1,6 @@
 # 🗺️ ROADMAP: Sistem Simulator PKSK Online & Penilai AI Artikulasi Penulisan
 
-> **Status Semasa:** FASA 5 SEDANG DILAKSANAKAN (Variasi Esei & Penalaan Rubrik Melayu Baku Selesai)  
+> **Status Semasa:** FASA 6 SELESAI (Google OAuth Physflix UX, Percubaan 2 Jam & Paywall Kunci Lesen Siap Sepenuhnya)  
 > **Sasaran Utama:** PKSK Sesi Kemasukan 2026 / 2027
 
 ---
@@ -15,11 +15,13 @@ gantt
     Portal Simulator & Bank Soalan 500+   :done, f1, 2026-08-25, 2026-09-05
     Integrasi Lesen Peranti Supabase     :done, f2, 2026-09-06, 2026-09-11
     Penilai AI Artikulasi Penulisan      :done, f3, 2026-09-11, 2026-09-12
-    section Fasa 4: Pemasa & Integriti
+    section Fasa 4-5: Pemasa & Variasi
     Pemasa Berkembar 45m & 10m Serentak   :done, f4, 2026-09-12, 2026-09-12
-    section Fasa 5-6: Peningkatan Lanjutan
-    Bank Soalan KBAT 2026 & Ujian Skrin   :active, f5, 2026-09-25, 2026-10-05
-    PWA Penuh & Notifikasi Skor Calon     : f6, 2026-10-06, 2026-10-20
+    Bank Soalan KBAT 2026 & Ujian Skrin   :done, f5, 2026-09-25, 2026-09-27
+    section Fasa 6: Google Auth & Trial Paywall
+    Google Auth Physflix UX & Trial 2 Jam :done, f6, 2026-09-27, 2026-09-27
+    section Fasa 7: Peningkatan Bank Soalan
+    Bank Soalan Lanjutan KBAT Math & Sci  :active, f7, 2026-09-28, 2026-10-10
 ```
 
 ---
@@ -45,15 +47,27 @@ gantt
   - Modul anti-salin (`user-select: none` & sekatan copy event) aktif pada kotak cadangan isi.
   - Penerbitan terkini di Vercel: [https://pksk2026.vercel.app](https://pksk2026.vercel.app).
 
+- [x] **Fasa 5: Bank Soalan Tambahan & Peningkatan Model Analisis AI**
+  - Penalaan lanjut prompt penilaian tatabahasa Melayu Baku pada enjin AI.
+  - Penambahan 22 variasi tajuk esei Bahagian C.
+  - PWA Penuh & Ikon Rasmi Korporat Janaan ChatGPT.
+  - Sistem Pintasan & Kunci Induk Pembangun ('PKSK-DEV-MASTER-2026' & '?dev=unlock').
+  - Kad Kawalan Pilihan Tema & Dropdown Tajuk Esei Bahagian C.
+  - Pengoptimuman UI & UX Responsif Penuh untuk Semua Telefon Pintar & Tablet.
+
+- [x] **Fasa 6: Google OAuth Physflix UX & Percubaan Percuma 2 Jam**
+  - Integrasi penuh Google OAuth Supabase dengan Hero sinematik ala Physflix.
+  - Pengalihan automatik (*auto-redirect*) terus ke Dashboard sejurus log masuk.
+  - Menu Dropdown Profil Avatar interaktif berserta butang Log Keluar.
+  - Penguatkuasaan Tempoh Percubaan 2 Jam (`TRIAL_DURATION_MS = 2 Jam`) dan auto-lock sistem.
+  - Notis tamat tempoh, medan Kunci Lesen 16-digit, dan butang pembelian terus Telegram `@halimroslan`.
+  - Penyesuaian margin simetri banner 1080px sejajar dengan kad ujian.
+  - Pembersihan UI: Penyingkiran tab lewah, butang bertindih, dan modal lesen yang fokus.
+
 ---
 
-### 🔄 Fasa 5: Bank Soalan Tambahan & Peningkatan Model Analisis AI (Fasa Aktif)
+### 🔄 Fasa 7: Peningkatan Bank Soalan Lanjutan KBAT Math & Sains (Fasa Seterusnya)
 
 - [ ] Penambahan soalan format KBAT terkini untuk subjek Sains & Matematik.
-- [x] Penalaan lanjut prompt penilaian tatabahasa Melayu Baku pada enjin AI (Tatabahasa Dewan DBP & kesilapan morfologi/sintaksis spesifik).
-- [x] Penambahan 22 variasi tajuk esei Bahagian C merangkumi Buli di Sekolah, Ko-Akademik, Kokurikulum, Teknologi AI/Media Sosial, Sambutan Hari Kebangsaan & Hari Malaysia (sesuai calon 12-13 tahun).
-- [x] PWA Penuh & Ikon Rasmi Korporat Janaan ChatGPT (DALL-E) dengan latar belakang PNG telus, perkataan PKSK, dan simbol AI di bucu atas kanan (manifest.json, sw.js, ikon 192/512/64px).
-- [x] Sistem Pintasan & Kunci Induk Pembangun (Developer Master Key 'PKSK-DEV-MASTER-2026' & '?dev=unlock' untuk akses penuh tanpa kuota).
-- [x] Kad Kawalan Pilihan Tema & Dropdown Tajuk Esei Bahagian C (penapis pil tema interaktif, dropdown pilihan tajuk khusus mengikut kategori, dan penyegerakan automatik dengan paparan stimulus serta cadangan isi AI).
-- [x] Pengoptimuman UI & UX Responsif Penuh untuk Semua Telefon Pintar & Tablet (Portrait & Landscape: Safe-area insets, navigasi leret/swipe, skala logo adaptif, pelarasan mod lanskap skrin terhad, palet soalan mesra sentuhan, dan pencegahan auto-zoom Safari).
+- [ ] Ujian keserasian paparan penuh untuk peranti telefon pintar skrin ultra kecil (< 360px).
 - [ ] Integrasi pemantauan status pangkalan data Supabase melalui pelayan Supabaseauto.
