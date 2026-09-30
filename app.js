@@ -1368,19 +1368,217 @@
     dom.aiIdeaContent.innerHTML = html;
   }
 
+  /* =========================================================================
+     OPENROUTER MULTI-KEY AI & IDEA GENERATION ENGINE (9ROUTER POOL)
+     - Multi-Key Rotating Failover Pool from 9router (8 Keys)
+     - Smart Idea Generation: nvidia/nemotron-3-super-120b-a12b:free, openrouter/free
+     ========================================================================= */
+  const _OR_B64_KEYS = [
+    // Key #2 (Active & Fast)
+    'c2stb3ItdjEtOWRjMWQ2NjM4MjMzNmM5YjNhNzFiNGFjYjU1OGMyZmY3ZTgxNDFlNGYwOGVmODIwNTJjODU1ZjcwZDI5MGY2Mw==',
+    // Key #1 (Backup)
+    'c2stb3ItdjEtMjY0MTNkNzFmNTlmNmJiYTRkMmI2OGU2NGJhOWVkMWZkOTc1MDE2N2ZiMzc5MTdlYWI1OGUzMWNkMzI0MDA5Nw==',
+    'c2stb3ItdjEtNGIzMmYzM2JhYjY4Nzk0NjQwMWMzYTI2MWY0NjU1ZjFmZDE3YTU0MWNlMGIxMTlmOTJiN2Q5NzUzZDYxYTY4Zg==',
+    'c2stb3ItdjEtODE3ODc3ZDYxZGFmYjliZTlkM2Y4MzdmNTI3YjhmZjlhMjc4MzAzN2FkOWZlYTIyOWI5N2NhYzdlMWM0YzI3Mg==',
+    'c2stb3ItdjEtOGJhYzg0MmM5MzU2ZjViMWE2M2Y0ZGQwMGRlNzQ2NmJmYTZhYjU4MTU0OGNiZmU2ZWY2ZTRlMTJlOWEzMWMyOA==',
+    'c2stb3ItdjEtODJkOTczZDdjMzY2NWNiNTllMWE0ZjU4MjhmNzQzZmQ5MzhkZWMzOWM0ZDlmZWI2OGY0MjQwMjcwOGM5YmY4NQ==',
+    'c2stb3ItdjEtZTA4MTRhYjI0MmQ2NmNiMGFjYzZmYzc2ZjI2NTdmY2VjYWFiZjEzNDhlZTU4MTQwY2E2OWJhNmJkMjI1MDNhZQ==',
+    'c2stb3ItdjEtYjNmN2IzZjIwYThjNzNjZWU1NGMxMjA2YWQwMGU5YzQxZTQzNmQ4NTAzYTdjZDk5MTM3MTk3YzI2ODg3ZjgxMA=='
+  ];
+  const OPENROUTER_KEYS_POOL = _OR_B64_KEYS.map(k => atob(k));
+
+  let currentOrKeyIdx = 0;
+  function getNextOrKey() {
+    const key = OPENROUTER_KEYS_POOL[currentOrKeyIdx % OPENROUTER_KEYS_POOL.length];
+    currentOrKeyIdx++;
+    return key;
+  }
+
+  // Vision OCR Models (Priority order: fastest & most accurate handwriting transcription)
+  const OPENROUTER_OCR_MODELS = [
+    'dots-studio/dots-3-note-preview:free',
+    'openrouter/free',
+    'meta-llama/llama-3.2-11b-vision-instruct:free',
+    'stealth/space-bunny-alpha'
+  ];
+
+  // Smartest Reasoning Models for Official LPM Rubric Grading
+  const OPENROUTER_EVAL_MODELS = [
+    'nvidia/nemotron-3-super-120b-a12b:free',
+    'openrouter/free'
+  ];
+
+  // Models for Fast & Creative PKSK Essay Idea Generation
+  const OPENROUTER_IDEA_MODELS = [
+    'nvidia/nemotron-3-super-120b-a12b:free',
+    'openrouter/free'
+  ];
+
+  // Universal Robust OpenRouter Chat Completion Engine
+  async function callOpenRouterChat(systemPrompt, userPrompt, candidateModels = null, maxTokens = 650) {
+    const modelsToTry = candidateModels && candidateModels.length > 0 ? candidateModels : OPENROUTER_IDEA_MODELS;
+    let lastError = 'Ralat sambungan AI';
+
+    const maxKeyAttempts = Math.min(3, OPENROUTER_KEYS_POOL.length);
+    for (let i = 0; i < maxKeyAttempts; i++) {
+      const currentKey = getNextOrKey();
+
+      for (const model of modelsToTry) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 9000); // 9s per model timeout
+
+        try {
+          const resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${currentKey}`,
+              'HTTP-Referer': 'https://pksk2026.vercel.app',
+              'X-Title': 'PKSK Simulator - Idea Generation'
+            },
+            signal: controller.signal,
+            body: JSON.stringify({
+              model: model,
+              messages: [
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: userPrompt }
+              ],
+              temperature: 0.35,
+              max_tokens: maxTokens
+            })
+          });
+
+          clearTimeout(timeoutId);
+
+          if (resp.ok) {
+            const data = await resp.json();
+            const text = data.choices?.[0]?.message?.content || '';
+
+            if (text && text.trim().length > 10) {
+              return {
+                success: true,
+                text: text.trim(),
+                model: `OpenRouter (${model.replace(':free', '')})`
+              };
+            }
+          } else {
+            const errData = await resp.json().catch(() => ({}));
+            lastError = errData.error?.message || `HTTP ${resp.status}`;
+            console.warn(`Model ${model} gagal (${resp.status}):`, lastError);
+          }
+        } catch (e) {
+          clearTimeout(timeoutId);
+          lastError = e.name === 'AbortError' ? `${model} masa tamat (9s)` : e.message;
+          console.warn(`Model ${model} ralat:`, e.message);
+        }
+      }
+    }
+
+    return { success: false, error: lastError };
+  }
+
+  // Compatibility Wrappers (Prevent ReferenceError in any legacy calls)
+  async function callGeminiAi(systemPrompt, userPrompt) {
+    return await callOpenRouterChat(systemPrompt, userPrompt);
+  }
+  async function callOxAlphaAi(systemPrompt, userPrompt) {
+    return await callOpenRouterChat(systemPrompt, userPrompt);
+  }
+
+  // Robust Extractor for AI Poin Isi (Handles JSON, Reasoning Preambles, Numbered Lists & Quotes)
+  function extractPointsFromAiText(rawText) {
+    if (!rawText || typeof rawText !== 'string') return [];
+
+    // 1. Cuba parse JSON standard
+    try {
+      let clean = rawText.replace(/```(?:json)?/gi, '').replace(/```/g, '').trim();
+      const jsonMatch = clean.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        const parsed = JSON.parse(jsonMatch[0]);
+        if (Array.isArray(parsed.isi_points) && parsed.isi_points.length > 0) {
+          return parsed.isi_points.map(p => String(p).trim()).filter(Boolean);
+        }
+        if (Array.isArray(parsed.points) && parsed.points.length > 0) {
+          return parsed.points.map(p => String(p).trim()).filter(Boolean);
+        }
+        if (Array.isArray(parsed.all_sentences) && parsed.all_sentences.length > 0) {
+          return parsed.all_sentences.map(p => String(p).trim()).filter(Boolean);
+        }
+      }
+    } catch (e) {}
+
+    // 2. Regex fallback untuk senarai bernombor (cth: 1. "...", 1. Poin...)
+    const found = [];
+    const lines = rawText.split('\n');
+    for (const line of lines) {
+      const numMatch = line.match(/^\s*(?:\d+[\.\)]|[-*•])\s*["'`]?([^"'`\r\n]{10,95})["'`]?\s*$/);
+      if (numMatch) {
+        let p = numMatch[1].trim();
+        p = p.replace(/\s*=>.*$/, '').replace(/["'`]/g, '').trim();
+        if (p && !p.toLowerCase().includes('words') && !p.toLowerCase().includes('isi_points') && !found.includes(p)) {
+          found.push(p);
+        }
+      }
+    }
+    if (found.length >= 3) return found;
+
+    // 3. Regex fallback untuk frasa dalam petikan ("...")
+    const quoteMatches = rawText.match(/"([^"\r\n]{12,85})"/g);
+    if (quoteMatches) {
+      for (const q of quoteMatches) {
+        const p = q.slice(1, -1).trim();
+        if (p && !found.includes(p) && !p.includes('=>') && !p.toLowerCase().includes('words') && !p.toLowerCase().includes('isi_points')) {
+          found.push(p);
+        }
+      }
+    }
+
+    return found;
+  }
+
+  // Dynamic Offline/Fallback Alternative Points Generator (Guarantees fresh points if offline)
+  function generateDynamicFallbackIdeas(topic) {
+    if (!topic) return [];
+    const defaults = Array.isArray(topic.defaultIdeas) ? topic.defaultIdeas : [];
+
+    // Synthesize fresh alternative perspective points
+    const perspectives = [
+      'Amalkan disiplin kendiri dan patuhi garis panduan sekolah',
+      'Tingkatkan komunikasi berkesan antara rakan sebaya dan guru',
+      'Manfaatkan bimbingan guru kaunseling dan ibu bapa',
+      'Semaikan nilai murni dan integriti dalam setiap tindakan',
+      'Pupuk semangat perpaduan dan saling menghormati dalam aktiviti',
+      'Kembangkan bakat serta kemahiran berfikir aras tinggi (KBAT)',
+      'Gunakan kemudahan teknologi secara berhemah dan bertanggungjawab'
+    ];
+
+    // Combine and shuffle
+    const pool = [...defaults, ...perspectives];
+    const shuffled = pool.sort(() => 0.5 - Math.random());
+    const unique = [];
+    for (const p of shuffled) {
+      if (!unique.includes(p) && p.length > 10) {
+        unique.push(p);
+      }
+      if (unique.length >= 5) break;
+    }
+    return unique.length >= 4 ? unique : defaults;
+  }
+
   async function generateAiEssayIdeas(topic, forceRegen = false) {
     if (!topic) return;
 
-    if (!forceRegen && topic.aiCustomIdeas) {
-      renderAiIdeaHtml(topic.aiCustomIdeas, 'Gemini AI');
+    if (!forceRegen && topic.aiCustomIdeas && topic.aiCustomIdeas.length >= 4) {
+      renderAiIdeaHtml(topic.aiCustomIdeas, 'OpenRouter AI');
       return;
     }
 
-    if (topic.defaultIdeas && !forceRegen) {
+    if (!forceRegen && topic.defaultIdeas) {
       renderAiIdeaHtml(topic.defaultIdeas, 'Idea Piawai PKSK');
       return;
     }
 
+    // Paparkan status visual proses penjanaan
     if (dom.aiIdeaBadge) {
       dom.aiIdeaBadge.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menjana Poin Ringkas...';
       dom.aiIdeaBadge.style.background = '#fef3c7';
@@ -1388,23 +1586,23 @@
     }
     if (dom.btnRegenerateAiIdeas) {
       dom.btnRegenerateAiIdeas.disabled = true;
+      dom.btnRegenerateAiIdeas.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menjana...';
     }
 
     const sysPrompt = `Anda ialah Guru Cemerlang Bahasa Melayu pakar Pentaksiran Kemasukan Sekolah Khusus (PKSK).
-Tugas anda: Berikan terus 4 HINGGA 6 POIN FRASA RINGKAS sebagai idea karangan calon.
+Tugas anda: Berikan terus 4 HINGGA 6 POIN FRASA RINGKAS sebagai idea karangan calon umur 12 tahun.
 CONTOH FORMAT POIN YANG DIMAHUKAN:
 "Pupuk semangat perpaduan antara murid pelbagai kaum"
 "Amalkan sikap amanah dan jujur dalam akademik"
 "Patuhi peraturan sekolah dan elakkan salah laku"
 
 SYARAT KETAT:
-1. WAJIB RINGKAS: Setiap poin HANYA frasa pendek (4 hingga 8 perkataan sahaja).
+1. WAJIB RINGKAS: Setiap poin HANYA frasa pendek (4 hingga 8 patah perkataan sahaja).
 2. JANGAN tulis ayat panjang, jangan buat huraian atau contoh berjela-jela.
 3. Terus kepada poin tindakan atau isi penting sahaja.
 4. Jumlah poin: MESTI TEPAT ANTARA 4 HINGGA 6 POIN SAHAJA.
 Format output JSON SAHAJA:
 {
-  "total_points": 5,
   "isi_points": [
     "Poin pendek 1...",
     "Poin pendek 2...",
@@ -1418,46 +1616,40 @@ Format output JSON SAHAJA:
 Tajuk: "${topic.title}"
 Stimulus: "${topic.prompt}"`;
 
-    let aiResult = await callGeminiAi(sysPrompt, userPrompt);
-    if (!aiResult.success || !aiResult.text) {
-      aiResult = await callOxAlphaAi(sysPrompt, userPrompt);
-    }
+    try {
+      const aiResult = await callOpenRouterChat(sysPrompt, userPrompt, OPENROUTER_IDEA_MODELS, 700);
 
-    if (dom.btnRegenerateAiIdeas) {
-      dom.btnRegenerateAiIdeas.disabled = false;
-    }
+      if (aiResult.success && aiResult.text) {
+        let points = extractPointsFromAiText(aiResult.text);
 
-    if (aiResult.success && aiResult.text) {
-      try {
-        let clean = aiResult.text.replace(/\`\`\`json/gi, '').replace(/\`\`\`/g, '').trim();
-        const m = clean.match(/\{[\s\S]*\}/);
-        if (m) clean = m[0];
-        const parsed = JSON.parse(clean);
+        if (points && points.length >= 3) {
+          // Enforce 4 to 6 points
+          if (points.length < 4 && topic.defaultIdeas) {
+            points = [...points, ...topic.defaultIdeas].slice(0, 5);
+          } else if (points.length > 6) {
+            points = points.slice(0, 6);
+          }
 
-        let points = [];
-        if (Array.isArray(parsed.isi_points) && parsed.isi_points.length > 0) {
-          points = parsed.isi_points;
-        } else if (Array.isArray(parsed.all_sentences) && parsed.all_sentences.length > 0) {
-          points = parsed.all_sentences;
+          topic.aiCustomIdeas = points;
+          renderAiIdeaHtml(points, 'OpenRouter AI (Poin Baharu)');
+          return;
         }
-
-        // Enforce 4 to 6 points
-        if (points.length < 4 && topic.defaultIdeas) {
-          points = topic.defaultIdeas;
-        } else if (points.length > 6) {
-          points = points.slice(0, 6);
-        }
-
-        topic.aiCustomIdeas = points;
-        renderAiIdeaHtml(points, aiResult.model || 'Gemini AI');
-        return;
-      } catch (err) {
-        console.warn('Gagal parse JSON poin ringkas AI:', err);
       }
-    }
 
-    if (topic.defaultIdeas) {
-      renderAiIdeaHtml(topic.defaultIdeas, 'Idea Piawai PKSK');
+      // Jika sambungan luar gagal, gunakan penjana variasi pintar tempatan
+      console.warn('AI online generation tidak menghasilkan poin lengkap, menggunakan variasi pintar:', aiResult.error);
+      const fallbackPoints = generateDynamicFallbackIdeas(topic);
+      topic.aiCustomIdeas = fallbackPoints;
+      renderAiIdeaHtml(fallbackPoints, 'Idea Variasi PKSK');
+    } catch (err) {
+      console.error('Ralat generateAiEssayIdeas:', err);
+      const fallbackPoints = generateDynamicFallbackIdeas(topic);
+      renderAiIdeaHtml(fallbackPoints, 'Idea Piawai PKSK');
+    } finally {
+      if (dom.btnRegenerateAiIdeas) {
+        dom.btnRegenerateAiIdeas.disabled = false;
+        dom.btnRegenerateAiIdeas.innerHTML = '<i class="fa-solid fa-rotate"></i> Jana Isi Baharu';
+      }
     }
   }
 
@@ -1623,40 +1815,7 @@ Stimulus: "${topic.prompt}"`;
      - Official LPM Rubric Grading (Smartest Frontier): nvidia/nemotron-3-ultra-550b-a55b:free, nvidia/nemotron-3-super-120b-a12b:free
      - Multi-Key Rotating Failover Pool from 9router (8 Keys)
      ========================================================================= */
-  const _OR_B64_KEYS = [
-    // Key #2 (Active & Fast)
-    'c2stb3ItdjEtOWRjMWQ2NjM4MjMzNmM5YjNhNzFiNGFjYjU1OGMyZmY3ZTgxNDFlNGYwOGVmODIwNTJjODU1ZjcwZDI5MGY2Mw==',
-    // Key #1 (Backup)
-    'c2stb3ItdjEtMjY0MTNkNzFmNTlmNmJiYTRkMmI2OGU2NGJhOWVkMWZkOTc1MDE2N2ZiMzc5MTdlYWI1OGUzMWNkMzI0MDA5Nw==',
-    'c2stb3ItdjEtNGIzMmYzM2JhYjY4Nzk0NjQwMWMzYTI2MWY0NjU1ZjFmZDE3YTU0MWNlMGIxMTlmOTJiN2Q5NzUzZDYxYTY4Zg==',
-    'c2stb3ItdjEtODE3ODc3ZDYxZGFmYjliZTlkM2Y4MzdmNTI3YjhmZjlhMjc4MzAzN2FkOWZlYTIyOWI5N2NhYzdlMWM0YzI3Mg==',
-    'c2stb3ItdjEtOGJhYzg0MmM5MzU2ZjViMWE2M2Y0ZGQwMGRlNzQ2NmJmYTZhYjU4MTU0OGNiZmU2ZWY2ZTRlMTJlOWEzMWMyOA==',
-    'c2stb3ItdjEtODJkOTczZDdjMzY2NWNiNTllMWE0ZjU4MjhmNzQzZmQ5MzhkZWMzOWM0ZDlmZWI2OGY0MjQwMjcwOGM5YmY4NQ==',
-    'c2stb3ItdjEtZTA4MTRhYjI0MmQ2NmNiMGFjYzZmYzc2ZjI2NTdmY2VjYWFiZjEzNDhlZTU4MTQwY2E2OWJhNmJkMjI1MDNhZQ==',
-    'c2stb3ItdjEtYjNmN2IzZjIwYThjNzNjZWU1NGMxMjA2YWQwMGU5YzQxZTQzNmQ4NTAzYTdjZDk5MTM3MTk3YzI2ODg3ZjgxMA=='
-  ];
-  const OPENROUTER_KEYS_POOL = _OR_B64_KEYS.map(k => atob(k));
-
-  let currentOrKeyIdx = 0;
-  function getNextOrKey() {
-    const key = OPENROUTER_KEYS_POOL[currentOrKeyIdx % OPENROUTER_KEYS_POOL.length];
-    currentOrKeyIdx++;
-    return key;
-  }
-
-  // Vision OCR Models (Priority order: fastest & most accurate handwriting transcription)
-  const OPENROUTER_OCR_MODELS = [
-    'dots-studio/dots-3-note-preview:free',
-    'openrouter/free',
-    'meta-llama/llama-3.2-11b-vision-instruct:free',
-    'stealth/space-bunny-alpha'
-  ];
-
-  // Smartest Reasoning Models for Official LPM Rubric Grading
-  const OPENROUTER_EVAL_MODELS = [
-    'nvidia/nemotron-3-super-120b-a12b:free',
-    'openrouter/free'
-  ];
+  // (OpenRouter Pool, Keys & Models are declared above with callOpenRouterChat)
 
   // Verify if a file is an image (including iPhone HEIC/HEIF)
   function isSupportedImageFile(file) {
