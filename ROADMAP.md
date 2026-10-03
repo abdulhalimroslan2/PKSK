@@ -1,6 +1,6 @@
 # 🗺️ ROADMAP: Sistem Simulator PKSK Online & Penilai AI Artikulasi Penulisan
 
-> **Status Semasa:** FASA 6 SELESAI (Google OAuth Physflix UX, Percubaan 2 Hari & Paywall Kunci Lesen Siap Sepenuhnya)  
+> **Status Semasa:** FASA 6 SELESAI & PKSK ADMIN PWA SELESAI (Bersedia Memulakan Fasa 7: Peningkatan Bank Soalan Lanjutan KBAT Math & Sains)  
 > **Sasaran Utama:** PKSK Sesi Kemasukan 2026 / 2027
 
 ---
@@ -20,8 +20,9 @@ gantt
     Bank Soalan KBAT 2026 & Ujian Skrin   :done, f5, 2026-09-25, 2026-09-27
     section Fasa 6: Google Auth & Trial Paywall
     Google Auth Physflix UX & Trial 2 Hari :done, f6, 2026-09-27, 2026-09-27
+    PKSK Admin PWA & 500 Kunci Live Supabase :done, admin, 2026-10-03, 2026-10-03
     section Fasa 7: Peningkatan Bank Soalan
-    Bank Soalan Lanjutan KBAT Math & Sci  :active, f7, 2026-09-28, 2026-10-10
+    Bank Soalan Lanjutan KBAT Math & Sci  :active, f7, 2026-10-03, 2026-10-15
 ```
 
 ---
@@ -34,7 +35,7 @@ gantt
   - Skim pemarkahan objektif automatik beserta slip keputusan rasmi.
 
 - [x] **Fasa 2: Pengurusan Lesen Supabase Cloud**
-  - Integrasi jadual `pksk_licenses` di Supabase (`rvslrscgbhgdcktdtfrl`).
+  - Integrasi jadual `pksk_licenses` di Supabase (`lcfkvljmcamulshvyeqe`).
   - Sistem pengaktifan kunci lesen peranti dengan status perkakasan.
 
 - [x] **Fasa 3: Penilai AI Artikulasi Penulisan (Ox Alpha + Gemini)**
@@ -63,6 +64,13 @@ gantt
   - Notis tamat tempoh, medan Kunci Lesen 16-digit, dan butang pembelian terus Telegram `@halimroslan`.
   - Penyesuaian margin simetri banner 1080px sejajar dengan kad ujian.
   - Pembersihan UI: Penyingkiran tab lewah, butang bertindih, dan modal lesen yang fokus.
+
+- [x] **PKSK Admin Hub: PWA Penuh, Ikon Kunci PKSK & Pemulihan Supabase (2026-10-03)**
+  - Pemulihan & suntikan 500 kunci lesen komersial rasmi ke Supabase `lcfkvljmcamulshvyeqe`.
+  - Penambahan perlindungan auto-migrasi `localStorage` pada Portal Pentadbir.
+  - PWA Penuh dengan reka bentuk ikon rasmi lambang kunci & teks besar "PKSK ADMIN" (512px, 192px, maskable, iOS apple-touch-icon, favicon).
+  - Pengoptimuman UI/UX responsif sepenuhnya untuk telefon pintar (iPhone/Android) dan tablet (iPad).
+  - Diterbitkan secara live di Vercel: [https://pkskadmin.vercel.app](https://pkskadmin.vercel.app).
 
 ---
 
