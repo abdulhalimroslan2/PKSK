@@ -30,7 +30,7 @@
 | **Fasa 4** | Pemasa Berkembar & Perlindungan Anti-Salin Esei | ✅ Selesai | 45 minit masa menjawab + 10 minit auto-hide cadangan idea serentak |
 | **Fasa 5** | Bank Soalan KBAT 2026 & Penalaan Rubrik Melayu Baku | ✅ Selesai | 23 Variasi tajuk esei, Kad Tema & Dropdown, Pengoptimuman Skrin Telefon & Tablet, Dev Master Key & Ikon PWA siap |
 | **Fasa 6** | Google OAuth Physflix UX & Percubaan 2 Hari | ✅ Selesai | Log masuk Google OAuth, auto-redirect Dashboard, avatar dropdown profil & log keluar, pemasa percubaan 2 hari, auto-lock sistem, butang pembelian Telegram @halimroslan, penyingkiran butang lewah & pembersihan modal lesen |
-| **PKSK Admin** | PWA Rasmi Portal Pentadbir & Pemantauan 500 Lesen | ✅ Selesai | PWA penuh dengan ikon lambang kunci + teks besar PKSK, manifest, SW, auto-migrasi Supabase `lcfkvljmcamulshvyeqe`, UI/UX responsif telefon & tablet |
+| **PKSK Admin** | PWA Rasmi & Impeccable UI/UX Redesign | ✅ Selesai | PWA penuh, Impeccable redesign (Outfit typography, executive telemetry rail, zero slop, WCAG AA compliant, Alt+S & / keyboard shortcuts), 500 lesen Supabase |
 | **Fasa 7** | Peningkatan Bank Soalan Lanjutan KBAT Math & Sains | ⏳ Sedia Dimulakan | Penambahan soalan format KBAT terkini untuk subjek Sains & Matematik |
 
 ---
@@ -63,6 +63,7 @@
 ---
 
 ## 5. 📝 Log Keputusan Teknikal (Decisions & Mini-ADRs)
+- **2026-10-03 - Impeccable UI & UX Redesign untuk PKSK Admin Hub:** Melaksanakan reka bentuk semula menyeluruh berpandukan kemahiran `/impeccable` (Mode: Operate). Menghapuskan semua anti-pattern (kicker, gradient text, pulsing decorative dots, floating card slop, colored glows), menggantikan tipografi dengan Outfit & JetBrains Mono, menambah telemetry & allocation rail 5-metrik, mematuhi nisbah kontras WCAG AA (>= 4.5:1), menyepadukan pintasan papan kekunci (Alt+S & /), dan lulus pemeriksaan pengesan reka bentuk tanpa sebarang kecacatan (`[]`).
 - **2026-10-03 - PWA Penuh & Pengoptimuman Responsif Telefon/Tablet untuk PKSK Admin Hub:** Menjana ikon PWA rasmi (lambang kunci & teks besar PKSK), menyertakan `manifest.json` dan `sw.js`, serta melaksanakan reka bentuk responsif penuh untuk telefon pintar dan tablet.
 - **2026-10-03 - Perlindungan Auto-Migrasi `localStorage` pada Portal Pentadbir:** Memastikan sebarang URL atau kunci lapuk daripada projek lama (`rvslrscgbhgdcktdtfrl`) dipadamkan secara automatik apabila portal dimuatkan.
 - **2026-10-03 - Pemulihan & Suntikan 500 Kunci Lesen Komersial PKSK ke Supabase:** Berjaya menyuntik 500 kunci rasmi dari `data/pksk_500_licenses.json` ke projek baharu `lcfkvljmcamulshvyeqe` dengan had 2 peranti aktif.

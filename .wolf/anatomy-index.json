@@ -1,0 +1,771 @@
+{
+  "version": 1,
+  "meta": {
+    "lastScanned": "2026-10-03T03:41:44.982Z",
+    "fileCount": 78,
+    "hits": 0,
+    "misses": 0,
+    "renderedHash": "25ff5f96b76c49062bcc51a5b61f0383024bba09733ba96ab91f16471f4903dc",
+    "storeUpdatedAt": "2026-10-03T03:41:44.983Z",
+    "rootHash": "08b239b52e8d48d3"
+  },
+  "files": {
+    ".gitignore": {
+      "description": "Git ignore rules",
+      "tokens": 51,
+      "hash": "356c1e84666367db",
+      "size": 192,
+      "mtimeMs": 1790488515559.8457,
+      "updatedAt": "2026-10-03T03:41:44.772Z",
+      "source": "scan"
+    },
+    ".ignore": {
+      "description": "graft's cards are gitignored but should stay greppable: ripgrep reads",
+      "tokens": 48,
+      "hash": "5b345696ac9daf0b",
+      "size": 180,
+      "mtimeMs": 1790478541713.8486,
+      "updatedAt": "2026-10-03T03:41:44.773Z",
+      "source": "scan"
+    },
+    ".vercelignore": {
+      "description": "scripts/**",
+      "tokens": 106,
+      "hash": "fd58a77a426dc84f",
+      "size": 394,
+      "mtimeMs": 1790513069775.6406,
+      "updatedAt": "2026-10-03T03:41:44.773Z",
+      "source": "scan"
+    },
+    "AGENTS.md": {
+      "description": "OpenWolf",
+      "tokens": 75,
+      "hash": "e401f79554a8d796",
+      "size": 297,
+      "mtimeMs": 1790998746474.8152,
+      "updatedAt": "2026-10-03T03:41:44.774Z",
+      "source": "scan"
+    },
+    "api/evaluate.js": {
+      "description": "Vercel Serverless Function: High-Intelligence Essay Evaluation & Grading",
+      "tokens": 3012,
+      "hash": "fcc7dd450c0e9d04",
+      "size": 10539,
+      "mtimeMs": 1790495754485.8135,
+      "updatedAt": "2026-10-03T03:41:44.775Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "getKeys",
+          "kind": "fn",
+          "startLine": 23,
+          "endLine": 30,
+          "tokens": 80
+        },
+        {
+          "name": "evaluateEssayLocalEngine",
+          "kind": "fn",
+          "startLine": 38,
+          "endLine": 138,
+          "tokens": 1295
+        },
+        {
+          "name": "handler",
+          "kind": "fn",
+          "startLine": 140,
+          "endLine": 256,
+          "tokens": 1234
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "function getKeys() {\nfunction evaluateEssayLocalEngine(essay, topicTitle = \"Umum\", topicPrompt = \"\") {\nexport default async function handler(req, res) {"
+    },
+    "api/transcribe.js": {
+      "description": "Vercel Serverless Function: OCR Handwriting Transcription using OpenRouter Vision Models",
+      "tokens": 2054,
+      "hash": "f49d321b6c6c9e88",
+      "size": 7188,
+      "mtimeMs": 1790492941185.3496,
+      "updatedAt": "2026-10-03T03:41:44.775Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "getKeys",
+          "kind": "fn",
+          "startLine": 16,
+          "endLine": 23,
+          "tokens": 80
+        },
+        {
+          "name": "cleanExtractedText",
+          "kind": "fn",
+          "startLine": 30,
+          "endLine": 87,
+          "tokens": 633
+        },
+        {
+          "name": "handler",
+          "kind": "fn",
+          "startLine": 89,
+          "endLine": 180,
+          "tokens": 938
+        }
+      ],
+      "symbolSource": "ts",
+      "skeleton": "function getKeys() {\nfunction cleanExtractedText(msg) {\nexport default async function handler(req, res) {"
+    },
+    "app.js": {
+      "description": "SISTEM PENTAKSIRAN KEMASUKAN SEKOLAH KHUSUS (PKSK) TINGKATAN 1",
+      "tokens": 51774,
+      "hash": "b416bfa10f30fbe6",
+      "size": 181227,
+      "mtimeMs": 1790762909141.344,
+      "updatedAt": "2026-10-03T03:41:44.780Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_bm_set1_jagung.webp": {
+      "description": "",
+      "tokens": 1190,
+      "hash": "092dd032eb1985dc",
+      "size": 4692,
+      "mtimeMs": 1790299641023.1282,
+      "updatedAt": "2026-10-03T03:41:44.781Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_bm_set2_tetikus.webp": {
+      "description": "",
+      "tokens": 938,
+      "hash": "29111095a6533dad",
+      "size": 3682,
+      "mtimeMs": 1790299641011.9358,
+      "updatedAt": "2026-10-03T03:41:44.782Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_bm_set3_sesiku.webp": {
+      "description": "",
+      "tokens": 4331,
+      "hash": "35c897b5eaaed971",
+      "size": 17128,
+      "mtimeMs": 1790299641034.3176,
+      "updatedAt": "2026-10-03T03:41:44.783Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_bm_set4_bertatih.webp": {
+      "description": "",
+      "tokens": 4886,
+      "hash": "93064cf43bca3b40",
+      "size": 19288,
+      "mtimeMs": 1790299640847.157,
+      "updatedAt": "2026-10-03T03:41:44.784Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_bm_set5_pentas.webp": {
+      "description": "",
+      "tokens": 852,
+      "hash": "814963f99a0a6856",
+      "size": 3358,
+      "mtimeMs": 1790299640337.1558,
+      "updatedAt": "2026-10-03T03:41:44.784Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_bm_set6_manggis.webp": {
+      "description": "",
+      "tokens": 796,
+      "hash": "874c992870996ce6",
+      "size": 3126,
+      "mtimeMs": 1790299640982.3708,
+      "updatedAt": "2026-10-03T03:41:44.784Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_bm_set9_sawah.webp": {
+      "description": "",
+      "tokens": 988,
+      "hash": "6f298075955ae94f",
+      "size": 3924,
+      "mtimeMs": 1790299641041.8062,
+      "updatedAt": "2026-10-03T03:41:44.785Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_eng_016_menu.webp": {
+      "description": "",
+      "tokens": 5171,
+      "hash": "f1f7e0d9515e5baf",
+      "size": 20404,
+      "mtimeMs": 1790299640475.0452,
+      "updatedAt": "2026-10-03T03:41:44.785Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_eng_017_email.webp": {
+      "description": "",
+      "tokens": 9108,
+      "hash": "5867e0302731b67b",
+      "size": 36062,
+      "mtimeMs": 1790299641001.4736,
+      "updatedAt": "2026-10-03T03:41:44.787Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_eng_018_dialogue.webp": {
+      "description": "",
+      "tokens": 2486,
+      "hash": "1c02e270b43ebc8c",
+      "size": 9800,
+      "mtimeMs": 1790299640453.8062,
+      "updatedAt": "2026-10-03T03:41:44.787Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_eng_019_poem.webp": {
+      "description": "",
+      "tokens": 1448,
+      "hash": "a86fe30fb84c78f4",
+      "size": 5710,
+      "mtimeMs": 1790299640341.254,
+      "updatedAt": "2026-10-03T03:41:44.788Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_eng_021_diary.webp": {
+      "description": "",
+      "tokens": 1170,
+      "hash": "984b58577433c982",
+      "size": 4636,
+      "mtimeMs": 1790299641036.9944,
+      "updatedAt": "2026-10-03T03:41:44.788Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_eng_023_nightingale.webp": {
+      "description": "",
+      "tokens": 4073,
+      "hash": "d2770cb0217241a4",
+      "size": 16098,
+      "mtimeMs": 1790299641025.8398,
+      "updatedAt": "2026-10-03T03:41:44.789Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_eng_026_gymnast.webp": {
+      "description": "",
+      "tokens": 34180,
+      "hash": "7b024d4bc2d7f54b",
+      "size": 135272,
+      "mtimeMs": 1790299640719.4563,
+      "updatedAt": "2026-10-03T03:41:44.793Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_mat_003_tali.webp": {
+      "description": "",
+      "tokens": 1058,
+      "hash": "5bfca1c464fcfbc4",
+      "size": 4186,
+      "mtimeMs": 1790299641024.26,
+      "updatedAt": "2026-10-03T03:41:44.793Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_mat_005_buku.webp": {
+      "description": "",
+      "tokens": 2375,
+      "hash": "4452abb442025f08",
+      "size": 9340,
+      "mtimeMs": 1790299640760.954,
+      "updatedAt": "2026-10-03T03:41:44.794Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_mat_009_jadual.webp": {
+      "description": "",
+      "tokens": 8244,
+      "hash": "ce3af1c7ebaac4e4",
+      "size": 32648,
+      "mtimeMs": 1790299640430.117,
+      "updatedAt": "2026-10-03T03:41:44.795Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_mat_011_bikar.webp": {
+      "description": "",
+      "tokens": 5600,
+      "hash": "addb4a59e2ca0654",
+      "size": 22060,
+      "mtimeMs": 1790299640405.9094,
+      "updatedAt": "2026-10-03T03:41:44.796Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_mat_016_bekas.webp": {
+      "description": "",
+      "tokens": 1566,
+      "hash": "6d85db9743a5796d",
+      "size": 6184,
+      "mtimeMs": 1790299640979.5583,
+      "updatedAt": "2026-10-03T03:41:44.796Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_mat_018_carta_palang.webp": {
+      "description": "",
+      "tokens": 10671,
+      "hash": "58e1467d2926128a",
+      "size": 42240,
+      "mtimeMs": 1790299640763.9648,
+      "updatedAt": "2026-10-03T03:41:44.797Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_mat_020_koordinat.webp": {
+      "description": "",
+      "tokens": 1616,
+      "hash": "50bab16c305617a9",
+      "size": 6352,
+      "mtimeMs": 1790299640361.5105,
+      "updatedAt": "2026-10-03T03:41:44.798Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_mat_021_gabungan_bentuk.webp": {
+      "description": "",
+      "tokens": 1909,
+      "hash": "8c3f0b5def8d394a",
+      "size": 7540,
+      "mtimeMs": 1790299641053.2842,
+      "updatedAt": "2026-10-03T03:41:44.798Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_mat2_007_beras.webp": {
+      "description": "",
+      "tokens": 1578,
+      "hash": "b44685b431a5561e",
+      "size": 6266,
+      "mtimeMs": 1790299640868.2087,
+      "updatedAt": "2026-10-03T03:41:44.798Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_mat2_017_bentuk_abde.webp": {
+      "description": "",
+      "tokens": 3649,
+      "hash": "58f108a31e581aaf",
+      "size": 14412,
+      "mtimeMs": 1790299640432.7869,
+      "updatedAt": "2026-10-03T03:41:44.799Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_mat2_027_carta_pai.webp": {
+      "description": "",
+      "tokens": 1788,
+      "hash": "407bd623805eb542",
+      "size": 7098,
+      "mtimeMs": 1790299640821.2107,
+      "updatedAt": "2026-10-03T03:41:44.799Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_pa_003_bnm.webp": {
+      "description": "",
+      "tokens": 558,
+      "hash": "abcb2757d55b1373",
+      "size": 2192,
+      "mtimeMs": 1790299641055.8247,
+      "updatedAt": "2026-10-03T03:41:44.800Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_pa_021_avatar.webp": {
+      "description": "",
+      "tokens": 2895,
+      "hash": "5cff0804e03c46f9",
+      "size": 11380,
+      "mtimeMs": 1790299641031.4897,
+      "updatedAt": "2026-10-03T03:41:44.800Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_sn_001_situasi.webp": {
+      "description": "",
+      "tokens": 1171,
+      "hash": "4998341a0db48623",
+      "size": 4652,
+      "mtimeMs": 1790299640440.6638,
+      "updatedAt": "2026-10-03T03:41:44.800Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_sn_002_haiwan_pq.webp": {
+      "description": "",
+      "tokens": 2964,
+      "hash": "739728527220ea29",
+      "size": 11680,
+      "mtimeMs": 1790299641049.9478,
+      "updatedAt": "2026-10-03T03:41:44.801Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_sn_003_anak_pokok.webp": {
+      "description": "",
+      "tokens": 7739,
+      "hash": "91d99ecda48a9826",
+      "size": 30556,
+      "mtimeMs": 1790299640810.412,
+      "updatedAt": "2026-10-03T03:41:44.802Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_sn_007_cawan.webp": {
+      "description": "",
+      "tokens": 5527,
+      "hash": "94bb02111b83f9dd",
+      "size": 21858,
+      "mtimeMs": 1790299640848.6533,
+      "updatedAt": "2026-10-03T03:41:44.803Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_sn_008_alat_z.webp": {
+      "description": "",
+      "tokens": 3075,
+      "hash": "733dab562087b779",
+      "size": 12172,
+      "mtimeMs": 1790299641049.114,
+      "updatedAt": "2026-10-03T03:41:44.803Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_sn_009_kitaran_air.webp": {
+      "description": "",
+      "tokens": 6635,
+      "hash": "77578295dd057215",
+      "size": 26174,
+      "mtimeMs": 1790299641054.9258,
+      "updatedAt": "2026-10-03T03:41:44.804Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_sn_010_organ_mno.webp": {
+      "description": "",
+      "tokens": 7870,
+      "hash": "96304432f1841400",
+      "size": 31112,
+      "mtimeMs": 1790299640422.277,
+      "updatedAt": "2026-10-03T03:41:44.805Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_sn_012_daya_geseran.webp": {
+      "description": "",
+      "tokens": 10932,
+      "hash": "5e270240ef278f36",
+      "size": 43214,
+      "mtimeMs": 1790299640338.2966,
+      "updatedAt": "2026-10-03T03:41:44.807Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_sn2_015_tart.webp": {
+      "description": "",
+      "tokens": 6886,
+      "hash": "767e96199c3de829",
+      "size": 27200,
+      "mtimeMs": 1790299640965.8452,
+      "updatedAt": "2026-10-03T03:41:44.808Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_sn2_017_jadual_kereta.webp": {
+      "description": "",
+      "tokens": 6078,
+      "hash": "d65fa6853790c71f",
+      "size": 24120,
+      "mtimeMs": 1790299640508.7615,
+      "updatedAt": "2026-10-03T03:41:44.809Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_sn2_020_tin.webp": {
+      "description": "",
+      "tokens": 2052,
+      "hash": "6d84a1a86f2e6ca8",
+      "size": 8096,
+      "mtimeMs": 1790299640437.2063,
+      "updatedAt": "2026-10-03T03:41:44.809Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_sn2_026_daya.webp": {
+      "description": "",
+      "tokens": 8783,
+      "hash": "4d07968d90d5dd6c",
+      "size": 34748,
+      "mtimeMs": 1790299641057.1584,
+      "updatedAt": "2026-10-03T03:41:44.810Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_sn2_028_buruj.webp": {
+      "description": "",
+      "tokens": 1266,
+      "hash": "bd5d044a0e97eb0d",
+      "size": 5020,
+      "mtimeMs": 1790299640937.2102,
+      "updatedAt": "2026-10-03T03:41:44.811Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_sn2_030_saiz_bumi_bulan.webp": {
+      "description": "",
+      "tokens": 3619,
+      "hash": "41420ea87c880e2b",
+      "size": 14330,
+      "mtimeMs": 1790299640930.0857,
+      "updatedAt": "2026-10-03T03:41:44.811Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_sn2_032_gerhana.webp": {
+      "description": "",
+      "tokens": 5293,
+      "hash": "59ae300a058f31d4",
+      "size": 20862,
+      "mtimeMs": 1790299640768.794,
+      "updatedAt": "2026-10-03T03:41:44.812Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_sn2_034_teknologi_tani.webp": {
+      "description": "",
+      "tokens": 1681,
+      "hash": "3ab3df9694995538",
+      "size": 6658,
+      "mtimeMs": 1790299640343.25,
+      "updatedAt": "2026-10-03T03:41:44.812Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_sn2_036_bas_xy.webp": {
+      "description": "",
+      "tokens": 6159,
+      "hash": "ad02bc0860711d6d",
+      "size": 24372,
+      "mtimeMs": 1790299640466.1768,
+      "updatedAt": "2026-10-03T03:41:44.813Z",
+      "source": "scan"
+    },
+    "assets/diagrams/diagram_sn2_038_zirafah.webp": {
+      "description": "",
+      "tokens": 197,
+      "hash": "5239dfee9233b552",
+      "size": 772,
+      "mtimeMs": 1790299640658.8494,
+      "updatedAt": "2026-10-03T03:41:44.814Z",
+      "source": "scan"
+    },
+    "assets/diagrams/figure_p111_kitaran_air.webp": {
+      "description": "",
+      "tokens": 6681,
+      "hash": "71a885018cd43e53",
+      "size": 26416,
+      "mtimeMs": 1790299640493.3833,
+      "updatedAt": "2026-10-03T03:41:44.814Z",
+      "source": "scan"
+    },
+    "assets/diagrams/table_p031_3d_shapes.webp": {
+      "description": "",
+      "tokens": 480,
+      "hash": "894f99d08efce15b",
+      "size": 1898,
+      "mtimeMs": 1790299640747.1672,
+      "updatedAt": "2026-10-03T03:41:44.815Z",
+      "source": "scan"
+    },
+    "assets/diagrams/table_p040_wang_simpanan.webp": {
+      "description": "",
+      "tokens": 6356,
+      "hash": "b95218c2dcad7f6d",
+      "size": 25224,
+      "mtimeMs": 1790299641035.4573,
+      "updatedAt": "2026-10-03T03:41:44.816Z",
+      "source": "scan"
+    },
+    "assets/diagrams/table_p055_koordinat.webp": {
+      "description": "",
+      "tokens": 3706,
+      "hash": "a22035e0931fce59",
+      "size": 14656,
+      "mtimeMs": 1790299641048.0576,
+      "updatedAt": "2026-10-03T03:41:44.817Z",
+      "source": "scan"
+    },
+    "assets/diagrams/table_p061_geseran_permukaan.webp": {
+      "description": "",
+      "tokens": 5553,
+      "hash": "b41b4096c0647454",
+      "size": 21984,
+      "mtimeMs": 1790299641019.6284,
+      "updatedAt": "2026-10-03T03:41:44.818Z",
+      "source": "scan"
+    },
+    "assets/diagrams/table_p071_keadaan_jirim.webp": {
+      "description": "",
+      "tokens": 13424,
+      "hash": "7e1392add277943b",
+      "size": 53074,
+      "mtimeMs": 1790299640339.8047,
+      "updatedAt": "2026-10-03T03:41:44.819Z",
+      "source": "scan"
+    },
+    "assets/diagrams/table_p081_cawan_kestabilan.webp": {
+      "description": "",
+      "tokens": 8128,
+      "hash": "3c54bf248abd7921",
+      "size": 32160,
+      "mtimeMs": 1790299640941.9343,
+      "updatedAt": "2026-10-03T03:41:44.820Z",
+      "source": "scan"
+    },
+    "assets/diagrams/test_p118_crop.webp": {
+      "description": "",
+      "tokens": 1292,
+      "hash": "4a91f1955629dea2",
+      "size": 5062,
+      "mtimeMs": 1790299640415.4321,
+      "updatedAt": "2026-10-03T03:41:44.821Z",
+      "source": "scan"
+    },
+    "CLAUDE.md": {
+      "description": "OpenWolf",
+      "tokens": 99,
+      "hash": "074d6b42b583729a",
+      "size": 395,
+      "mtimeMs": 1790998746461.1624,
+      "updatedAt": "2026-10-03T03:41:44.821Z",
+      "source": "scan"
+    },
+    "data/dataset.js": {
+      "description": "",
+      "tokens": 176948,
+      "hash": "6978f150b60e91d9",
+      "size": 619380,
+      "mtimeMs": 1790299641074.814,
+      "updatedAt": "2026-10-03T03:41:44.825Z",
+      "source": "scan"
+    },
+    "data/pksk_500_licenses.csv": {
+      "description": "",
+      "tokens": 9851,
+      "hash": "b8f6b48b9c84f60e",
+      "size": 36938,
+      "mtimeMs": 1790299641066.7947,
+      "updatedAt": "2026-10-03T03:41:44.826Z",
+      "source": "scan"
+    },
+    "data/pksk_500_licenses.json": {
+      "description": "",
+      "tokens": 31970,
+      "hash": "8267c152fc59c2a0",
+      "size": 111894,
+      "mtimeMs": 1790299641068.612,
+      "updatedAt": "2026-10-03T03:41:44.826Z",
+      "source": "scan"
+    },
+    "data/pksk_blueprint.json": {
+      "description": "",
+      "tokens": 1020,
+      "hash": "dbae5e1e41627d96",
+      "size": 3569,
+      "mtimeMs": 1790299641067.7117,
+      "updatedAt": "2026-10-03T03:41:44.827Z",
+      "source": "scan"
+    },
+    "data/pksk_master_dataset.json": {
+      "description": "",
+      "tokens": 262610,
+      "hash": "12f99924144370f0",
+      "size": 919197,
+      "mtimeMs": 1790299641070.6738,
+      "updatedAt": "2026-10-03T03:41:44.831Z",
+      "source": "scan"
+    },
+    "data/supabase_schema_and_seed.sql": {
+      "description": "SKEMA JADUAL & POLISI KESELAMATAN SUPABASE (PKSK LICENSES)",
+      "tokens": 8577,
+      "hash": "5330ee40fedfa7f0",
+      "size": 30019,
+      "mtimeMs": 1790299641073.107,
+      "updatedAt": "2026-10-03T03:41:44.832Z",
+      "source": "scan"
+    },
+    "GEMINI.md": {
+      "description": "OpenWolf",
+      "tokens": 75,
+      "hash": "e401f79554a8d796",
+      "size": 297,
+      "mtimeMs": 1790998746475.0527,
+      "updatedAt": "2026-10-03T03:41:44.832Z",
+      "source": "scan"
+    },
+    "index.html": {
+      "description": "Portal Rasmi PKSK | Pentaksiran Kemasukan Sekolah Khusus",
+      "tokens": 19171,
+      "hash": "077bbad3bbe6758c",
+      "size": 71904,
+      "mtimeMs": 1790512496095.858,
+      "updatedAt": "2026-10-03T03:41:44.833Z",
+      "source": "scan"
+    },
+    "license.js": {
+      "description": "============================================================================",
+      "tokens": 9136,
+      "hash": "c7964352685d8ad1",
+      "size": 31996,
+      "mtimeMs": 1790512496095.051,
+      "updatedAt": "2026-10-03T03:41:44.834Z",
+      "source": "scan"
+    },
+    "manifest.json": {
+      "description": "",
+      "tokens": 289,
+      "hash": "7bbf384b7292411f",
+      "size": 1011,
+      "mtimeMs": 1790478905991.2812,
+      "updatedAt": "2026-10-03T03:41:44.834Z",
+      "source": "scan"
+    },
+    "PROJECT_FLOW.md": {
+      "description": "🧭 PROJECT FLOW & LIVING ARCHITECTURE: Sistem Simulator PKSK Online & Penilai AI Artikulasi Penulisan",
+      "tokens": 1990,
+      "hash": "4b809926daf2e9d0",
+      "size": 7992,
+      "mtimeMs": 1790512501686.8833,
+      "updatedAt": "2026-10-03T03:41:44.834Z",
+      "source": "scan"
+    },
+    "README.md": {
+      "description": "Project documentation",
+      "tokens": 596,
+      "hash": "97750689fa4fad28",
+      "size": 2401,
+      "mtimeMs": 1790299640329.1921,
+      "updatedAt": "2026-10-03T03:41:44.834Z",
+      "source": "scan"
+    },
+    "ROADMAP.md": {
+      "description": "🗺️ ROADMAP: Sistem Simulator PKSK Online & Penilai AI Artikulasi Penulisan",
+      "tokens": 919,
+      "hash": "e9408e753a66bfe8",
+      "size": 3685,
+      "mtimeMs": 1790512501687.5857,
+      "updatedAt": "2026-10-03T03:41:44.835Z",
+      "source": "scan"
+    },
+    "styles.css": {
+      "description": "Styles: 60 rules, 49 vars",
+      "tokens": 24957,
+      "hash": "0914bae99066b378",
+      "size": 87351,
+      "mtimeMs": 1790510310689.179,
+      "updatedAt": "2026-10-03T03:41:44.836Z",
+      "source": "scan"
+    },
+    "supabase_migration_lcfkvljmcamulshvyeqe.sql": {
+      "description": "PKSK SUITES PRO 2026: SUPABASE DATABASE MIGRATION SCRIPT",
+      "tokens": 1275,
+      "hash": "03f71da149e46069",
+      "size": 4466,
+      "mtimeMs": 1790484355156.427,
+      "updatedAt": "2026-10-03T03:41:44.836Z",
+      "source": "scan"
+    },
+    "sw.js": {
+      "description": "PKSK Simulator 2026 - Service Worker (Offline Resilience & PWA Cache)",
+      "tokens": 667,
+      "hash": "781fc50ccc9e3565",
+      "size": 2333,
+      "mtimeMs": 1790762998226.106,
+      "updatedAt": "2026-10-03T03:41:44.836Z",
+      "source": "scan"
+    },
+    "verify_diagrams.html": {
+      "description": "Semakan Visual 34 Rajah Autentik PKSK",
+      "tokens": 1621,
+      "hash": "08dd27eca31df697",
+      "size": 6081,
+      "mtimeMs": 1790299641137.7556,
+      "updatedAt": "2026-10-03T03:41:44.837Z",
+      "source": "scan"
+    }
+  },
+  "preamble": [
+    "> Project structure index. Auto-maintained by OpenWolf hooks and daemon.",
+    "> Run `openwolf scan` to generate, or wait for the first Claude Code session.",
+    "> Status: Pending initial scan"
+  ]
+}

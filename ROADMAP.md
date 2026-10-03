@@ -65,7 +65,13 @@ gantt
   - Penyesuaian margin simetri banner 1080px sejajar dengan kad ujian.
   - Pembersihan UI: Penyingkiran tab lewah, butang bertindih, dan modal lesen yang fokus.
 
-- [x] **PKSK Admin Hub: PWA Penuh, Ikon Kunci PKSK & Pemulihan Supabase (2026-10-03)**
+- [x] **PKSK Admin Hub: PWA Penuh & Impeccable UI/UX Redesign (2026-10-03)**
+  - Redesign menyeluruh berpandukan standard `/impeccable` (Mode: Operate, Craft Floor zero-defect `[]`).
+  - Tipografi eksekutif tersendiri: Outfit (UI & Heading) dan JetBrains Mono (Kunci & Data numerik berjadual).
+  - Telemetry & Inventory Panel bersepadu dengan visual allocation distribution progress rail.
+  - Pusat Agihan Pantas Shopee (Alt+S) & carian pantas keyboard shortcut (/).
+  - Pematuhan penuh kontras WCAG AA (>= 4.5:1) pada semua elemen dan placeholder.
+  - Sifar anti-pattern: bebas kad berulang, bebas zero-offset glow, bebas pulsing dot hiasan.
   - Pemulihan & suntikan 500 kunci lesen komersial rasmi ke Supabase `lcfkvljmcamulshvyeqe`.
   - Penambahan perlindungan auto-migrasi `localStorage` pada Portal Pentadbir.
   - PWA Penuh dengan reka bentuk ikon rasmi lambang kunci & teks besar "PKSK ADMIN" (512px, 192px, maskable, iOS apple-touch-icon, favicon).

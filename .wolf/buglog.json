@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "bugs": [
+    {
+      "id": "BUG-20261003-PKSK-LICENSES-RETRIEVAL",
+      "timestamp": "2026-10-03T03:50:21.789Z",
+      "error_message": "lesen pksk down, saya tak boleh nk retreive / 0 licenses returned",
+      "file": "data/pksk_500_licenses.json, admin_portal/admin.js, license.js",
+      "root_cause": "1) Semasa migrasi dari projek rvslrscgbhgdcktdtfrl ke lcfkvljmcamulshvyeqe, jadual pksk_licenses dicipta tetapi data 500 kunci belum disuntik/diseed (kosong). 2) admin_portal/admin.js tidak mempunyai perlindungan auto-migrasi localStorage untuk mengosongkan URL projek lama yang telah pupus.",
+      "fix": "1) Menyuntik kesemua 500 rekod kunci lesen komersial dari data/pksk_500_licenses.json ke jadual pksk_licenses di Supabase lcfkvljmcamulshvyeqe. 2) Menambah perlindungan auto-migrasi localStorage dalam getSupabaseConfig() pada admin_portal/admin.js untuk reset URL lapuk rvslrscgbhgdcktdtfrl.",
+      "tags": [
+        "supabase",
+        "pksk_licenses",
+        "admin_portal",
+        "migration",
+        "seed"
+      ]
+    },
+    {
+      "id": "BUG-20261003-PKSKADMIN-VERCEL-DEPLOY",
+      "timestamp": "2026-10-03T04:02:34.059Z",
+      "error_message": "kenapa saya tak boleh load kunci di https://pkskadmin.vercel.app",
+      "file": "admin_portal/admin.js",
+      "root_cause": "Repositori tempatan admin_portal berada 3 komit di hadapan origin/main (belum di-push). Akibatnya, laman web live Vercel pkskadmin.vercel.app masih menghidangkan kod lama yang cuba memanggil Supabase rvslrscgbhgdcktdtfrl yang telah dipadam.",
+      "fix": "Menjalankan git push origin main ke repo abdulhalimroslan2/PKSKAdmin.git. Vercel telah selesai deploy versi terkini yang mempunyai Default URL lcfkvljmcamulshvyeqe dan auto-migrasi localStorage.",
+      "tags": [
+        "vercel",
+        "deployment",
+        "pkskadmin",
+        "git-push",
+        "supabase"
+      ]
+    }
+  ]
+}
