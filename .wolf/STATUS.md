@@ -12,6 +12,15 @@ budget_tokens: 1500
 
 ## ✅ Done
 
+### Peningkatan UI/UX: Impeccable Design System & Emil Kowalski Polish (2026-10-11)
+- Integrasi token kurva easing tersuai Emil Kowalski (`--ease-out`, `--ease-in-out`, `--ease-spring`, `--ease-drawer`, `--duration-tap`).
+- Maklum balas fizikal serta-merta pada setiap butang & kad interaktif dengan mampatan skala sentuh (`scale(0.97)` on `:active`).
+- Pengasingan `:hover` transforms di bawah `@media (hover: hover) and (pointer: fine)` untuk mencegah isu sticky-hover pada telefon/tablet.
+- Pengoptimuman Tablet (768px-1024px): Susun atur dwi-lajur ergonomik (soalan di kiri, palet matriks 100 soalan melekit di kanan).
+- Pengoptimuman Mobile Portrait (<=767px): Sasaran sentuh minimum 48px, butang navigasi utama bersaiz penuh di zon capaian ibu jari, bulatan abjad pilihan jawapan 34px, perlindungan Safe Area Insets iOS.
+- Pengoptimuman Mobile Landscape (Tinggi <=550px): Header ultra-kompak (38px), grid pilihan jawapan 2 lajur (A/B kiri, C/D kanan) untuk menghapuskan skrol menegak.
+- Aksesibiliti `@media (prefers-reduced-motion: reduce)` & pengubahsuaian kemasukan modal dari `scale(0.96)` tanpa lompatan `scale(0)`.
+
 ### Penyelesaian Isu Skor Statik 7.4 & Semakan Terperinci Esei Buli (2026-10-11)
 - **Punca Masalah Skor Mendatar 7.4 Dihapuskan:**
   1. Penggantian model lalai OpenRouter kepada `google/gemini-2.5-flash` yang sangat pantas (<2s) dan stabil berbanding model lapuk yang sering timeout.
