@@ -1,7 +1,7 @@
 # 🧭 PROJECT FLOW & LIVING ARCHITECTURE: Sistem Simulator PKSK Online & Penilai AI Artikulasi Penulisan
 
-> **Status Semasa:** FASA 6 SELESAI & PKSK ADMIN PWA SELESAI (Bersedia Memulakan Fasa 7: Peningkatan Bank Soalan Lanjutan KBAT Math & Sains)  
-> **Tarikh Kemas Kini Terakhir:** 2026-10-03  
+> **Status Semasa:** FASA 6B & ENJIN PENILAIAN DSKP + EMIL KOWALSKI UI/UX SELESAI (Bersedia Memulakan Fasa 7: Peningkatan Bank Soalan Lanjutan KBAT Math & Sains)  
+> **Tarikh Kemas Kini Terakhir:** 2026-10-11  
 > **Fail Rujukan Utama:** [index.html](file:///Users/halimroslan/Desktop/Kod Sumber (Antigravity)/PKSK Sistem (Simulator Ujian & AI Artikulasi Penulisan)/index.html), [app.js](file:///Users/halimroslan/Desktop/Kod Sumber (Antigravity)/PKSK Sistem (Simulator Ujian & AI Artikulasi Penulisan)/app.js), [license.js](file:///Users/halimroslan/Desktop/Kod Sumber (Antigravity)/PKSK Sistem (Simulator Ujian & AI Artikulasi Penulisan)/license.js), [styles.css](file:///Users/halimroslan/Desktop/Kod Sumber (Antigravity)/PKSK Sistem (Simulator Ujian & AI Artikulasi Penulisan)/styles.css), [sw.js](file:///Users/halimroslan/Desktop/Kod Sumber (Antigravity)/PKSK Sistem (Simulator Ujian & AI Artikulasi Penulisan)/sw.js)
 
 ---
@@ -31,6 +31,8 @@
 | **Fasa 5** | Bank Soalan KBAT 2026 & Penalaan Rubrik Melayu Baku | ✅ Selesai | 23 Variasi tajuk esei, Kad Tema & Dropdown, Pengoptimuman Skrin Telefon & Tablet, Dev Master Key & Ikon PWA siap |
 | **Fasa 6** | Google OAuth Physflix UX & Percubaan 2 Hari | ✅ Selesai | Log masuk Google OAuth, auto-redirect Dashboard, avatar dropdown profil & log keluar, pemasa percubaan 2 hari, auto-lock sistem, butang pembelian Telegram @halimroslan, penyingkiran butang lewah & pembersihan modal lesen |
 | **PKSK Admin** | PWA Rasmi & Impeccable UI/UX Redesign | ✅ Selesai | PWA penuh, Impeccable redesign (Outfit typography, executive telemetry rail, zero slop, WCAG AA compliant, Alt+S & / keyboard shortcuts), 500 lesen Supabase |
+| **Fasa 6B (AI)** | Enjin Semakan Artikulasi DSKP & Humanizer Malaya | ✅ Selesai | Integrasi DSKP TP1-TP6, KPS sebab-akibat, Tatabahasa Dewan, model `google/gemini-2.5-flash` pantas (<2s), hapus skor statik 7.4 (skor dinamik 8.0/10.0 TP5) |
+| **Fasa 6C (UI)** | Impeccable Design & Emil Kowalski UI Polish | ✅ Selesai | Token easing tersuai, mampatan sentuh `scale(0.97)` on `:active`, Tablet Dual-Column, Mobile Portrait Thumb-zone, Mobile Landscape 2-column options grid |
 | **Fasa 7** | Peningkatan Bank Soalan Lanjutan KBAT Math & Sains | ⏳ Sedia Dimulakan | Penambahan soalan format KBAT terkini untuk subjek Sains & Matematik |
 
 ---
@@ -63,6 +65,12 @@
 ---
 
 ## 5. 📝 Log Keputusan Teknikal (Decisions & Mini-ADRs)
+- **2026-10-11 — [ADR-07] Naik Taraf Enjin Penilaian Artikulasi Penulisan DSKP & Humanizer Malaya:**
+  - *Masalah:* Skor esei asyik mendatar 7.4 disebabkan model lama percuma timeout (>3.8s) dan jatuh ke fallback lokal statik (2.4 + 2.2 + 1.4 + 1.4 = 7.4).
+  - *Penyelesaian:* Menggantikan model utama kepada `google/gemini-2.5-flash` dengan had masa 7.0s. Menyelaras enjin lokal dengan pengesanan peribahasa ("sediakan payung sebelum hujan"), pengesanan frasa berulang ("kita juga"), dan kualiti perenggan penutup. Skor esei kini anjal dan tepat (cth: esei buli mendapat 8.0 / 10.0 TP 5 Cemerlang).
+- **2026-10-11 — [ADR-08] Pengoptimuman Paparan Responsif Mengikut Falsafah Emil Kowalski:**
+  - *Masalah:* Paparan tablet meruntuhkan palet soalan ke bahagian bawah; butang tiada maklum balas tekan fizikal; hover melekat pada skrin sentuh; mod landskap telefon sesak secara menegak.
+  - *Penyelesaian:* Melaksanakan kurva easing tersuai `--ease-out`, maklum balas mampatan `scale(0.97)` on `:active`, penapisan hover melalui `@media (hover: hover)`, susun atur dwi-lajur pintar untuk tablet (soalan kiri, palet melekit kanan), dan grid pilihan jawapan 2 lajur (A/B kiri, C/D kanan) pada telefon mod landskap untuk menghapuskan skrol menegak.
 - **2026-10-03 - Impeccable UI & UX Redesign untuk PKSK Admin Hub:** Melaksanakan reka bentuk semula menyeluruh berpandukan kemahiran `/impeccable` (Mode: Operate). Menghapuskan semua anti-pattern (kicker, gradient text, pulsing decorative dots, floating card slop, colored glows), menggantikan tipografi dengan Outfit & JetBrains Mono, menambah telemetry & allocation rail 5-metrik, mematuhi nisbah kontras WCAG AA (>= 4.5:1), menyepadukan pintasan papan kekunci (Alt+S & /), dan lulus pemeriksaan pengesan reka bentuk tanpa sebarang kecacatan (`[]`).
 - **2026-10-03 - PWA Penuh & Pengoptimuman Responsif Telefon/Tablet untuk PKSK Admin Hub:** Menjana ikon PWA rasmi (lambang kunci & teks besar PKSK), menyertakan `manifest.json` dan `sw.js`, serta melaksanakan reka bentuk responsif penuh untuk telefon pintar dan tablet.
 - **2026-10-03 - Perlindungan Auto-Migrasi `localStorage` pada Portal Pentadbir:** Memastikan sebarang URL atau kunci lapuk daripada projek lama (`rvslrscgbhgdcktdtfrl`) dipadamkan secara automatik apabila portal dimuatkan.

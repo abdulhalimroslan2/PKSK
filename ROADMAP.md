@@ -1,6 +1,6 @@
 # 🗺️ ROADMAP: Sistem Simulator PKSK Online & Penilai AI Artikulasi Penulisan
 
-> **Status Semasa:** FASA 6 SELESAI & PKSK ADMIN PWA SELESAI (Bersedia Memulakan Fasa 7: Peningkatan Bank Soalan Lanjutan KBAT Math & Sains)  
+> **Status Semasa:** FASA 6B & 6C SELESAI (Bersedia Memulakan Fasa 7: Peningkatan Bank Soalan Lanjutan KBAT Math & Sains)  
 > **Sasaran Utama:** PKSK Sesi Kemasukan 2026 / 2027
 
 ---
