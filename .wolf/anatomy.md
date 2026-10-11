@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-10-03T03:41:44.982Z
-> Files: 78 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-10-11T10:23:41.449Z
+> Files: 82 tracked | Anatomy hits: 0 | Misses: 0
 
 > Project structure index. Auto-maintained by OpenWolf hooks and daemon.
 > Run `openwolf scan` to generate, or wait for the first Claude Code session.
@@ -13,15 +13,19 @@
 - `.ignore` — graft's cards are gitignored but should stay greppable: ripgrep reads (~48 tok)
 - `.vercelignore` — scripts/** (~106 tok)
 - `AGENTS.md` — OpenWolf (~75 tok)
-- `app.js` — SISTEM PENTAKSIRAN KEMASUKAN SEKOLAH KHUSUS (PKSK) TINGKATAN 1 (~51774 tok)
+- `app.js` — SISTEM PENTAKSIRAN KEMASUKAN SEKOLAH KHUSUS (PKSK) TINGKATAN 1 (~55677 tok)
 - `CLAUDE.md` — OpenWolf (~99 tok)
+- `DESIGN.md` — DESIGN SYSTEM & VISUAL WORLD — PKSK Admin Hub (~600 tok)
 - `GEMINI.md` — OpenWolf (~75 tok)
 - `index.html` — Portal Rasmi PKSK | Pentaksiran Kemasukan Sekolah Khusus (~19171 tok)
+- `Kaedah` (~0 tok)
+- `Kesan` (~0 tok)
 - `license.js` — ============================================================================ (~9136 tok)
 - `manifest.json` (~289 tok)
-- `PROJECT_FLOW.md` — 🧭 PROJECT FLOW & LIVING ARCHITECTURE: Sistem Simulator PKSK Online & Penilai AI Artikulasi Penulisan (~1990 tok)
+- `PRODUCT.md` — PRODUCT CONTEXT — PKSK Sistem & Admin Hub (~474 tok)
+- `PROJECT_FLOW.md` — 🧭 PROJECT FLOW & LIVING ARCHITECTURE: Sistem Simulator PKSK Online & Penilai AI Artikulasi Penulisan (~2545 tok)
 - `README.md` — Project documentation (~596 tok)
-- `ROADMAP.md` — 🗺️ ROADMAP: Sistem Simulator PKSK Online & Penilai AI Artikulasi Penulisan (~919 tok)
+- `ROADMAP.md` — 🗺️ ROADMAP: Sistem Simulator PKSK Online & Penilai AI Artikulasi Penulisan (~1235 tok)
 - `styles.css` — Styles: 60 rules, 49 vars (~24957 tok)
 - `supabase_migration_lcfkvljmcamulshvyeqe.sql` — PKSK SUITES PRO 2026: SUPABASE DATABASE MIGRATION SCRIPT (~1275 tok)
 - `sw.js` — PKSK Simulator 2026 - Service Worker (Offline Resilience & PWA Cache) (~667 tok)
@@ -29,7 +33,7 @@
 
 ## api/
 
-- `evaluate.js` — Vercel Serverless Function: High-Intelligence Essay Evaluation & Grading (~3012 tok)
+- `evaluate.js` — Vercel Serverless Function: High-Intelligence Essay Evaluation & Grading (~5864 tok)
 - `transcribe.js` — Vercel Serverless Function: OCR Handwriting Transcription using OpenRouter Vision Models (~2054 tok)
 
 ## assets/diagrams/

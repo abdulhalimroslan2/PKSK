@@ -11,3 +11,6 @@ shopee_listing/
 .env
 .env.local
 .env.*
+.claude/
+.codex/
+.cursor/

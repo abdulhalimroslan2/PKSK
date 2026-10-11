@@ -1,4 +1,4 @@
----
+- **2026-10-11 (Penambahbaikan Enjin Semakan & Penskoran Artikulasi Penulisan DSKP & Humanizer Malaya)**: Mengintegrasikan Standard Prestasi DSKP KSSM (TP 1 hingga TP 6) dan Kemahiran Proses Sains (KPS Penaakulan Sebab-Akibat / Inkuiri Saintifik) ke dalam enjin semakan esei PKSK Bahagian C. Menyepadukan penulenan Humanizer Malaya bagi mengesan dan menapis 7 corak klise AI (BM-01 hingga BM-07) serta semakan tatabahasa & morfologi DBP. Mengemaskini `api/evaluate.js` dan `app.js` (enjin tempatan dan prompt AI OpenRouter) serta mereka bentuk semula kad diagnostik laporan esei (`renderAiEssayReportCard`) dengan Lencana Pengiktirafan TP DSKP, Indeks Ketulenan Humanizer Malaya (0-100%), dan tip pedagogikal LPM.\n\n---
 description: chronological action log per session, consolidated weekly
 ---
 # Memory

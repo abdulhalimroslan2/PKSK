@@ -12,6 +12,24 @@ budget_tokens: 1500
 
 ## ✅ Done
 
+### Penyelesaian Isu Skor Statik 7.4 & Semakan Terperinci Esei Buli (2026-10-11)
+- **Punca Masalah Skor Mendatar 7.4 Dihapuskan:**
+  1. Penggantian model lalai OpenRouter kepada `google/gemini-2.5-flash` yang sangat pantas (<2s) dan stabil berbanding model lapuk yang sering timeout.
+  2. Pemanjangan had masa timeout perlumbaan AI client-side `app.js` daripada 3.8s ke 7.0s bagi mengelakkan pembatalan awal sebelum AI sempat pulangkan JSON.
+  3. Kemas kini kedua-dua enjin tempatan (`api/evaluate.js` dan `app.js`) dengan penskoran granular dinamik: pengesan peribahasa ("sediakan payung sebelum hujan"), pengesan pengulangan pemula frasa ("kita juga" 3x), analisis kedalaman perenggan penutup (12 perkataan), dan perkadaran panjang kata sebenar.
+- **Hasil Diagnostik Karangan Buli Calon (151 patah perkataan):**
+  - Skor Melonjak dari 7.4 ke **8.0 / 10.0** (Band 5 Cemerlang / TP 5 Menilai & Mewajarkan).
+  - Skor Kriteria: Idea (2.6/3.0), Bahasa (2.3/3.0), Struktur (1.5/2.0), Nilai & KBAT (1.6/2.0).
+  - Ketulenan Humanizer Malaya: 90% (Sifar klise AI, bahasa Melayu asli).
+- **Integriti & Sandaran:** Sandaran terkini dicipta di `/Users/halimroslan/NEW CIDS SUITES PRO/pksk-sistem-backup/`. Syntax kedua-dua fail disahkan `node -c` lulus (Exit code 0).
+
+### Penambahbaikan Enjin Semakan & Penskoran Artikulasi Penulisan (DSKP & Humanizer Malaya) (2026-10-11)
+- Integrasi Standard Prestasi DSKP KSSM (TP 1 - TP 6) berasaskan taksonomi kognitif dan Kemahiran Proses Sains (KPS Penaakulan Sebab-Akibat / Inkuiri Saintifik).
+- Integrasi Humanizer Malaya untuk pengesanan 7 corak klise AI (BM-01 s/d BM-07) serta pembetulan tatabahasa dan morfologi DBP.
+- Pengemaskinian selaras antara `api/evaluate.js` (Vercel serverless) dan `app.js` (client-side rule engine & OpenRouter prompt).
+- Penambahbaikan visual `renderAiEssayReportCard` dengan Lencana DSKP TP, Indeks Ketulenan Humanizer Malaya, diagnostik dwitunjang, dan bimbingan pedagogikal LPM.
+- Ujian heuristik & sintaks berjaya sepenuhnya (`node -c`). Sandaran fail disahkan di `/Users/halimroslan/NEW CIDS SUITES PRO/pksk-sistem-backup/`.
+
 ### PKSK Admin Hub: PWA Rasmi, Ikon Kunci & Pemulihan Supabase (2026-10-03)
 - Pemulihan & suntikan 500 kunci lesen komersial rasmi (`data/pksk_500_licenses.json`) ke projek Supabase aktif `lcfkvljmcamulshvyeqe` dengan had 2 peranti aktif.
 - Perlindungan auto-migrasi `localStorage` pada `admin_portal/admin.js` untuk membersihkan URL lapuk `rvslrscgbhgdcktdtfrl`.

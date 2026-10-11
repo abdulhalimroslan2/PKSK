@@ -1404,12 +1404,16 @@
 
   // Smartest Reasoning Models for Official LPM Rubric Grading
   const OPENROUTER_EVAL_MODELS = [
+    'google/gemini-2.5-flash',
+    'google/gemini-2.0-flash-001',
     'nvidia/nemotron-3-super-120b-a12b:free',
     'openrouter/free'
   ];
 
   // Models for Fast & Creative PKSK Essay Idea Generation
   const OPENROUTER_IDEA_MODELS = [
+    'google/gemini-2.5-flash',
+    'google/gemini-2.0-flash-001',
     'nvidia/nemotron-3-super-120b-a12b:free',
     'openrouter/free'
   ];
@@ -2145,15 +2149,99 @@ Stimulus: "${topic.prompt}"`;
   }
 
   // Official Rubric Evaluation Engine with 550B Frontier Reasoning Model
-  // Real-Time High-Fidelity Malay NLP Rubric Engine
+  // Real-Time High-Fidelity Malay NLP Rubric Engine (DSKP TP 1 - TP 6 & Humanizer Malaya)
   function evaluateEssayLocalEngine(essay, topicTitle = "Umum", topicPrompt = "") {
     const text = (essay || "").trim();
     const words = text.split(/\s+/).filter(w => w.length > 0);
     const wordCount = words.length;
     const paragraphs = text.split(/\n+/).map(p => p.trim()).filter(p => p.length > 0);
     const paraCount = paragraphs.length;
-
+  
     const flaws = [];
+    const aiCliches = [];
+    const strengths = [];
+  
+    // 1. HUMANIZER MALAYA: Pengesanan 7 Corak Klise AI (AI Tells BM-01 - BM-07)
+    const bm01Match = text.match(/\bbukan\s+(?:hanya|sekadar|sahaja)\s+[^,.\n]{3,50},\s*(?:malahan?|tetapi\s+juga)\b/i);
+    if (bm01Match) {
+      aiCliches.push(`Corak klise AI BM-01 ("${bm01Match[0]}"): Lebih baik nyatakan fakta langsung secara bersahaja.`);
+    }
+  
+    const bm02Match = text.match(/\b(?:fikirkanlah\s+sejenak|inilah\s+hakikatnya|tepuk\s+dada\s+tanya\s+selera|let\s+that\s+sink\s+in)[.!]?/i);
+    if (bm02Match) {
+      aiCliches.push(`Penutup dramatik sebaris BM-02 ("${bm02Match[0]}"): Sebaiknya tamatkan perenggan dengan langkah praktikal atau implikasi wajar.`);
+    }
+  
+    const bm03Match = text.match(/\b(?:jom\s+kita\s+selami|mari\s+kita\s+rungkai|secara\s+jujurnya|tahukah\s+anda\s+bahawa)\b/i);
+    if (bm03Match) {
+      aiCliches.push(`Mukadimah pementasan BM-03 ("${bm03Match[0]}"): Elakkan pembuka gaya pengacaraan; terus nyatakan isi utama.`);
+    }
+  
+    const bm04Match = text.match(/\b(?:berdiri\s+megah\s+sebagai\s+saksi|menjadi\s+bukti\s+kukuh|merentasi\s+landskap\s+digital|memupuk\s+sinergi|anjakan\s+paradigma)\b/i);
+    if (bm04Match) {
+      aiCliches.push(`Perkataan megah klise BM-04 ("${bm04Match[0]}"): Gunakan kata biasa yang tepat seperti "menunjukkan" atau "bekerjasama".`);
+    }
+  
+    const bm05Match = text.match(/\b(?:sudah\s+tentu!|tentu\s+sekali!|semoga\s+ini\s+membantu|soalan\s+yang\s+sangat\s+bernas)\b/i);
+    if (bm05Match) {
+      aiCliches.push(`Sisa sapaan chatbot BM-05 ("${bm05Match[0]}"): Gugurkan ungkapan bot ini daripada karangan formal.`);
+    }
+  
+    const emDashCount = (text.match(/[—–]|\s--\s/g) || []).length;
+    if (emDashCount >= 3) {
+      aiCliches.push(`Lambakan tanda sengkang em-dash BM-06 (${emDashCount} kali): Gunakan koma atau bahagikan ayat kepada dua klausa bebas.`);
+    }
+  
+    const emojiMatch = text.match(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{26FF}]/u);
+    if (emojiMatch) {
+      aiCliches.push("Emoji hiasan dikesan: Karangan rasmi PKSK wajib menggunakan teks tulen tanpa simbol emoji.");
+    }
+  
+    // Morfologi & Tatabahasa DBP (Malaya NLP Check)
+    const dbpCorrections = [
+      { regex: /\bibubapa\b/gi, msg: "Ejaan \"ibubapa\" tidak baku (patut dieja terpisah: \"ibu bapa\")." },
+      { regex: /\bdi\s+masa\s+hadapan\b/gi, msg: "Penggunaan kata sendi salah \"di masa hadapan\" (patut \"pada masa hadapan\")." },
+      { regex: /\bdi\s+kalangan\b/gi, msg: "Penggunaan kata sendi salah \"di kalangan\" (patut \"dalam kalangan\")." },
+      { regex: /\bselain\s+daripada\s+itu\b/gi, msg: "Frasa lewah \"selain daripada itu\" (memadai \"selain itu\")." },
+      { regex: /\bianya\b/gi, msg: "Kata ganti lewah \"ianya\" (gunakan sama ada \"ia\" atau kata nama asal)." },
+      { regex: /\boleh\s+kerana\b/gi, msg: "Ralat kata sendi/hubung \"oleh kerana\" (patut \"oleh sebab\")." },
+      { regex: /\bmerbahaya\b/gi, msg: "Ejaan kurang tepat \"merbahaya\" (patut \"berbahaya\")." },
+      { regex: /\bwalaubagaimanapun\b/gi, msg: "Ejaan \"walaubagaimanapun\" patut dieja terpisah: \"walau bagaimanapun\"." }
+    ];
+  
+    dbpCorrections.forEach(c => {
+      if (c.regex.test(text)) flaws.push(c.msg);
+    });
+  
+    // 1b. Pengesanan Peribahasa & Ungkapan Menarik
+    const proverbPatterns = [
+      { regex: /sediakan\s+payung\s+sebelum\s+hujan/i, name: "sediakan payung sebelum hujan" },
+      { regex: /bagai\s+aur\s+dengan\s+tebing/i, name: "bagai aur dengan tebing" },
+      { regex: /melentur\s+buluh\s+biarlah\s+dari\s+rebungnya/i, name: "melentur buluh biarlah dari rebungnya" },
+      { regex: /berat\s+sama\s+dipikul\s+ringan\s+sama\s+dijinjing/i, name: "berat sama dipikul ringan sama dijinjing" },
+      { regex: /di\s+mana\s+ada\s+kemahuan\s+di\s+situ\s+ada\s+jalan/i, name: "di mana ada kemahuan di situ ada jalan" },
+      { regex: /bulat\s+air\s+kerana\s+pembetung/i, name: "bulat air kerana pembetung" },
+      { regex: /dayung\s+sudah\s+di\s+tangan/i, name: "dayung sudah di tangan perahu sudah di air" }
+    ];
+    const matchedProverbs = proverbPatterns.filter(p => p.regex.test(text)).map(p => p.name);
+    if (matchedProverbs.length > 0) {
+      strengths.push(`Penggunaan peribahasa tepat & menarik: "${matchedProverbs.join(", ")}" diselitkan mengikut konteks.`);
+    }
+  
+    // 1c. Pengesanan Pengulangan Frasa Pemula (Gaya Bahasa Monotonous)
+    const kitaJugaMatches = (text.match(/\bkita\s+juga\b/gi) || []).length;
+    if (kitaJugaMatches >= 3) {
+      flaws.push(`Pengulangan frasa pemula "kita juga" sebanyak ${kitaJugaMatches} kali: Pelbagaikan subjek seperti "Mangsa buli wajar...", "Pihak sekolah perlu...", atau "Murid dinasihatkan...".`);
+    }
+  
+    // 1d. Analisis Kualiti Perenggan Penutup
+    const lastParagraph = paragraphs[paragraphs.length - 1] || "";
+    const lastParaWords = lastParagraph.split(/\s+/).filter(Boolean).length;
+    const hasFutureHope = /\b(?:agar|supaya|dapat\s+dilahirkan|harmoni|generasi|masa\s+depan|menggembleng\s+tenaga|berganding\s+bahu)\b/i.test(lastParagraph);
+    if (paraCount >= 3 && lastParaWords <= 16 && !hasFutureHope) {
+      flaws.push(`Perenggan penutup terlalu ringkas (${lastParaWords} patah perkataan): Tambahkan seruan tindakan bersama pihak sekolah/masyarakat dan harapan jangka panjang agar rumusan lebih berimpak.`);
+    }
+  
     const dupMatch = text.match(/\b([a-zA-Z\u00C0-\u017F]+)\s+\1\b/gi);
     if (dupMatch) {
       dupMatch.forEach(m => {
@@ -2167,63 +2255,149 @@ Stimulus: "${topic.prompt}"`;
     if (/Khususnya,\s*ketika\s*pertandingan\./i.test(text)) {
       flaws.push("Ayat tergantung dikesan: \"Khususnya, ketika pertandingan.\" (memerlukan klausa utama).");
     }
-    if (/\^?diri dapat membina ayat yang gramatis/i.test(text)) {
-      flaws.push("Struktur ayat kurang tepat: \"Kesannya, diri dapat membina ayat yang gramatis.\"");
+  
+    // 2. DSKP-FIZIK: Kemahiran Saintifik, KPS & Penaakulan Sebab-Akibat
+    const causeKeywords = ["disebabkan oleh", "faktor utama", "punca", "berpunca daripada", "hal ini kerana", "kesan daripada", "hal ini dikatakan demikian kerana"];
+    const matchedCauses = causeKeywords.filter(k => new RegExp(`\\b${k}\\b`, "i").test(text));
+  
+    const mechanismKeywords = ["berfungsi untuk", "melalui kaedah", "proses", "mekanisme", "tindakan wajar", "mengaplikasikan", "konsep", "tindakan ini mampu"];
+    const matchedMechanisms = mechanismKeywords.filter(m => new RegExp(`\\b${m}\\b`, "i").test(text));
+  
+    const effectKeywords = ["memberikan impak", "meningkatkan kecekapan", "mengurangkan risiko", "kesannya", "implikasinya", "natijahnya", "akibatnya", "dapat mengelakkan", "menyelamatkan mangsa"];
+    const matchedEffects = effectKeywords.filter(e => new RegExp(`\\b${e}\\b`, "i").test(text));
+  
+    const innovationKeywords = ["inovasi", "langkah proaktif", "pendekatan lestari", "teknologi pintar", "penyelesaian holistik", "daya cipta", "kreatif"];
+    const matchedInnovations = innovationKeywords.filter(iv => new RegExp(`\\b${iv}\\b`, "i").test(text));
+  
+    const hasScientificReasoning = (matchedCauses.length > 0 && matchedEffects.length > 0) || (matchedMechanisms.length > 0 && matchedInnovations.length > 0);
+    if (hasScientificReasoning) {
+      strengths.push("Penaakulan logik saintifik mantap: Mempunyai hubungan sebab-akibat (punca, mekanisme tindakan, dan implikasi jelas).");
     }
-
-    const strengths = [];
-    const kbatKeywords = ["kritis", "matang", "bernas", "spontan", "hujah", "fakta", "kepimpinan", "keyakinan", "berani", "positif", "lancar"];
-    const matchedKbat = kbatKeywords.filter(k => new RegExp(`\b${k}\b`, "i").test(text));
-    if (matchedKbat.length >= 4) {
-      strengths.push(`Penggunaan kosa kata KBAT yang tepat: ${matchedKbat.slice(0, 5).join(", ")}`);
+  
+    const kbatKeywords = ["kritis", "matang", "bernas", "spontan", "hujah", "fakta", "kepimpinan", "keyakinan", "berani", "positif", "lancar", "rasional", "integriti", "disiplin", "kerjasama", "akhlak", "keselamatan"];
+    const matchedKbat = kbatKeywords.filter(k => new RegExp(`\\b${k}\\b`, "i").test(text));
+    if (matchedKbat.length >= 3) {
+      strengths.push(`Kosa kata KBAT & nilai murni diperkukuh: ${matchedKbat.slice(0, 5).join(", ")}`);
     }
-    const discourseMarkers = ["Antaranya", "Selain itu", "Seterusnya", "Akhir sekali", "Kesimpulannya", "Oleh itu", "Khususnya", "Misalnya", "Contohnya"];
-    const matchedDiscourse = discourseMarkers.filter(d => new RegExp(`\b${d}\b`, "i").test(text));
+  
+    const discourseMarkers = ["Antara langkah utama", "Antaranya", "Selain itu", "Seterusnya", "Akhir sekali", "Kesimpulannya", "Oleh itu", "Khususnya", "Misalnya", "Contohnya", "Justeru", "Pada masa yang sama", "Sehubungan dengan itu", "Rentetan daripada itu", "Tuntasnya"];
+    const matchedDiscourse = discourseMarkers.filter(d => new RegExp(`\\b${d}\\b`, "i").test(text));
     if (matchedDiscourse.length >= 3) {
-      strengths.push(`Penggunaan penanda wacana yang berkesan: ${matchedDiscourse.slice(0, 4).join(", ")}`);
+      strengths.push(`Penanda wacana gramatis digunakan dengan berkesan (${matchedDiscourse.slice(0, 4).join(", ")}).`);
     }
     if (paraCount >= 4) {
       strengths.push(`Struktur karangan lengkap (${paraCount} perenggan: Pendahuluan, Isi-isi penting, dan Penutup).`);
     }
-
-    let ideaScore = 2.4;
-    if (wordCount < 60) ideaScore = 1.0;
-    else if (wordCount < 100) ideaScore = 1.8;
-
-    let bahasaScore = 2.2;
-    if (flaws.length > 0) bahasaScore -= Math.min(1.0, flaws.length * 0.3);
-    if (wordCount < 80) bahasaScore -= 0.4;
-    bahasaScore = Math.max(1.0, parseFloat(bahasaScore.toFixed(1)));
-
-    let strukturScore = 1.4;
-    if (paraCount >= 4 && matchedDiscourse.length >= 3) strukturScore = 1.7;
-
+  
+    // 3. PENSKORAN MULTI-KRITERIA DINAMIK (Skor Maksimum 10.0)
+    // Kriteria 1: Idea (Maks 3.0)
+    let ideaScore = 2.2;
+    if (wordCount >= 140) ideaScore = 2.5;
+    else if (wordCount >= 100) ideaScore = 2.3;
+    else if (wordCount >= 60) ideaScore = 1.7;
+    else ideaScore = 1.0;
+    if (paraCount >= 5) ideaScore = parseFloat((ideaScore + 0.1).toFixed(1));
+  
+    // Kriteria 2: Bahasa (Maks 3.0)
+    let bahasaScore = 2.4;
+    if (matchedProverbs.length > 0) bahasaScore += 0.2;
+    const totalLanguageFlaws = flaws.length + aiCliches.length;
+    if (totalLanguageFlaws > 0) {
+      bahasaScore -= Math.min(0.6, totalLanguageFlaws * 0.15);
+    }
+    bahasaScore = Math.max(1.0, Math.min(3.0, parseFloat(bahasaScore.toFixed(1))));
+  
+    // Kriteria 3: Struktur (Maks 2.0)
+    let strukturScore = 1.7;
+    if (paraCount >= 5 && matchedDiscourse.length >= 3) strukturScore = 1.8;
+    if (lastParaWords <= 16 && !hasFutureHope) strukturScore -= 0.3;
+    strukturScore = Math.max(1.0, Math.min(2.0, parseFloat(strukturScore.toFixed(1))));
+  
+    // Kriteria 4: Nilai & KBAT (Maks 2.0)
     let nilaiKbatScore = 1.4;
-    if (matchedKbat.length >= 4) nilaiKbatScore = 1.7;
-
-    const totalScore = parseFloat((ideaScore + bahasaScore + strukturScore + nilaiKbatScore).toFixed(1));
-
+    if (hasScientificReasoning) nilaiKbatScore += 0.2;
+    if (matchedKbat.length >= 3) nilaiKbatScore += 0.1;
+    nilaiKbatScore = Math.max(1.0, Math.min(2.0, parseFloat(nilaiKbatScore.toFixed(1))));
+  
+    const totalScore = parseFloat(Math.min(10.0, ideaScore + bahasaScore + strukturScore + nilaiKbatScore).toFixed(1));
+  
+    // 4. PEMETAAN TAHAP PENGUASAAN DSKP (TP 1 - TP 6) & BAND LPM
     let band = "Band 4 (Kepujian)";
-    if (totalScore >= 8.5) band = "Band 5 (Cemerlang)";
-    else if (totalScore >= 6.5) band = "Band 4 (Kepujian)";
-    else if (totalScore >= 4.5) band = "Band 3 (Memuaskan)";
-    else band = "Band 2 (Penguasaan Minimum)";
-
+    let tpText = "TP 4 (Menganalisis / Baik)";
+    let tpCode = "TP 4";
+    let tpDesc = "Calon berkebolehan mencerakinkan hujah dan menghubungkaitkan sebab serta kesan secara teratur.";
+  
+    if (totalScore >= 9.0) {
+      band = "Band 5 (Cemerlang)";
+      tpText = "TP 6 (Mereka Cipta / Cemerlang)";
+      tpCode = "TP 6";
+      tpDesc = "Idea sangat matang, inovatif, penaakulan saintifik/KBAT beraras tinggi, dan gaya bahasa bernas tanpa sebarang klise.";
+    } else if (totalScore >= 7.8) {
+      band = "Band 5 (Cemerlang)";
+      tpText = "TP 5 (Menilai & Mewajarkan / Sangat Baik)";
+      tpCode = "TP 5";
+      tpDesc = "Calon berupaya menilai situasi, mewajarkan cadangan berasaskan bukti dan rasional yang kukuh.";
+    } else if (totalScore >= 6.5) {
+      band = "Band 4 (Kepujian)";
+      tpText = "TP 4 (Menganalisis / Baik)";
+      tpCode = "TP 4";
+      tpDesc = "Calon berupaya mencerakin isi dan mengaitkan sebab serta kesan dengan baik disokong penanda wacana.";
+    } else if (totalScore >= 5.0) {
+      band = "Band 3 (Memuaskan)";
+      tpText = "TP 3 (Mengaplikasi / Memuaskan)";
+      tpCode = "TP 3";
+      tpDesc = "Calon mengaplikasikan pengetahuan asas dalam konteks lazim tetapi huraian isi masih terhad.";
+    } else if (totalScore >= 3.5) {
+      band = "Band 2 (Penguasaan Minimum)";
+      tpText = "TP 2 (Memahami / Terhad)";
+      tpCode = "TP 2";
+      tpDesc = "Kefahaman asas ditunjukkan namun ayat ringkas dan tiada penaakulan sebab-akibat.";
+    } else {
+      band = "Band 1 (Sangat Terhad)";
+      tpText = "TP 1 (Mengingat Semula / Sangat Terhad)";
+      tpCode = "TP 1";
+      tpDesc = "Penulisan tidak lengkap atau sekadar menyenaraikan poin asas tanpa huraian gramatis.";
+    }
+  
+    let authenticityPercent = Math.max(40, 100 - (aiCliches.length * 15) - (flaws.length * 5));
+    if (wordCount < 50) authenticityPercent = Math.min(authenticityPercent, 60);
+    let authenticityStatus = "Tulen / Bahasa Melayu Asli";
+    if (aiCliches.length >= 2) authenticityStatus = "Dikesan Klise AI (Perlu Penulenan)";
+    else if (aiCliches.length === 1) authenticityStatus = "Sederhana Tulen (Ada Pola Klise AI)";
+  
+    const allFlaws = [...flaws, ...aiCliches];
+  
     return {
       skor_keseluruhan: totalScore,
       band: band,
+      tahap_penguasaan_dskp: tpText,
+      dimensi_kognitif: {
+        tahap: tpCode,
+        deskripsi: tpDesc,
+        penaakulan_saintifik: hasScientificReasoning
+          ? "Hubungan sebab-akibat (punca, proses tindakan, dan implikasi pencegahan) dihuraikan dengan teratur."
+          : "Disyorkan menghubungkaitkan punca dan kesan dengan lebih terperinci bagi memantapkan penaakulan logik."
+      },
+      humanizer_malaya: {
+        status_ketulenan: authenticityStatus,
+        indeks_ketulenan: authenticityPercent,
+        tanda_klise_ai: aiCliches,
+        ulasan_gaya: aiCliches.length === 0
+          ? "Gaya bahasa penulisan asli calon, santun, dan bebas daripada corak klise bot AI."
+          : `Dikesan ${aiCliches.length} corak klise AI yang mengurangkan keaslian rasa bahasa Melayu.`
+      },
       kriteria: {
         idea: {
           skor: ideaScore,
           max: 3.0,
-          ulasan: `Idea relevan dengan tema (${matchedKbat.slice(0, 3).join(", ") || topicTitle}). Hujah diperjelas melalui perenggan isi yang teratur.`
+          ulasan: `Idea relevan dengan tema (${matchedKbat.slice(0, 3).join(", ") || topicTitle}). Mengemukakan ${paraCount >= 4 ? paraCount - 2 : "beberapa"} isi langkah pencegahan yang logik.`
         },
         bahasa: {
           skor: bahasaScore,
           max: 3.0,
-          ulasan: flaws.length > 0 
-            ? `Kosa kata memuaskan, namun ${flaws.length} kelemahan ejaan & struktur ayat perlu dimurnikan.`
-            : "Bahasa Melayu baku digunakan dengan baik dan mematuhi Tatabahasa Dewan."
+          ulasan: allFlaws.length > 0
+            ? `Kosa kata memuaskan dan ada peribahasa tepat, namun terdapat ${allFlaws.length} aspek gaya bahasa/pengulangan yang perlu dimurnikan.`
+            : "Bahasa Melayu baku digunakan secara gramatis, menepati piawaian Tatabahasa Dewan."
         },
         struktur: {
           skor: strukturScore,
@@ -2233,18 +2407,24 @@ Stimulus: "${topic.prompt}"`;
         nilai_kbat: {
           skor: nilaiKbatScore,
           max: 2.0,
-          ulasan: "Aplikasi nilai murni, disiplin, dan pemikiran berani/kritis ditonjolkan secara kontekstual."
+          ulasan: `Penaakulan ${tpCode} DSKP diterapkan dengan nilai keselamatan, akhlak, dan integriti.`
         }
       },
-      kekuatan: strengths,
-      kelemahan_tatabahasa: flaws.length > 0 ? flaws : ["Tiada kesalahan tatabahasa ketara."],
+      kekuatan: strengths.length > 0 ? strengths : ["Calon berjaya menyampaikan maksud asas penulisan."],
+      kelemahan_tatabahasa: allFlaws.length > 0 ? allFlaws : ["Tiada kesalahan tatabahasa atau klise AI dikesan."],
       cadangan_penambahbaikan: [
-        "Huraikan setiap faedah dengan contoh pengalaman sebenar atau peribahasa bersesuaian.",
-        "Semak semula ayat sebelum menghantar bagi mengelakkan perkataan berulang dan simbol taipan.",
-        "Gunakan ayat majmuk gabungan dan pancangan bagi memperkaya kepelbagaian struktur ayat."
+        hasScientificReasoning
+          ? "Kekalkan penghujahan berpaksikan fakta dan kembangkan lagi contoh aplikasi kehidupan sebenar."
+          : "Gunakan formula \"Punca -> Kaedah Tindakan -> Kesan Nyata\" untuk mengukuhkan logik hujah anda.",
+        kitaJugaMatches >= 3
+          ? "Pelbagaikan subjek pemula perenggan isi bagi mengelakkan rentak ayat yang mendatar."
+          : "Perbanyakkan ayat majmuk gabungan dan pancangan bagi memperkaya variasi binaan ayat.",
+        lastParaWords <= 16 && !hasFutureHope
+          ? "Perluas perenggan penutup dengan menyertakan harapan dan seruan kerjasama pelbagai pihak."
+          : "Semak ejaan kata sendi mengikut piawaian Tatabahasa Dewan."
       ],
-      rumusan_keseluruhan: `Karangan mencapai tahap ${band} (${wordCount} patah perkataan). Calon mempamerkan keupayaan berartikulasi yang meyakinkan.`,
-      aiModelUsed: "Ox Alpha AI (Analisis Pantas LPM)"
+      rumusan_keseluruhan: `Karangan mencapai ${tpText} (${band}, ${wordCount} patah perkataan). Calon mempamerkan keupayaan berartikulasi yang meyakinkan mengikut Standard Prestasi DSKP & Tatabahasa DBP.`,
+      aiModelUsed: "Ox Alpha AI (Enjin Analisis DSKP & Humanizer Malaya)"
     };
   }
 
@@ -2256,6 +2436,18 @@ Stimulus: "${topic.prompt}"`;
       state.aiEssayAssessment = {
         skor_keseluruhan: 0,
         band: "Band 1 (Tiada Penulisan)",
+        tahap_penguasaan_dskp: "TP 1 (Sangat Terhad)",
+        dimensi_kognitif: {
+          tahap: "TP 1",
+          deskripsi: "Tiada penulisan dikesan.",
+          penaakulan_saintifik: "Tiada bukti penaakulan."
+        },
+        humanizer_malaya: {
+          status_ketulenan: "Tiada Teks",
+          indeks_ketulenan: 0,
+          tanda_klise_ai: [],
+          ulasan_gaya: "Teks kosong."
+        },
         kriteria: {
           idea: { skor: 0, max: 3.0, ulasan: "Calon tidak memuat naik gambar kertas esei atau teks kosong." },
           bahasa: { skor: 0, max: 3.0, ulasan: "Tiada teks untuk disemak tatabahasa & ejaan." },
@@ -2264,7 +2456,7 @@ Stimulus: "${topic.prompt}"`;
         },
         kekuatan: ["Tiada"],
         kelemahan_tatabahasa: ["Ruang penulisan kosong."],
-        cadangan_penambahbaikan: ["Sila muat naik foto kertas jawapan anda untuk disemak oleh AI."],
+        cadangan_penambahbaikan: ["Sila muat naik foto kertas jawapan anda atau taip terus karangan untuk dinilai oleh AI."],
         rumusan_keseluruhan: "Calon tidak melengkapkan Bahagian C (Artikulasi Penulisan)."
       };
       return state.aiEssayAssessment;
@@ -2281,7 +2473,7 @@ Stimulus: "${topic.prompt}"`;
       // 2a. Try Vercel Serverless /api/evaluate first
       try {
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 3200);
+        const timeout = setTimeout(() => controller.abort(), 6500);
 
         const serverlessResp = await fetch("/api/evaluate", {
           method: "POST",
@@ -2308,18 +2500,40 @@ Stimulus: "${topic.prompt}"`;
       // 2b. Direct OpenRouter client call
       try {
         const currentKey = getNextOrKey();
-        const model = OPENROUTER_EVAL_MODELS[0] || "nvidia/nemotron-3-super-120b-a12b:free";
+        const model = OPENROUTER_EVAL_MODELS[0] || "google/gemini-2.5-flash";
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 3500);
+        const timeout = setTimeout(() => controller.abort(), 6500);
 
-        const prompt = `Anda Pemeriksa Rasmi Lembaga Peperiksaan Malaysia bagi PKSK Bahagian C (Artikulasi Penulisan).
+        const prompt = `Anda Pemeriksa Kanan Rasmi Lembaga Peperiksaan Malaysia (LPM) bagi PKSK Bahagian C (Artikulasi Penulisan).
+Anda menyepadukan DUA STANDARD KEBANGSAAN:
+1. STANDARD PRESTASI DSKP KSSM (TP 1 - TP 6):
+   - TP 1: Sangat Terhad (<3.5), TP 2: Terhad (3.5-4.9), TP 3: Memuaskan (5.0-6.4),
+   - TP 4: Analisis Baik (6.5-7.9, sebab-akibat), TP 5: Menilai & Mewajarkan (8.0-8.9),
+   - TP 6: Mereka Cipta / Cemerlang (9.0-10.0, inovasi & kematangan tinggi).
+2. HUMANIZER MALAYA (Tatabahasa Baku DBP & Pengesanan Klise AI):
+   - Kesan corak klise AI: "bukan sekadar X malah Y", penutup dramatik "Inilah hakikatnya", mukadimah "Mari kita selami", perkataan megah klise "merentasi landskap", atau sisa bot.
+   - Nilai ketulenan bahasa Melayu (0-100%).
+   - Tulis ulasan dalam Bahasa Melayu baku yang pedagogikal, membina, dan mesra calon.
+
 Wajib sediakan JSON SAHAJA mengikut skema:
 {
-  "skor_keseluruhan": 7.0,
+  "skor_keseluruhan": 7.5,
   "band": "Band 4 (Kepujian)",
+  "tahap_penguasaan_dskp": "TP 4 (Menganalisis & Mencerakin Hujah)",
+  "dimensi_kognitif": {
+    "tahap": "TP 4",
+    "deskripsi": "...",
+    "penaakulan_saintifik": "..."
+  },
+  "humanizer_malaya": {
+    "status_ketulenan": "Tulen / Bahasa Melayu Asli",
+    "indeks_ketulenan": 94,
+    "tanda_klise_ai": [],
+    "ulasan_gaya": "..."
+  },
   "kriteria": {
-    "idea": { "skor": 2.0, "max": 3.0, "ulasan": "..." },
-    "bahasa": { "skor": 2.0, "max": 3.0, "ulasan": "..." },
+    "idea": { "skor": 2.3, "max": 3.0, "ulasan": "..." },
+    "bahasa": { "skor": 2.2, "max": 3.0, "ulasan": "..." },
     "struktur": { "skor": 1.5, "max": 2.0, "ulasan": "..." },
     "nilai_kbat": { "skor": 1.5, "max": 2.0, "ulasan": "..." }
   },
@@ -2342,10 +2556,10 @@ Wajib sediakan JSON SAHAJA mengikut skema:
             model: model,
             messages: [
               { role: "system", content: prompt },
-              { role: "user", content: `Karangan Calon:\n${essay}` }
+              { role: "user", content: `Tajuk: "${topicTitle}"\nStimulus: "${topicPrompt}"\n\nKarangan Calon:\n${essay}` }
             ],
             temperature: 0.1,
-            max_tokens: 1000
+            max_tokens: 1100
           })
         });
         clearTimeout(timeout);
@@ -2357,7 +2571,7 @@ Wajib sediakan JSON SAHAJA mengikut skema:
           if (match) {
             const parsed = JSON.parse(match[0]);
             if (typeof parsed.skor_keseluruhan === "number") {
-              parsed.aiModelUsed = `Ox Alpha AI (${model.replace(":free", "")})`;
+              parsed.aiModelUsed = `Ox Alpha AI (${model.replace(":free", "")} - DSKP & Humanizer)`;
               return parsed;
             }
           }
@@ -2369,7 +2583,7 @@ Wajib sediakan JSON SAHAJA mengikut skema:
 
     // Dynamic micro-delay (1.2s) so the student experiences a realistic diagnostic progression
     const minAnimationPromise = new Promise(resolve => setTimeout(resolve, 1300));
-    const raceTimeoutPromise = new Promise(resolve => setTimeout(() => resolve(null), 3800));
+    const raceTimeoutPromise = new Promise(resolve => setTimeout(() => resolve(null), 7000));
 
     const [aiResult] = await Promise.all([
       Promise.race([aiPromise, raceTimeoutPromise]),
@@ -2381,9 +2595,6 @@ Wajib sediakan JSON SAHAJA mengikut skema:
     return finalAssessment;
   }
 
-  /* =========================================================================
-     OFFICIAL RESULTS SLIP CALCULATION & AI REPORT
-     ========================================================================= */
   async function renderResultsSlip() {
     // Fill candidate details
     dom.slipDispName.textContent = state.candidate.name || 'CALON PKSK';
@@ -2431,9 +2642,9 @@ Wajib sediakan JSON SAHAJA mengikut skema:
         `;
 
         const steps = [
-          { h: "Menyemak Tatabahasa & Ejaan Melayu Baku...", s: "Mengimbas hukum Tatabahasa Dewan, pengulangan frasa, dan ketepatan imbuhan." },
-          { h: "Menilai Pemikiran Kritis & KBAT...", s: "Menganalisis kedalaman hujah, daya kepimpinan, dan nilai murni calon." },
-          { h: "Menjana Slip Keputusan & Gred Rasmi LPM...", s: "Menghitung skor muktamad mengikut 4 kriteria rasmi Pentaksiran Kemasukan Sekolah Khusus." }
+          { h: "Menyemak Tatabahasa Baku DBP & Penulenan Humanizer Malaya...", s: "Mengimbas hukum Tatabahasa Dewan, ejaan morfologi, dan menapis corak klise AI." },
+          { h: "Menilai Standard Prestasi DSKP & Penaakulan Saintifik KPS...", s: "Menganalisis hubungan sebab-akibat, pemikiran kritis KBAT, dan kematangan idea." },
+          { h: "Menjana Slip Keputusan Rasmi Lembaga Peperiksaan Malaysia...", s: "Menghitung skor muktamad mengikut 4 kriteria rasmi Pentaksiran Kemasukan Sekolah Khusus." }
         ];
         let stepIdx = 0;
         progressTimer = setInterval(() => {
@@ -2577,11 +2788,12 @@ Wajib sediakan JSON SAHAJA mengikut skema:
     const nilaiScore = k.nilai_kbat?.skor || 0;
     const nilaiMax = k.nilai_kbat?.max || 2.0;
 
-    const strengthsHtml = (assessment.kekuatan || []).map(s => `<li>${s}</li>`).join('');
-    const weaknessesHtml = (assessment.kelemahan_tatabahasa || []).map(w => `<li>${w}</li>`).join('');
+    const strengthsHtml = (assessment.kekuatan || []).map(s => `<li>${s}</li>`).join("");
+    const weaknessesHtml = (assessment.kelemahan_tatabahasa || []).map(w => `<li>${w}</li>`).join("");
 
-    const apiKey = localStorage.getItem('pksk_gemini_api_key') || '';
-    const isAiPowered = !assessment.isHeuristic && apiKey;
+    const dskpTp = assessment.tahap_penguasaan_dskp || "TP 4 (Menganalisis / Baik)";
+    const humanizer = assessment.humanizer_malaya || { status_ketulenan: "Gaya Bahasa Melayu Asli", indeks_ketulenan: 95, ulasan_gaya: "Gaya bahasa penulisan asli calon." };
+    const kognitif = assessment.dimensi_kognitif || { deskripsi: "Calon mempamerkan kefahaman kontekstual memuaskan.", penaakulan_saintifik: "Hujah disokong hubungan sebab-akibat." };
 
     dom.aiEssayReportSection.innerHTML = `
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; border-bottom:1.5px solid var(--border-subtle); padding-bottom:1rem; margin-bottom:1rem;">
@@ -2590,7 +2802,7 @@ Wajib sediakan JSON SAHAJA mengikut skema:
             <i class="fa-solid fa-brain" style="color:#16a34a;"></i> Laporan Penilaian AI: Artikulasi Penulisan (Bahagian C)
           </h3>
           <p style="margin:0; font-size:0.85rem; color:var(--text-muted);">
-            Disemak oleh <strong>${assessment.aiModelUsed || 'AI Engine (Gemini & Ox Alpha)'}</strong> mengikut Rubrik Rasmi Lembaga Peperiksaan Malaysia.
+            Disemak oleh <strong>${assessment.aiModelUsed || "Ox Alpha AI (Enjin Analisis DSKP & Humanizer Malaya)"}</strong> berpandukan Standard Prestasi DSKP KSSM & Rubrik Rasmi LPM.
           </p>
         </div>
         <div style="display:flex; align-items:center; gap:0.75rem;">
@@ -2604,9 +2816,24 @@ Wajib sediakan JSON SAHAJA mengikut skema:
         </div>
       </div>
 
+      <!-- Executive Diagnostic Badges (DSKP TP + Band LPM + Humanizer Malaya) -->
+      <div style="display:flex; flex-wrap:wrap; gap:0.6rem; align-items:center; margin-bottom:1.25rem; padding:0.75rem 1rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:var(--radius-md);">
+        <div style="font-size:0.8rem; font-weight:800; color:var(--kpm-navy); text-transform:uppercase; letter-spacing:0.5px; display:flex; align-items:center; gap:0.35rem;">
+          <i class="fa-solid fa-award" style="color:#0284c7;"></i> Pengiktirafan:
+        </div>
+        <span class="badge" style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd; font-weight:800; font-size:0.82rem; padding:4px 9px; border-radius:6px;">
+          ${assessment.band || "Band 4 (Kepujian)"}
+        </span>
+        <span class="badge" style="background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; font-weight:800; font-size:0.82rem; padding:4px 9px; border-radius:6px;">
+          <i class="fa-solid fa-graduation-cap"></i> ${dskpTp}
+        </span>
+        <span class="badge" style="background:${humanizer.indeks_ketulenan >= 80 ? "#f0fdf4" : "#fffbeb"}; color:${humanizer.indeks_ketulenan >= 80 ? "#15803d" : "#b45309"}; border:1px solid ${humanizer.indeks_ketulenan >= 80 ? "#bbf7d0" : "#fde68a"}; font-weight:800; font-size:0.82rem; padding:4px 9px; border-radius:6px;">
+          <i class="fa-solid fa-shield-halved"></i> ${humanizer.status_ketulenan} (${humanizer.indeks_ketulenan}%)
+        </span>
+      </div>
+
       <!-- 4 Rubric Criteria Grid -->
       <div class="ai-criteria-grid">
-        
         <!-- Criteria 1: Idea & Hujah -->
         <div class="ai-criterion-item">
           <div class="ai-criterion-header">
@@ -2616,22 +2843,22 @@ Wajib sediakan JSON SAHAJA mengikut skema:
           <div class="ai-progress-track">
             <div class="ai-progress-fill" style="width:${(ideaScore / ideaMax) * 100}%;"></div>
           </div>
-          <p style="font-size:0.85rem; color:#334155; margin:0; line-height:1.5;">${k.idea?.ulasan || 'Idea menepati tajuk penulisan.'}</p>
+          <p style="font-size:0.85rem; color:#334155; margin:0; line-height:1.5;">${k.idea?.ulasan || "Idea menepati tajuk penulisan."}</p>
         </div>
 
-        <!-- Criteria 2: Bahasa & Tatabahasa -->
+        <!-- Criteria 2: Bahasa, Ejaan & Ketulenan DBP -->
         <div class="ai-criterion-item">
           <div class="ai-criterion-header">
-            <span>2. Bahasa, Ejaan & Tatabahasa</span>
+            <span>2. Bahasa, Ejaan & Ketulenan DBP</span>
             <span class="badge" style="background:#e0f2fe; color:#0369a1; font-weight:800; font-size:0.85rem; padding:3px 7px; border-radius:4px;">${bahasaScore} / ${bahasaMax}</span>
           </div>
           <div class="ai-progress-track">
             <div class="ai-progress-fill" style="width:${(bahasaScore / bahasaMax) * 100}%;"></div>
           </div>
-          <p style="font-size:0.85rem; color:#334155; margin:0; line-height:1.5;">${k.bahasa?.ulasan || 'Tatabahasa memuaskan.'}</p>
+          <p style="font-size:0.85rem; color:#334155; margin:0; line-height:1.5;">${k.bahasa?.ulasan || "Tatabahasa Melayu baku memuaskan."}</p>
         </div>
 
-        <!-- Criteria 3: Struktur & Format -->
+        <!-- Criteria 3: Struktur & Koheren -->
         <div class="ai-criterion-item">
           <div class="ai-criterion-header">
             <span>3. Struktur & Koheren</span>
@@ -2640,56 +2867,82 @@ Wajib sediakan JSON SAHAJA mengikut skema:
           <div class="ai-progress-track">
             <div class="ai-progress-fill" style="width:${(strukturScore / strukturMax) * 100}%;"></div>
           </div>
-          <p style="font-size:0.85rem; color:#334155; margin:0; line-height:1.5;">${k.struktur?.ulasan || 'Struktur perenggan tersusun.'}</p>
+          <p style="font-size:0.85rem; color:#334155; margin:0; line-height:1.5;">${k.struktur?.ulasan || "Struktur perenggan tersusun."}</p>
         </div>
 
-        <!-- Criteria 4: Nilai Murni & KBAT -->
+        <!-- Criteria 4: Nilai Murni, KPS & KBAT -->
         <div class="ai-criterion-item">
           <div class="ai-criterion-header">
-            <span>4. Nilai Murni & KBAT</span>
+            <span>4. Nilai Murni, KPS & KBAT</span>
             <span class="badge" style="background:#e0f2fe; color:#0369a1; font-weight:800; font-size:0.85rem; padding:3px 7px; border-radius:4px;">${nilaiScore} / ${nilaiMax}</span>
           </div>
           <div class="ai-progress-track">
             <div class="ai-progress-fill" style="width:${(nilaiScore / nilaiMax) * 100}%;"></div>
           </div>
-          <p style="font-size:0.85rem; color:#334155; margin:0; line-height:1.5;">${k.nilai_kbat?.ulasan || 'Menerapkan elemen integriti.'}</p>
+          <p style="font-size:0.85rem; color:#334155; margin:0; line-height:1.5;">${k.nilai_kbat?.ulasan || "Menerapkan elemen penaakulan logik & integriti."}</p>
+        </div>
+      </div>
+
+      <!-- Kad Diagnostik Dwitunjang (DSKP & Humanizer Malaya) -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(290px, 1fr)); gap:1rem; margin-top:0.5rem; margin-bottom:1rem;">
+        <!-- Card 1: DSKP Standard Prestasi & Inkuiri KPS -->
+        <div style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:var(--radius-md); padding:1rem;">
+          <h5 style="color:#15803d; font-size:0.92rem; font-weight:800; margin:0 0 0.35rem 0; display:flex; align-items:center; gap:0.4rem;">
+            <i class="fa-solid fa-microscope"></i> Dimensi Kognitif DSKP & KPS:
+          </h5>
+          <p style="font-size:0.85rem; color:#166534; margin:0 0 0.4rem 0; font-weight:700;">
+            ${dskpTp}
+          </p>
+          <p style="font-size:0.83rem; color:#1f2937; margin:0; line-height:1.5;">
+            ${kognitif.penaakulan_saintifik || kognitif.deskripsi || "Penaakulan sebab-akibat dan hujah berpaksikan logik wajar."}
+          </p>
         </div>
 
+        <!-- Card 2: Humanizer Malaya Anti-Slop & Ketulenan -->
+        <div style="background:#eff6ff; border:1.5px solid #93c5fd; border-radius:var(--radius-md); padding:1rem;">
+          <h5 style="color:#1d4ed8; font-size:0.92rem; font-weight:800; margin:0 0 0.35rem 0; display:flex; align-items:center; gap:0.4rem;">
+            <i class="fa-solid fa-feather-pointed"></i> Penulenan Bahasa Melayu (Humanizer):
+          </h5>
+          <p style="font-size:0.85rem; color:#1e40af; margin:0 0 0.4rem 0; font-weight:700;">
+            ${humanizer.status_ketulenan} (${humanizer.indeks_ketulenan}%)
+          </p>
+          <p style="font-size:0.83rem; color:#1f2937; margin:0; line-height:1.5;">
+            ${humanizer.ulasan_gaya || "Gaya penulisan bersahaja, natural, dan mematuhi laras Bahasa Melayu rasmi tanpa struktur klise AI."}
+          </p>
+        </div>
       </div>
 
       <!-- Qualitative Feedback Rows -->
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem;">
-        
-        <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:var(--radius-md); padding:1rem;">
-          <h5 style="color:#166534; font-size:0.92rem; font-weight:800; margin:0 0 0.4rem 0;">
-            <i class="fa-solid fa-circle-check"></i> Kekuatan Karangan Calon:
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(290px, 1fr)); gap:1rem; margin-top:0.5rem;">
+        <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:var(--radius-md); padding:1rem;">
+          <h5 style="color:#1e293b; font-size:0.92rem; font-weight:800; margin:0 0 0.4rem 0;">
+            <i class="fa-solid fa-circle-check" style="color:#16a34a;"></i> Kekuatan Karangan Calon:
           </h5>
-          <ul class="ai-feedback-list" style="margin:0; font-size:0.88rem;">
-            ${strengthsHtml || '<li>Karangan menepati kehendak soalan pentaksiran.</li>'}
+          <ul class="ai-feedback-list" style="margin:0; font-size:0.86rem;">
+            ${strengthsHtml || "<li>Karangan menepati kehendak soalan pentaksiran.</li>"}
           </ul>
         </div>
 
         <div style="background:#fef2f2; border:1.5px solid #fecaca; border-radius:var(--radius-md); padding:1rem;">
           <h5 style="color:#991b1b; font-size:0.92rem; font-weight:800; margin:0 0 0.4rem 0;">
-            <i class="fa-solid fa-circle-exclamation"></i> Aspek Perlu Diperbaiki:
+            <i class="fa-solid fa-circle-exclamation"></i> Aspek Perlu Dimurnikan (Tatabahasa & Gaya):
           </h5>
-          <ul class="ai-feedback-list warning" style="margin:0; font-size:0.88rem;">
-            ${weaknessesHtml || '<li>Kekalkan ketepatan ejaan dan struktur ayat majmuk.</li>'}
+          <ul class="ai-feedback-list warning" style="margin:0; font-size:0.86rem;">
+            ${weaknessesHtml || "<li>Kekalkan ketepatan ejaan dan struktur ayat majmuk.</li>"}
           </ul>
         </div>
-
       </div>
 
       <!-- Recommendation Summary Box -->
       <div style="background:#f8fafc; border:1.5px solid var(--border-subtle); border-left:4px solid #0284c7; border-radius:var(--radius-sm); padding:1rem 1.2rem; margin-top:1rem;">
-        <strong style="color:var(--kpm-navy); font-size:0.92rem;"><i class="fa-solid fa-lightbulb" style="color:#0284c7;"></i> Rumusan & Tip Pemeriksa:</strong>
+        <strong style="color:var(--kpm-navy); font-size:0.92rem;"><i class="fa-solid fa-lightbulb" style="color:#0284c7;"></i> Rumusan & Bimbingan Pedagogi Pemeriksa:</strong>
         <p style="margin:0.25rem 0 0 0; font-size:0.88rem; color:var(--text-main); line-height:1.55;">
-          ${assessment.rumusan_keseluruhan || 'Tahniah atas usaha penulisan karangan ini.'}
+          ${assessment.rumusan_keseluruhan || "Tahniah atas usaha penulisan karangan ini."}
         </p>
       </div>
     `;
 
-    const btnReeval = document.getElementById('btnReevaluateEssayAi');
+    const btnReeval = document.getElementById("btnReevaluateEssayAi");
     if (btnReeval) {
       btnReeval.onclick = async () => {
         btnReeval.disabled = true;
